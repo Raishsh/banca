@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PedidoService } from '../../core/services/pedido';
 import { Pedido } from '../../core/models/pedido.model';
+import { PagamentoStateService } from '../../core/services/pagamento-state';
 
 @Component({
   selector: 'app-pagamento',
@@ -14,21 +15,22 @@ import { Pedido } from '../../core/models/pedido.model';
 })
 export class PagamentoComponent implements OnInit {
   pedido: Pedido | null = null;
-  metodoPagamento: string = ''; // Para guardar a opção selecionada
+  metodoPagamento: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private pedidoService: PedidoService
+    private pedidoService: PedidoService,
+    private pagamentoState: PagamentoStateService
   ) {}
 
   ngOnInit(): void {
-    // Pega o ID do pedido da URL
-    const pedidoId = this.route.snapshot.paramMap.get('id');
-    if (pedidoId) {
-      // Busca os detalhes do pedido na API
-      // (Precisaremos criar este método no serviço)
-      this.pedidoService.getPedidoById(+pedidoId).subscribe(data => {
+    const pedidoIdParam = this.route.snapshot.paramMap.get('id');
+    if (pedidoIdParam) {
+      const id = +pedidoIdParam;
+      // marca como "em pagamento" localmente para manter visível na lista até confirmar
+      this.pagamentoState.add(id);
+      this.pedidoService.getPedidoById(id).subscribe(data => {
         this.pedido = data;
       });
     }
@@ -46,11 +48,12 @@ export class PagamentoComponent implements OnInit {
       valorPago: this.pedido.total
     };
 
-    // (Precisaremos criar este método no serviço)
     this.pedidoService.registrarPagamento(dadosPagamento).subscribe({
       next: () => {
+        // pagamento concluído, remover da fila local e voltar à lista
+        this.pagamentoState.remove(this.pedido!.idPedido);
         alert('Pagamento registado com sucesso!');
-        this.router.navigate(['/app/pedidos']); // Volta para a lista de pedidos
+        this.router.navigate(['/app/pedidos']);
       },
       error: (err) => {
         alert('Erro ao registar o pagamento.');
