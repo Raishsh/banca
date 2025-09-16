@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'; 
 import { PedidoService } from '../../core/services/pedido';
 import { Pedido } from '../../core/models/pedido.model';
+import { PagamentoStateService } from '../../core/services/pagamento-state';
+import { forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-pedidos',
@@ -18,16 +20,34 @@ export class Pedidos implements OnInit {
 
   pedidos: Pedido[] = [];
 
-  constructor(private pedidoService: PedidoService) {}
+  constructor(
+    private pedidoService: PedidoService,
+    private pagamentoState: PagamentoStateService
+  ) {}
 
   ngOnInit(): void {
     this.carregarPedidos();
+  }
+
+  private mergePendentesComLista(): void {
+    const pendentes = this.pagamentoState.all();
+    const faltantes = pendentes.filter(id => !this.pedidos.some(p => p.idPedido === id));
+    if (faltantes.length === 0) return;
+
+    forkJoin(faltantes.map(id => this.pedidoService.getPedidoById(id))).subscribe({
+      next: (extraPedidos) => {
+        // adiciona ao início para maior visibilidade
+        this.pedidos = [...extraPedidos, ...this.pedidos];
+      },
+      error: (err) => console.error('Erro ao carregar pedidos pendentes de pagamento', err)
+    });
   }
 
   carregarPedidos(): void {
     this.pedidoService.getPedidos().subscribe({
       next: (data: Pedido[]) => {
         this.pedidos = data;
+        this.mergePendentesComLista();
       },
       error: (err: any) => {
         console.error('Erro ao carregar pedidos', err);
