@@ -51,6 +51,10 @@
             Pagamento Realizado
           </button>
         </div>
+
+        <button *ngIf="pedido.status === 'PREPARANDO' || pedido.status === 'PRONTO'" class="btn btn-cancelar" (click)="abrirModalCancelarPedido(pedido)">
+          Cancelar Pedido
+        </button>
       </div>
     </div>
   </div>
