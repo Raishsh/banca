@@ -77,4 +77,11 @@ export class PedidoService {
 getPedidoById(id: number): Observable<Pedido> {
   return this.http.get<Pedido>(`${this.apiUrl}/${id}`);
 }
+
+/**
+ * Envia uma requisição para cancelar um pedido.
+ */
+cancelarPedido(pedidoId: number): Observable<Pedido> {
+  return this.http.delete<Pedido>(`${this.apiUrl}/${pedidoId}/cancelar`);
+}
 }
