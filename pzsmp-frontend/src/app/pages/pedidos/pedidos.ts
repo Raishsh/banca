@@ -86,4 +86,33 @@ export class Pedidos implements OnInit {
         }
     });
   }
+
+  abrirModalCancelarPedido(pedido: Pedido): void {
+    this.pedidoParaCancelar = pedido;
+    this.showCancelModal = true;
+  }
+
+  fecharModalCancelar(): void {
+    this.showCancelModal = false;
+    this.pedidoParaCancelar = null;
+  }
+
+  confirmarCancelamento(): void {
+    if (!this.pedidoParaCancelar) return;
+
+    this.pedidoService.cancelarPedido(this.pedidoParaCancelar.idPedido).subscribe({
+      next: (pedidoAtualizado: Pedido) => {
+        const index = this.pedidos.findIndex(p => p.idPedido === this.pedidoParaCancelar!.idPedido);
+        if (index !== -1) {
+          this.pedidos[index] = pedidoAtualizado;
+        }
+        this.fecharModalCancelar();
+      },
+      error: (err: any) => {
+        const errorMessage = err?.error?.message || 'Erro ao cancelar o pedido.';
+        alert(errorMessage);
+        console.error(err);
+      }
+    });
+  }
 }
