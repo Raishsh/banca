@@ -119,4 +119,13 @@ public class PedidoController {
         List<PedidoResponseDto> pedidosDoDia = pedidoService.buscarPedidosPorData(data);
         return ResponseEntity.ok(pedidosDoDia);
     }
+
+    /**
+     * Endpoint para cancelar um pedido.
+     */
+    @DeleteMapping("/{id}/cancelar")
+    public ResponseEntity<PedidoResponseDto> cancelarPedido(@PathVariable Integer id) {
+        PedidoResponseDto pedidoCancelado = pedidoService.cancelarPedido(id);
+        return ResponseEntity.ok(pedidoCancelado);
+    }
 }
