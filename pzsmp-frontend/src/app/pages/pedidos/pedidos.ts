@@ -19,6 +19,8 @@ import { forkJoin, of } from 'rxjs';
 export class Pedidos implements OnInit {
 
   pedidos: Pedido[] = [];
+  showCancelModal = false;
+  pedidoParaCancelar: Pedido | null = null;
 
   constructor(
     private pedidoService: PedidoService,
