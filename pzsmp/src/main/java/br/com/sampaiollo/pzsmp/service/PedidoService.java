@@ -222,4 +222,36 @@ public class PedidoService {
                 .map(PedidoResponseDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public PedidoResponseDto cancelarPedido(Integer pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado com ID: " + pedidoId));
+
+        // Verificar se o pedido pode ser cancelado
+        if (pedido.getStatus() == StatusPedido.PAGO || pedido.getStatus() == StatusPedido.ENTREGUE) {
+            throw new RuntimeException("Você não pode cancelar este pedido. O status atual é: " + pedido.getStatus());
+        }
+
+        if (pedido.getStatus() == StatusPedido.CANCELADO) {
+            throw new RuntimeException("Este pedido já foi cancelado.");
+        }
+
+        // Cancelar o pedido
+        pedido.setStatus(StatusPedido.CANCELADO);
+
+        // Liberar a mesa se existir
+        Mesa mesa = pedido.getMesa();
+        if (mesa != null) {
+            List<StatusPedido> statusesFinalizados = List.of(StatusPedido.PAGO, StatusPedido.ENTREGUE, StatusPedido.CANCELADO);
+            long pedidosPendentes = pedidoRepository.countByMesaAndStatusNotIn(mesa, statusesFinalizados);
+            if (pedidosPendentes == 1) { // Será 1 porque ainda não salvamos este pedido
+                mesa.setStatus(StatusMesa.LIVRE);
+                mesaRepository.save(mesa);
+            }
+        }
+
+        Pedido pedidoSalvo = pedidoRepository.save(pedido);
+        return new PedidoResponseDto(pedidoSalvo);
+    }
 }

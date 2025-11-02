@@ -51,6 +51,10 @@
             Pagamento Realizado
           </button>
         </div>
+
+        <button *ngIf="pedido.status === 'PREPARANDO' || pedido.status === 'PRONTO'" class="btn btn-cancelar" (click)="abrirModalCancelarPedido(pedido)">
+          Cancelar Pedido
+        </button>
       </div>
     </div>
   </div>
@@ -64,7 +68,7 @@
   </div>
   <h2>Tudo tranquilo por aqui</h2>
   <p>Ainda não há pedidos em andamento. Inicie uma nova venda.</p>
-  
+
   <div class="quick-actions">
     <button class="btn-action-card" [routerLink]="['/app/mesas']">
       <span>Pedido para Mesa</span>
@@ -75,5 +79,39 @@
     <button class="btn-action-card" [routerLink]="['/app/balcao']">
       <span>Pedido de Balcão</span>
     </button>
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Cancelamento -->
+<div *ngIf="showCancelModal" class="modal-overlay" (click)="fecharModalCancelar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Cancelar Pedido?</h2>
+      <button class="modal-close-btn" (click)="fecharModalCancelar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708l2.647-2.646-2.647-2.646a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p *ngIf="pedidoParaCancelar" class="modal-message">
+        Tem certeza que deseja cancelar o pedido Nº {{ pedidoParaCancelar.numeroDia || pedidoParaCancelar.idPedido }}?
+      </p>
+      <div *ngIf="pedidoParaCancelar" class="modal-order-summary">
+        <p><strong>Total:</strong> {{ pedidoParaCancelar.total | currency:'BRL' }}</p>
+        <p><strong>Status:</strong> {{ pedidoParaCancelar.status }}</p>
+      </div>
+      <p class="modal-warning">Esta ação não pode ser desfeita.</p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-modal-cancelar" (click)="fecharModalCancelar()">
+        Manter Pedido
+      </button>
+      <button class="btn btn-modal-confirmar" (click)="confirmarCancelamento()">
+        Confirmar Cancelamento
+      </button>
+    </div>
   </div>
 </div>
