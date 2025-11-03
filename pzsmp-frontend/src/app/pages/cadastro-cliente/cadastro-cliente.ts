@@ -18,12 +18,14 @@ export class CadastroClienteComponent implements OnInit {
   modo: 'lista' | 'cadastro' = 'lista';
 
   allClientes: Cliente[] = [];
+  filteredClientes: Cliente[] = [];
   paginatedClientes: Cliente[] = [];
 
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 1;
   sortOrder: 'asc' | 'desc' = 'asc';
+  searchQuery: string = '';
 
   novoCliente = {
     nome: '', telefone: '', email: '',
