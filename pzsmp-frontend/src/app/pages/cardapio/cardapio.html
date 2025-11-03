@@ -36,8 +36,18 @@
       <p *ngIf="produto.descricao" class="produto-descricao">{{ produto.descricao }}</p>
     </div>
     <div class="card-actions">
-      <button class="btn btn-aviso" (click)="abrirModalEdicao(produto)">Editar</button>
-      <button class="btn btn-erro" (click)="excluirProduto(produto.id_produto)">Excluir</button>
+      <button
+        class="btn btn-aviso"
+        (click)="abrirModalEdicao(produto)"
+        appTooltip="Clique para editar os dados deste produto">
+        Editar
+      </button>
+      <button
+        class="btn btn-erro"
+        (click)="excluirProduto(produto.id_produto)"
+        appTooltip="Clique para excluir este produto permanentemente">
+        Excluir
+      </button>
     </div>
   </div>
 </div>
