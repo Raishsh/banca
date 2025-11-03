@@ -25,25 +25,38 @@ export class HistoricoSangriaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cargoUsuario = this.authService.getCargoUsuarioLogado(); // <<< Busque o cargo
+    this.cargoUsuario = this.authService.getCargoUsuarioLogado();
+    this.definirPeriodoPadraoEBuscar();
+  }
+
+  definirPeriodoPadraoEBuscar(): void {
+    const hoje = new Date();
+    const seteDiasAtras = new Date();
+    seteDiasAtras.setDate(hoje.getDate() - 7);
+
+    this.dataFim = formatDate(hoje, 'yyyy-MM-dd', 'en-US');
+    this.dataInicio = formatDate(seteDiasAtras, 'yyyy-MM-dd', 'en-US');
+
     this.carregarHistorico();
   }
 
   carregarHistorico(): void {
-    this.caixaService.getSangrias().subscribe({
+    this.caixaService.getSangriasByDateRange(this.dataInicio, this.dataFim).subscribe({
       next: (data) => { this.historico = data; },
       error: (err) => { console.error('Erro ao carregar histórico', err); }
     });
   }
 
-  // <<< MÉTODOS MOVIDOS PARA CÁ >>>
+  limparFiltro(): void {
+    this.definirPeriodoPadraoEBuscar();
+  }
+
   abrirModalSangria(): void {
     this.mostrarModalSangria = true;
   }
 
   fecharModalSangria(): void {
     this.mostrarModalSangria = false;
-    // BÔNUS: Atualiza a lista automaticamente após fechar o modal
-    this.carregarHistorico(); 
+    this.carregarHistorico();
   }
 }
