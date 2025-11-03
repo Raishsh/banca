@@ -191,3 +191,37 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Tooltip Styles for Helper Hints
+========================================================= */
+.app-tooltip {
+  position: fixed;
+  background-color: rgba(45, 55, 72, 0.95);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: normal;
+  max-width: 250px;
+  word-wrap: break-word;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.app-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid rgba(45, 55, 72, 0.95);
+}
