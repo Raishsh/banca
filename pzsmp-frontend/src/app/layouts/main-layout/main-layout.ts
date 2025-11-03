@@ -5,12 +5,13 @@ import { AuthService } from '../../core/services/auth';
 import { PedidoService } from '../../core/services/pedido';
 import { SangriaModalComponent } from '../../shared/components/sangria-modal/sangria-modal';
 import { HelperPanelComponent } from '../../shared/components/helper-panel/helper-panel';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  // Adicione CommonModule, SangriaModalComponent e HelperPanelComponent aos imports
-  imports: [RouterModule, CommonModule, HelperPanelComponent],
+  // Adicione CommonModule, SangriaModalComponent, HelperPanelComponent e TooltipDirective aos imports
+  imports: [RouterModule, CommonModule, HelperPanelComponent, TooltipDirective],
   templateUrl: './main-layout.html',
   styleUrls: ['./main-layout.css']
 })
