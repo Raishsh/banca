@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CaixaService } from '../../core/services/caixa';
 import { AuthService } from '../../core/services/auth';
@@ -17,6 +17,8 @@ export class HistoricoAporteComponent implements OnInit {
   historico: any[] = [];
   mostrarModalAporte = false;
   cargoUsuario: string | null = null;
+  dataInicio: string = '';
+  dataFim: string = '';
 
   constructor(
     private caixaService: CaixaService,
