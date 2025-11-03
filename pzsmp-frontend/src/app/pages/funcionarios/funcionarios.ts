@@ -17,12 +17,14 @@ export class Funcionarios implements OnInit {
   modo: 'lista' | 'cadastro' = 'lista';
 
   allFuncionarios: Funcionario[] = [];
+  filteredFuncionarios: Funcionario[] = [];
   paginatedFuncionarios: Funcionario[] = [];
 
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 1;
   sortOrder: 'asc' | 'desc' = 'asc';
+  searchQuery: string = '';
 
   novoFuncionario = {
     nome: '',
