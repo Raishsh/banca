@@ -102,7 +102,11 @@
           <i class="fas fa-user-circle"></i> 
           <span>{{ nomeUsuarioLogado || 'Usuário' }}</span> 
         </div>
-        <a (click)="logout()" class="btn-logout" title="Sair">
+        <a
+          (click)="logout()"
+          class="btn-logout"
+          title="Sair"
+          appTooltip="Clique para fazer logout e sair do sistema">
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </div>
