@@ -1,12 +1,15 @@
 package br.com.sampaiollo.pzsmp.controller;
 
 import br.com.sampaiollo.pzsmp.dto.SangriaRequest;
+import br.com.sampaiollo.pzsmp.dto.AporteRequest;
 import br.com.sampaiollo.pzsmp.entity.Sangria;
+import br.com.sampaiollo.pzsmp.entity.Aporte;
 import br.com.sampaiollo.pzsmp.service.CaixaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import br.com.sampaiollo.pzsmp.dto.SangriaResponseDTO; // <<< IMPORTE O NOVO DTO
+import br.com.sampaiollo.pzsmp.dto.SangriaResponseDTO;
+import br.com.sampaiollo.pzsmp.dto.AporteResponseDTO;
 import java.util.List;
 
 @RestController
