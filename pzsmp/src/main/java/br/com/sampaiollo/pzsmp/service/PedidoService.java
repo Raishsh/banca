@@ -60,7 +60,7 @@ public class PedidoService {
         // Define numero do pedido sequencial global controlado por sequenciador
         br.com.sampaiollo.pzsmp.entity.SequenciadorPedido seq = sequenciadorRepository.findById(1L)
                 .orElseGet(() -> {
-                    br.com.sampaiollo.pzsmp.entity.SequenciadorPedido novo = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1);
+                    br.com.sampaiollo.pzsmp.entity.SequenciadorPedido novo = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1, LocalDateTime.now());
                     return sequenciadorRepository.save(novo);
                 });
         Integer numeroAtual = seq.getProximoNumero();
@@ -111,9 +111,9 @@ public class PedidoService {
     }
 
     public List<PedidoResponseDto> listarTodos() {
-        LocalDate hoje = LocalDate.now();
-        LocalDateTime inicioHoje = hoje.atStartOfDay();
-        LocalDateTime fimHoje = hoje.atTime(23, 59, 59);
+        // Obter o timestamp de início do expediente atual
+        br.com.sampaiollo.pzsmp.entity.SequenciadorPedido seq = sequenciadorRepository.findById(1L).orElse(null);
+        LocalDateTime inicioExpediente = seq != null ? seq.getDataInicioExpediente() : LocalDateTime.now();
 
         return pedidoRepository.findAll().stream()
                 .filter(p -> {
@@ -121,9 +121,9 @@ public class PedidoService {
                     if (p.getStatus() == StatusPedido.ENTREGUE) {
                         return false;
                     }
-                    // Mostrar pedidos CANCELADO apenas se forem do dia atual
+                    // Mostrar pedidos CANCELADO apenas se forem do expediente atual
                     if (p.getStatus() == StatusPedido.CANCELADO) {
-                        return p.getData().isAfter(inicioHoje) && p.getData().isBefore(fimHoje);
+                        return p.getData().isAfter(inicioExpediente);
                     }
                     // Mostrar todos os outros status (PREPARANDO, PRONTO, PAGO)
                     return true;
@@ -207,11 +207,13 @@ public class PedidoService {
         }
 
         // Reseta o sequenciador de número de pedidos para iniciar do 1 no próximo expediente
+        // E atualiza o timestamp de início do expediente para agora
         var seq = sequenciadorRepository.findById(1L).orElse(null);
         if (seq == null) {
-            seq = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1);
+            seq = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1, LocalDateTime.now());
         } else {
             seq.setProximoNumero(1);
+            seq.setDataInicioExpediente(LocalDateTime.now());
         }
         sequenciadorRepository.save(seq);
 

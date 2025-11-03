@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sequenciador_pedido")
@@ -17,4 +18,7 @@ public class SequenciadorPedido {
 
     @Column(name = "proximo_numero", nullable = false)
     private Integer proximoNumero;
+
+    @Column(name = "data_inicio_expediente", nullable = false)
+    private LocalDateTime dataInicioExpediente;
 }
