@@ -3,20 +3,27 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FuncionarioService } from '../../core/services/funcionario';
 import { Funcionario } from '../../core/models/funcionario.model';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-funcionarios',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './funcionarios.html',
   styleUrls: ['./funcionarios.css']
 })
 export class Funcionarios implements OnInit {
 
-  // Variável para controlar a visualização: 'lista' ou 'cadastro'
   modo: 'lista' | 'cadastro' = 'lista';
 
-  listaFuncionarios: Funcionario[] = [];
+  allFuncionarios: Funcionario[] = [];
+  paginatedFuncionarios: Funcionario[] = [];
+
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 1;
+  sortOrder: 'asc' | 'desc' = 'asc';
+
   novoFuncionario = {
     nome: '',
     telefone: '',
@@ -35,8 +42,40 @@ export class Funcionarios implements OnInit {
 
   carregarFuncionarios(): void {
     this.funcionarioService.getFuncionarios().subscribe(data => {
-      this.listaFuncionarios = data;
+      this.allFuncionarios = data;
+      this.sortFuncionarios();
+      this.updatePagination();
     });
+  }
+
+  sortFuncionarios(): void {
+    this.allFuncionarios.sort((a, b) => {
+      const nameA = a.nome.toLowerCase();
+      const nameB = b.nome.toLowerCase();
+
+      if (this.sortOrder === 'asc') {
+        return nameA.localeCompare(nameB);
+      } else {
+        return nameB.localeCompare(nameA);
+      }
+    });
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.allFuncionarios.length / this.pageSize);
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = this.totalPages;
+    }
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedFuncionarios = this.allFuncionarios.slice(startIndex, endIndex);
+  }
+
+  onPageChange(newPage: number): void {
+    this.currentPage = newPage;
+    this.updatePagination();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   cadastrarFuncionario(): void {
