@@ -7,10 +7,12 @@
 
 <!-- Menu de Filtros Horizontal -->
 <div class="filtros-container">
-  <button *ngFor="let tipo of tiposDeProduto"
-          class="btn-filtro"
-          [class.active]="filtroAtual === tipo"
-          (click)="filtrarProdutos(tipo)">
+  <button
+    *ngFor="let tipo of tiposDeProduto"
+    class="btn-filtro"
+    [class.active]="filtroAtual === tipo"
+    (click)="filtrarProdutos(tipo)"
+    [appTooltip]="'Clique para filtrar e visualizar ' + formatarNomeFiltro(tipo)">
     {{ formatarNomeFiltro(tipo) }}
   </button>
 </div>
