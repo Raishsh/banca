@@ -44,6 +44,8 @@ export class CadastroClienteComponent implements OnInit {
     this.clienteService.getClientes().subscribe(data => {
       this.allClientes = data;
       this.sortClientes();
+      this.filteredClientes = [...this.allClientes];
+      this.searchQuery = '';
       this.updatePagination();
     });
   }
