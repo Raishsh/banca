@@ -50,11 +50,20 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
 }
 
+/* Container para tabela com scroll responsivo
+------------------------------------------------------------------- */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 20px;
+}
+
 /* Tabela de Clientes
 ------------------------------------------------------------------- */
 table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
 }
 
 thead th {
