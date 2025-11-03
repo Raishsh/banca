@@ -60,7 +60,7 @@ public class PedidoService {
         // Define numero do pedido sequencial global controlado por sequenciador
         br.com.sampaiollo.pzsmp.entity.SequenciadorPedido seq = sequenciadorRepository.findById(1L)
                 .orElseGet(() -> {
-                    br.com.sampaiollo.pzsmp.entity.SequenciadorPedido novo = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1);
+                    br.com.sampaiollo.pzsmp.entity.SequenciadorPedido novo = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1, LocalDateTime.now());
                     return sequenciadorRepository.save(novo);
                 });
         Integer numeroAtual = seq.getProximoNumero();
