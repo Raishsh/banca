@@ -132,12 +132,12 @@ export class Funcionarios implements OnInit {
     });
   }
 
-  // <<< NOVO MÉTODO PARA EXCLUSÃO >>>
   excluir(id: number): void {
     if (confirm('Tem certeza que deseja excluir este funcionário?')) {
       this.funcionarioService.excluirFuncionario(id).subscribe({
         next: () => {
           alert('Funcionário excluído com sucesso.');
+          this.currentPage = 1;
           this.carregarFuncionarios();
         },
         error: (err) => {
