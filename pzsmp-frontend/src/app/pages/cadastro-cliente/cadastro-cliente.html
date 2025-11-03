@@ -40,8 +40,18 @@
               </span>
             </td>
             <td class="acoes-cell">
-              <button class="btn-acao btn-aviso" (click)="abrirModalEdicao(cliente)">Editar</button>
-              <button class="btn-acao btn-erro" (click)="excluirCliente(cliente.id)">Excluir</button>
+              <button
+                class="btn-acao btn-aviso"
+                (click)="abrirModalEdicao(cliente)"
+                appTooltip="Clique para editar os dados deste cliente">
+                Editar
+              </button>
+              <button
+                class="btn-acao btn-erro"
+                (click)="excluirCliente(cliente.id)"
+                appTooltip="Clique para excluir este cliente permanentemente">
+                Excluir
+              </button>
             </td>
           </tr>
         </tbody>
