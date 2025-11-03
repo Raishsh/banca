@@ -82,8 +82,9 @@ export class Funcionarios implements OnInit {
     this.funcionarioService.cadastrarFuncionario(this.novoFuncionario).subscribe({
       next: (novoFuncionarioCadastrado) => {
         alert(`Funcionário "${novoFuncionarioCadastrado.nome}" cadastrado com sucesso!`);
-        this.carregarFuncionarios(); // Atualiza a lista
-        this.voltarParaLista(); // Volta para a tela de listagem
+        this.currentPage = 1;
+        this.carregarFuncionarios();
+        this.voltarParaLista();
       },
       error: (err) => {
         alert('Erro ao cadastrar funcionário.');
