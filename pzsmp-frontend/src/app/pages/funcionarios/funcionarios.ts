@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { FuncionarioService } from '../../core/services/funcionario';
 import { Funcionario } from '../../core/models/funcionario.model';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { InputMaskDirective } from '../../shared/directives/input-mask.directive';
 
 @Component({
   selector: 'app-funcionarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent],
+  imports: [CommonModule, FormsModule, PaginationComponent, InputMaskDirective],
   templateUrl: './funcionarios.html',
   styleUrls: ['./funcionarios.css']
 })

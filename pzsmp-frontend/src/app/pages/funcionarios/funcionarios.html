@@ -82,11 +82,11 @@
         </div>
         <div class="form-group">
           <label>Telefone</label>
-          <input type="text" [(ngModel)]="funcionarioEmEdicao.telefone" name="edit-telefone">
+          <input type="text" [(ngModel)]="funcionarioEmEdicao.telefone" name="edit-telefone" appInputMask="phone" placeholder="(99) 99999-9999">
         </div>
         <div class="form-group">
           <label>Cargo</label>
-          <input type="text" [(ngModel)]="funcionarioEmEdicao.cargo" name="edit-cargo" required>
+          <input type="text" [(ngModel)]="funcionarioEmEdicao.cargo" name="edit-cargo" placeholder="Ex: Atendente, Cozinheiro, Entregador" required>
         </div>
         <div class="form-group">
           <label>Nova Senha (deixe em branco para não alterar)</label>
@@ -111,11 +111,11 @@
         </div>
         <div class="form-group">
           <label for="telefone">Telefone</label>
-          <input id="telefone" type="text" [(ngModel)]="novoFuncionario.telefone" name="telefone">
+          <input id="telefone" type="text" [(ngModel)]="novoFuncionario.telefone" name="telefone" appInputMask="phone" placeholder="(99) 99999-9999">
         </div>
         <div class="form-group">
           <label for="cargo">Cargo</label>
-          <input id="cargo" type="text" [(ngModel)]="novoFuncionario.cargo" name="cargo" required>
+          <input id="cargo" type="text" [(ngModel)]="novoFuncionario.cargo" name="cargo" placeholder="Ex: Atendente, Cozinheiro, Entregador" required>
         </div>
         <div class="form-group">
           <label for="login">Login de Acesso</label>
