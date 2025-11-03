@@ -52,6 +52,7 @@ public class ClienteService {
             endereco.setBairro(dto.getBairro());
             endereco.setNumero(dto.getNumero());
             endereco.setCidade(dto.getCidade());
+            endereco.setUf(dto.getUf());
             endereco.setCep(dto.getCep());
             
             enderecoRepository.save(endereco);
@@ -72,11 +73,12 @@ public class ClienteService {
         endereco.setBairro(dto.getBairro());
         endereco.setNumero(dto.getNumero());
         endereco.setCidade(dto.getCidade());
+        endereco.setUf(dto.getUf());
         endereco.setCep(dto.getCep());
-        
+
         return enderecoRepository.save(endereco);
     }
-    
+
     public Optional<Cliente> buscarPorId(Integer id) {
         return clienteRepository.findById(id);
     }
@@ -105,6 +107,7 @@ public Cliente atualizarCliente(Integer id, ClienteRequestDto dto) {
         enderecoPrincipal.setBairro(dto.getBairro());
         enderecoPrincipal.setNumero(dto.getNumero());
         enderecoPrincipal.setCidade(dto.getCidade());
+        enderecoPrincipal.setUf(dto.getUf());
         enderecoPrincipal.setCep(dto.getCep());
         enderecoRepository.save(enderecoPrincipal); // Salva as alterações no endereço
     }

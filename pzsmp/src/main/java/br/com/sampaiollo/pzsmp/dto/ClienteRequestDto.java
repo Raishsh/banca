@@ -13,5 +13,6 @@ public class ClienteRequestDto {
     private String bairro;
     private Integer numero;
     private String cidade;
+    private String uf;
     private String cep;
 }

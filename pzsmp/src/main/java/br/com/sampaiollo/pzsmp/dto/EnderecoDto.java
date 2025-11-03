@@ -8,6 +8,7 @@ import br.com.sampaiollo.pzsmp.entity.Endereco;
     String bairro,
     Integer numero,
     String cidade,
+    String uf,
     String cep
 ) {
     // Construtor que converte uma entidade Endereco neste DTO
@@ -17,6 +18,7 @@ import br.com.sampaiollo.pzsmp.entity.Endereco;
             endereco.getBairro(),
             endereco.getNumero(),
             endereco.getCidade(),
+            endereco.getUf(),
             endereco.getCep()
         );
     }

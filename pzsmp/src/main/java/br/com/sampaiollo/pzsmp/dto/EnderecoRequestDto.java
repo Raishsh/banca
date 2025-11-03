@@ -8,5 +8,6 @@ public class EnderecoRequestDto {
     private String bairro;
     private Integer numero;
     private String cidade;
+    private String uf;
     private String cep;
 }
