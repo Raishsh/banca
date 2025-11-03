@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
 import { PedidoService } from '../../core/services/pedido';
 import { Pedido } from '../../core/models/pedido.model';
 import { PagamentoStateService } from '../../core/services/pagamento-state';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { forkJoin, of } from 'rxjs';
 
 @Component({
@@ -11,7 +12,8 @@ import { forkJoin, of } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule 
+    RouterModule,
+    TooltipDirective
   ],
   templateUrl: './pedidos.html',
   styleUrls: ['./pedidos.css']
