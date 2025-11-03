@@ -467,6 +467,28 @@ tbody tr:hover {
     font-size: 0.85rem;
   }
 
+  .search-filter-section {
+    margin-bottom: 15px;
+    padding: 10px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .btn-buscar, .btn-limpar {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
   .content-card {
     padding: 12px;
     border-radius: 6px;
