@@ -351,6 +351,25 @@ hr {
     font-size: 0.9rem;
   }
 
+  .search-filter-section {
+    margin-bottom: 20px;
+    padding: 12px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .btn-buscar, .btn-limpar {
+    width: 100%;
+    padding: 10px 14px;
+  }
+
   .card {
     padding: 15px;
     border-radius: 8px;
