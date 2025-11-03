@@ -152,13 +152,33 @@
 
 .pedido-card .card-actions {
   /* Espaçamento acima dos botões reduzido */
-  margin-top: 20px; 
+  margin-top: 20px;
   display: flex;
   gap: 10px;
 }
 
 .pedido-card .card-actions .btn {
   flex-grow: 1;
+}
+
+.pedido-card .card-actions.card-actions-cancelado {
+  background-color: #fadbd8;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #e74c3c;
+  justify-content: center;
+}
+
+.pedido-card .cancelado-message {
+  text-align: center;
+  width: 100%;
+}
+
+.pedido-card .cancelado-message p {
+  margin: 0;
+  color: #c0392b;
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
 /* O restante do CSS (botões, etc.) pode continuar como estava */
