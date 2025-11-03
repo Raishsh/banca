@@ -69,15 +69,43 @@ public class CaixaService {
                 .collect(Collectors.toList());
     }
     
+    @Transactional
+    public Aporte realizarAporte(AporteRequest request) {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Funcionario funcionario = funcionarioRepository.findByUsuarioLogin(usuarioLogado.getLogin())
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado para o usuário logado."));
+
+        Aporte novoAporte = new Aporte();
+        novoAporte.setFuncionario(funcionario);
+        novoAporte.setValor(request.valor());
+        novoAporte.setDescricao(request.descricao());
+        novoAporte.setData(LocalDateTime.now());
+
+        Aporte aporteSalvo = aporteRepository.save(novoAporte);
+
+        // Atualiza o relatório diário em tempo real (soma)
+        atualizarRelatorioDiario(request.valor(), true);
+
+        return aporteSalvo;
+    }
+
+    @Transactional(readOnly = true)
+    public List<AporteResponseDTO> listarTodosAportes() {
+        return aporteRepository.findAll()
+                .stream()
+                .map(AporteResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Lógica central para encontrar/criar o relatório do dia e atualizar seu valor.
      */
     private void atualizarRelatorioDiario(BigDecimal valor, boolean isSoma) {
         LocalDate hoje = LocalDate.now();
-        
+
         RelatorioDiario relatorio = relatorioDiarioRepository.findByData(hoje)
                                         .orElse(new RelatorioDiario(hoje, BigDecimal.ZERO));
-        
+
         if (isSoma) {
             relatorio.setValorTotal(relatorio.getValorTotal().add(valor));
         } else {
