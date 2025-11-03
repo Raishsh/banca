@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CaixaService } from '../../core/services/caixa';
 import { AuthService } from '../../core/services/auth';
@@ -17,6 +17,8 @@ export class HistoricoAporteComponent implements OnInit {
   historico: any[] = [];
   mostrarModalAporte = false;
   cargoUsuario: string | null = null;
+  dataInicio: string = '';
+  dataFim: string = '';
 
   constructor(
     private caixaService: CaixaService,
@@ -25,14 +27,29 @@ export class HistoricoAporteComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargoUsuario = this.authService.getCargoUsuarioLogado();
+    this.definirPeriodoPadraoEBuscar();
+  }
+
+  definirPeriodoPadraoEBuscar(): void {
+    const hoje = new Date();
+    const seteDiasAtras = new Date();
+    seteDiasAtras.setDate(hoje.getDate() - 7);
+
+    this.dataFim = formatDate(hoje, 'yyyy-MM-dd', 'en-US');
+    this.dataInicio = formatDate(seteDiasAtras, 'yyyy-MM-dd', 'en-US');
+
     this.carregarHistorico();
   }
 
   carregarHistorico(): void {
-    this.caixaService.getAportes().subscribe({
+    this.caixaService.getAportesByDateRange(this.dataInicio, this.dataFim).subscribe({
       next: (data) => { this.historico = data; },
       error: (err) => { console.error('Erro ao carregar histórico', err); }
     });
+  }
+
+  limparFiltro(): void {
+    this.definirPeriodoPadraoEBuscar();
   }
 
   abrirModalAporte(): void {

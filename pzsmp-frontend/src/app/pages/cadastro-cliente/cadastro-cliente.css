@@ -41,6 +41,71 @@
   background-color: rgb(80, 80, 80);
 }
 
+/* Search Filter Section
+------------------------------------------------------------------- */
+.search-filter-section {
+  margin-bottom: 25px;
+  background-color: var(--cor-fundo, #f8fafc);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda, #e2e8f0);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 14px;
+  border: 1px solid var(--cor-borda, #cbd5e0);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: var(--cor-texto-secundario, #a0aec0);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+.btn-buscar, .btn-limpar {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-buscar {
+  background-color: rgb(50, 50, 50);
+  color: white;
+}
+
+.btn-buscar:hover {
+  background-color: rgb(80, 80, 80);
+}
+
+.btn-limpar {
+  background-color: #e2e8f0;
+  color: #2d3748;
+}
+
+.btn-limpar:hover {
+  background-color: #cbd5e0;
+}
+
 /* Card de Conteúdo (para Lista e Formulário)
 ------------------------------------------------------------------- */
 .card {
@@ -286,6 +351,25 @@ hr {
     font-size: 0.9rem;
   }
 
+  .search-filter-section {
+    margin-bottom: 20px;
+    padding: 12px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .btn-buscar, .btn-limpar {
+    width: 100%;
+    padding: 10px 14px;
+  }
+
   .card {
     padding: 15px;
     border-radius: 8px;
@@ -392,6 +476,28 @@ hr {
   }
 
   .header-text p {
+    font-size: 0.85rem;
+  }
+
+  .search-filter-section {
+    margin-bottom: 15px;
+    padding: 10px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .btn-buscar, .btn-limpar {
+    width: 100%;
+    padding: 10px 12px;
     font-size: 0.85rem;
   }
 

@@ -18,12 +18,14 @@ export class CadastroClienteComponent implements OnInit {
   modo: 'lista' | 'cadastro' = 'lista';
 
   allClientes: Cliente[] = [];
+  filteredClientes: Cliente[] = [];
   paginatedClientes: Cliente[] = [];
 
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 1;
   sortOrder: 'asc' | 'desc' = 'asc';
+  searchQuery: string = '';
 
   novoCliente = {
     nome: '', telefone: '', email: '',
@@ -42,6 +44,8 @@ export class CadastroClienteComponent implements OnInit {
     this.clienteService.getClientes().subscribe(data => {
       this.allClientes = data;
       this.sortClientes();
+      this.filteredClientes = [...this.allClientes];
+      this.searchQuery = '';
       this.updatePagination();
     });
   }
@@ -59,15 +63,38 @@ export class CadastroClienteComponent implements OnInit {
     });
   }
 
+  filtrarClientes(): void {
+    if (!this.searchQuery.trim()) {
+      this.filteredClientes = [...this.allClientes];
+    } else {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredClientes = this.allClientes.filter(cliente => {
+        const nomeMatch = cliente.nome.toLowerCase().includes(query);
+        const emailMatch = cliente.email.toLowerCase().includes(query);
+        const telefoneMatch = cliente.telefone.toLowerCase().includes(query);
+        return nomeMatch || emailMatch || telefoneMatch;
+      });
+    }
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  limparBusca(): void {
+    this.searchQuery = '';
+    this.filteredClientes = [...this.allClientes];
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
   updatePagination(): void {
-    this.totalPages = Math.ceil(this.allClientes.length / this.pageSize);
+    this.totalPages = Math.ceil(this.filteredClientes.length / this.pageSize);
     if (this.currentPage > this.totalPages && this.totalPages > 0) {
       this.currentPage = this.totalPages;
     }
 
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.paginatedClientes = this.allClientes.slice(startIndex, endIndex);
+    this.paginatedClientes = this.filteredClientes.slice(startIndex, endIndex);
   }
 
   onPageChange(newPage: number): void {
