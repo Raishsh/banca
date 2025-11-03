@@ -115,28 +115,64 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="cep">CEP</label>
-          <input id="cep" type="text" [(ngModel)]="novoCliente.cep" name="cep">
+          <input
+            id="cep"
+            type="text"
+            [(ngModel)]="novoCliente.cep"
+            name="cep"
+            appTooltip="Digite o CEP do endereço do cliente">
         </div>
         <div class="form-group">
           <label for="rua">Rua</label>
-          <input id="rua" type="text" [(ngModel)]="novoCliente.rua" name="rua">
+          <input
+            id="rua"
+            type="text"
+            [(ngModel)]="novoCliente.rua"
+            name="rua"
+            appTooltip="Digite o nome da rua">
         </div>
         <div class="form-group">
           <label for="numero">Número</label>
-          <input id="numero" type="number" [(ngModel)]="novoCliente.numero" name="numero">
+          <input
+            id="numero"
+            type="number"
+            [(ngModel)]="novoCliente.numero"
+            name="numero"
+            appTooltip="Digite o número do endereço">
         </div>
         <div class="form-group">
           <label for="bairro">Bairro</label>
-          <input id="bairro" type="text" [(ngModel)]="novoCliente.bairro" name="bairro">
+          <input
+            id="bairro"
+            type="text"
+            [(ngModel)]="novoCliente.bairro"
+            name="bairro"
+            appTooltip="Digite o bairro">
         </div>
         <div class="form-group">
           <label for="cidade">Cidade</label>
-          <input id="cidade" type="text" [(ngModel)]="novoCliente.cidade" name="cidade">
+          <input
+            id="cidade"
+            type="text"
+            [(ngModel)]="novoCliente.cidade"
+            name="cidade"
+            appTooltip="Digite a cidade">
         </div>
       </div>
       <div class="form-actions">
-        <button type="button" class="btn btn-secundario" (click)="voltarParaLista()">Cancelar</button>
-        <button type="submit" class="btn btn-primario">Salvar Cliente</button>
+        <button
+          type="button"
+          class="btn btn-secundario"
+          (click)="voltarParaLista()"
+          appTooltip="Clique para voltar à lista de clientes">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primario"
+          appTooltip="Clique para salvar o novo cliente no sistema">
+          Salvar Cliente
+        </button>
       </div>
     </form>
   </div>
