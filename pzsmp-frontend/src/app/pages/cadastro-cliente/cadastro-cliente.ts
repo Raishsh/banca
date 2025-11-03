@@ -29,7 +29,7 @@ export class CadastroClienteComponent implements OnInit {
 
   novoCliente = {
     nome: '', telefone: '', email: '',
-    rua: '', bairro: '', numero: null, cidade: 'Rio Azul-PR', cep: '84560-000'
+    rua: '', bairro: '', numero: null, cidade: 'Rio Azul', uf: 'PR', cep: '84560-000'
   };
 
   clienteEmEdicao: any | null = null;
@@ -132,8 +132,8 @@ export class CadastroClienteComponent implements OnInit {
   limparFormulario(): void {
     this.novoCliente = {
       nome: '', telefone: '', email: '',
-      rua: '', bairro: '', numero: null, 
-      cidade: 'Rio Azul-PR', cep: '84560-000'
+      rua: '', bairro: '', numero: null,
+      cidade: 'Rio Azul', uf: 'PR', cep: '84560-000'
     };
   }
 
@@ -148,7 +148,8 @@ export class CadastroClienteComponent implements OnInit {
       rua: cliente.endereco?.rua || '',
       bairro: cliente.endereco?.bairro || '',
       numero: cliente.endereco?.numero || null,
-      cidade: cliente.endereco?.cidade || 'Rio Azul-PR',
+      cidade: cliente.endereco?.cidade || 'Rio Azul',
+      uf: cliente.endereco?.uf || 'PR',
       cep: cliente.endereco?.cep || '84560-000'
     };
   }
