@@ -2,24 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CaixaService } from '../../core/services/caixa';
-import { AuthService } from '../../core/services/auth'; // <<< IMPORTE O AUTH SERVICE
-import { SangriaModalComponent } from '../../shared/components/sangria-modal/sangria-modal'; // <<< IMPORTE O MODAL
+import { AuthService } from '../../core/services/auth';
+import { SangriaModalComponent } from '../../shared/components/sangria-modal/sangria-modal';
 
 @Component({
   selector: 'app-historico-sangria',
   standalone: true,
-  imports: [CommonModule, FormsModule, SangriaModalComponent], // <<< ADICIONE O MODAL AQUI
+  imports: [CommonModule, FormsModule, SangriaModalComponent],
   templateUrl: './historico-sangria.html',
   styleUrls: ['./historico-sangria.css']
 })
 export class HistoricoSangriaComponent implements OnInit {
   historico: any[] = [];
-  mostrarModalSangria = false; // <<< Propriedade para controlar o modal
-  cargoUsuario: string | null = null; // <<< Propriedade para o cargo
+  mostrarModalSangria = false;
+  cargoUsuario: string | null = null;
+  dataInicio: string = '';
+  dataFim: string = '';
 
   constructor(
     private caixaService: CaixaService,
-    private authService: AuthService // <<< INJETE O AUTH SERVICE
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
