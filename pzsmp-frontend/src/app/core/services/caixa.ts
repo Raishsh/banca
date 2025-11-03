@@ -2,10 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Interface para definir o corpo da requisição
 interface SangriaRequest {
   valor: number;
   observacao: string;
+}
+
+interface AporteRequest {
+  valor: number;
+  descricao: string;
 }
 
 @Injectable({
@@ -29,5 +33,20 @@ export class CaixaService {
 
   getSangrias(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/sangrias`);
+  }
+
+  /**
+   * Envia uma requisição para registrar um aporte no caixa.
+   * @param valor O valor a ser adicionado.
+   * @param descricao O motivo da adição.
+   * @returns Um Observable com a resposta da API.
+   */
+  realizarAporte(valor: number, descricao: string): Observable<any> {
+    const requestBody: AporteRequest = { valor, descricao };
+    return this.http.post<any>(`${this.apiUrl}/aporte`, requestBody);
+  }
+
+  getAportes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/aportes`);
   }
 }

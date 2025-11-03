@@ -12,6 +12,7 @@ import { CadastroClienteComponent } from './pages/cadastro-cliente/cadastro-clie
 import { PagamentoComponent } from './pages/pagamento/pagamento';
 import { RelatoriosComponent } from './pages/relatorios/relatorios';
 import { HistoricoSangriaComponent } from './pages/historico-sangria/historico-sangria';
+import { HistoricoAporteComponent } from './pages/historico-aporte/historico-aporte';
 import { RelatorioDetalhadoComponent } from './pages/relatorio-detalhado/relatorio-detalhado';
 
 export const routes: Routes = [
@@ -38,8 +39,9 @@ export const routes: Routes = [
       { path: 'pagamento/:id', component: PagamentoComponent },
       { path: 'relatorios', component: RelatoriosComponent },
       { path: 'historico-sangria', component: HistoricoSangriaComponent },
+      { path: 'historico-aporte', component: HistoricoAporteComponent },
       { path: 'relatorios/:data', component: RelatorioDetalhadoComponent },
-      
+
       // Rota padrão dentro da área logada, redireciona para a tela de pedidos
       { path: '', redirectTo: 'pedidos', pathMatch: 'full' }
     ]

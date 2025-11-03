@@ -1,0 +1,46 @@
+<div class="modal-overlay" (click)="cancelar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Adicionar Aporte</h2>
+    <p>Registre uma entrada de dinheiro no caixa.</p>
+
+    <form (ngSubmit)="realizarAporte()">
+      <div class="form-group">
+        <label for="valor">Valor do Aporte (R$)</label>
+        <input
+          id="valor"
+          type="number"
+          [(ngModel)]="valor"
+          name="valor"
+          placeholder="Ex: 50.00"
+          required
+          appTooltip="Digite o valor em reais que será adicionado ao caixa">
+      </div>
+      <div class="form-group">
+        <label for="descricao">Descrição / Motivo</label>
+        <textarea
+          id="descricao"
+          [(ngModel)]="descricao"
+          name="descricao"
+          rows="3"
+          placeholder="Ex: Dinheiro adicional para o caixa"
+          appTooltip="Descreva brevemente o motivo ou origem do aporte"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-secundario"
+          (click)="cancelar()"
+          appTooltip="Clique para cancelar esta operação">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primario"
+          appTooltip="Clique para registrar o aporte no caixa">
+          Confirmar Aporte
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

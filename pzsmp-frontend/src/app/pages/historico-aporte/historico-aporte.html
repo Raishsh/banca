@@ -1,0 +1,41 @@
+<div class="page-header">
+  <div class="header-text">
+    <h1>Histórico de Aportes</h1>
+    <p>Visualize todas as adições de dinheiro registradas no caixa.</p>
+  </div>
+  <div class="header-actions">
+    <button 
+      *ngIf="cargoUsuario === 'ADMIN'" 
+      class="btn-primario" 
+      (click)="abrirModalAporte()"
+      appTooltip="Clique para adicionar dinheiro ao caixa">
+      + Adicionar Aporte
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Data / Hora</th>
+        <th>Valor</th>
+        <th>Funcionário</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of historico">
+        <td>{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ item.valor | currency:'BRL' }}</td>
+        <td>{{ item.nomeFuncionario }}</td>
+        <td>{{ item.descricao || 'N/A' }}</td>
+      </tr>
+      <tr *ngIf="historico.length === 0">
+        <td colspan="4" class="text-center">Nenhum registro de aporte encontrado.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-aporte-modal *ngIf="mostrarModalAporte" (close)="fecharModalAporte()"></app-aporte-modal>
