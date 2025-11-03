@@ -39,8 +39,9 @@ export const routes: Routes = [
       { path: 'pagamento/:id', component: PagamentoComponent },
       { path: 'relatorios', component: RelatoriosComponent },
       { path: 'historico-sangria', component: HistoricoSangriaComponent },
+      { path: 'historico-aporte', component: HistoricoAporteComponent },
       { path: 'relatorios/:data', component: RelatorioDetalhadoComponent },
-      
+
       // Rota padrão dentro da área logada, redireciona para a tela de pedidos
       { path: '', redirectTo: 'pedidos', pathMatch: 'full' }
     ]
