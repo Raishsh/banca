@@ -12,6 +12,7 @@ import { CadastroClienteComponent } from './pages/cadastro-cliente/cadastro-clie
 import { PagamentoComponent } from './pages/pagamento/pagamento';
 import { RelatoriosComponent } from './pages/relatorios/relatorios';
 import { HistoricoSangriaComponent } from './pages/historico-sangria/historico-sangria';
+import { HistoricoAporteComponent } from './pages/historico-aporte/historico-aporte';
 import { RelatorioDetalhadoComponent } from './pages/relatorio-detalhado/relatorio-detalhado';
 
 export const routes: Routes = [
