@@ -3,25 +3,32 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../core/services/cliente';
 import { Cliente } from '../../core/models/cliente.model';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-cadastro-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './cadastro-cliente.html',
   styleUrls: ['./cadastro-cliente.css']
 })
 export class CadastroClienteComponent implements OnInit {
 
-  // Variável para controlar a visualização: 'lista' ou 'cadastro'
   modo: 'lista' | 'cadastro' = 'lista';
 
-  listaClientes: Cliente[] = [];
+  allClientes: Cliente[] = [];
+  paginatedClientes: Cliente[] = [];
+
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 1;
+  sortOrder: 'asc' | 'desc' = 'asc';
+
   novoCliente = {
     nome: '', telefone: '', email: '',
     rua: '', bairro: '', numero: null, cidade: 'Rio Azul-PR', cep: '84560-000'
   };
-  
+
   clienteEmEdicao: any | null = null;
 
   constructor(private clienteService: ClienteService) { }
@@ -31,7 +38,41 @@ export class CadastroClienteComponent implements OnInit {
   }
 
   carregarClientes(): void {
-    this.clienteService.getClientes().subscribe(data => this.listaClientes = data);
+    this.clienteService.getClientes().subscribe(data => {
+      this.allClientes = data;
+      this.sortClientes();
+      this.updatePagination();
+    });
+  }
+
+  sortClientes(): void {
+    this.allClientes.sort((a, b) => {
+      const nameA = a.nome.toLowerCase();
+      const nameB = b.nome.toLowerCase();
+
+      if (this.sortOrder === 'asc') {
+        return nameA.localeCompare(nameB);
+      } else {
+        return nameB.localeCompare(nameA);
+      }
+    });
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.allClientes.length / this.pageSize);
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = this.totalPages;
+    }
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedClientes = this.allClientes.slice(startIndex, endIndex);
+  }
+
+  onPageChange(newPage: number): void {
+    this.currentPage = newPage;
+    this.updatePagination();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   cadastrarCliente(): void {
