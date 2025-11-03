@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ClienteService } from '../../core/services/cliente';
 import { Cliente } from '../../core/models/cliente.model';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-cadastro-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent],
+  imports: [CommonModule, FormsModule, PaginationComponent, TooltipDirective],
   templateUrl: './cadastro-cliente.html',
   styleUrls: ['./cadastro-cliente.css']
 })
