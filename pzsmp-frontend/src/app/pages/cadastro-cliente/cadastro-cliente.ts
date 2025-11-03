@@ -79,8 +79,9 @@ export class CadastroClienteComponent implements OnInit {
     this.clienteService.cadastrarCliente(this.novoCliente).subscribe({
       next: (novoClienteCadastrado) => {
         alert(`Cliente "${novoClienteCadastrado.nome}" cadastrado com sucesso!`);
+        this.currentPage = 1;
         this.carregarClientes();
-        this.voltarParaLista(); // Volta para a tela de listagem
+        this.voltarParaLista();
       },
       error: (err) => {
         alert('Erro ao cadastrar cliente. Verifique se o e-mail já está em uso.');
