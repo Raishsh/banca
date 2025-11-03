@@ -111,9 +111,9 @@ public class PedidoService {
     }
 
     public List<PedidoResponseDto> listarTodos() {
-        LocalDate hoje = LocalDate.now();
-        LocalDateTime inicioHoje = hoje.atStartOfDay();
-        LocalDateTime fimHoje = hoje.atTime(23, 59, 59);
+        // Obter o timestamp de início do expediente atual
+        br.com.sampaiollo.pzsmp.entity.SequenciadorPedido seq = sequenciadorRepository.findById(1L).orElse(null);
+        LocalDateTime inicioExpediente = seq != null ? seq.getDataInicioExpediente() : LocalDateTime.now();
 
         return pedidoRepository.findAll().stream()
                 .filter(p -> {
@@ -121,9 +121,9 @@ public class PedidoService {
                     if (p.getStatus() == StatusPedido.ENTREGUE) {
                         return false;
                     }
-                    // Mostrar pedidos CANCELADO apenas se forem do dia atual
+                    // Mostrar pedidos CANCELADO apenas se forem do expediente atual
                     if (p.getStatus() == StatusPedido.CANCELADO) {
-                        return p.getData().isAfter(inicioHoje) && p.getData().isBefore(fimHoje);
+                        return p.getData().isAfter(inicioExpediente);
                     }
                     // Mostrar todos os outros status (PREPARANDO, PRONTO, PAGO)
                     return true;
