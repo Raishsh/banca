@@ -74,6 +74,13 @@
         appTooltip="Acompanhe o histórico de sangrias do caixa">
         <i class="fas fa-box-open"></i>Sangrias
       </a>
+      <a
+        routerLink="/app/historico-aporte"
+        routerLinkActive="active"
+        *ngIf="cargoUsuario === 'ADMIN'"
+        appTooltip="Acompanhe o histórico de aportes do caixa">
+        <i class="fas fa-arrow-circle-down"></i>Aportes
+      </a>
     </nav>
     <div class="sidebar-bottom">
       <div class="sidebar-actions">
