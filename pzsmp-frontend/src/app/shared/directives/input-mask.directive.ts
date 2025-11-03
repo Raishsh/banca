@@ -5,7 +5,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
   standalone: true
 })
 export class InputMaskDirective {
-  @Input() appInputMask: 'phone' | 'cep' | 'currency' | 'date';
+  @Input() appInputMask: 'phone' | 'cep' | 'currency' | 'date' = 'phone';
 
   constructor(private el: ElementRef) {}
 
