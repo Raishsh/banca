@@ -13,17 +13,67 @@
       
 </div>
     <nav class="sidebar-nav">
-      <a routerLink="/app/pedidos" routerLinkActive="active"><i class="fas fa-box"></i> Pedidos</a>
-      <a routerLink="/app/cardapio" routerLinkActive="active"><i class="fas fa-utensils"></i> Cardápio</a>
-      <a routerLink="/app/entregas" routerLinkActive="active"><i class="fas fa-truck"></i> Entrega</a>
-      <a routerLink="/app/mesas" routerLinkActive="active"><i class="fas fa-chair"></i>Mesas</a>
-      <a routerLink="/app/balcao" routerLinkActive="active"><i class="fas fa-cash-register"></i> Balcão</a>
-      <a routerLink="/app/cadastro-produto" routerLinkActive="active"><i class="fas fa-plus-square"></i> Cadastro de Produto</a>
-      <a routerLink="/app/cadastro-cliente" routerLinkActive="active"><i class="fas fa-user-plus"></i>Clientes</a>
-      <a routerLink="/app/funcionarios" routerLinkActive="active"><i class="fas fa-users-cog"></i>Funcionários</a>
-      <a routerLink="/app/relatorios" routerLinkActive="active"><i class="fas fa-chart-bar"></i> Relatórios</a>
-      <a routerLink="/app/historico-sangria" routerLinkActive="active" *ngIf="cargoUsuario === 'ADMIN'">
-      <i class="fas fa-box-open"></i>Sangrias</a>
+      <a
+        routerLink="/app/pedidos"
+        routerLinkActive="active"
+        appTooltip="Visualize e gerencie todos os pedidos em andamento">
+        <i class="fas fa-box"></i> Pedidos
+      </a>
+      <a
+        routerLink="/app/cardapio"
+        routerLinkActive="active"
+        appTooltip="Veja todos os produtos disponíveis no cardápio">
+        <i class="fas fa-utensils"></i> Cardápio
+      </a>
+      <a
+        routerLink="/app/entregas"
+        routerLinkActive="active"
+        appTooltip="Gerencie pedidos de entrega em domicílio">
+        <i class="fas fa-truck"></i> Entrega
+      </a>
+      <a
+        routerLink="/app/mesas"
+        routerLinkActive="active"
+        appTooltip="Controle as mesas e seus pedidos associados">
+        <i class="fas fa-chair"></i>Mesas
+      </a>
+      <a
+        routerLink="/app/balcao"
+        routerLinkActive="active"
+        appTooltip="Registre vendas rápidas do balcão">
+        <i class="fas fa-cash-register"></i> Balcão
+      </a>
+      <a
+        routerLink="/app/cadastro-produto"
+        routerLinkActive="active"
+        appTooltip="Adicione ou edite produtos do seu cardápio">
+        <i class="fas fa-plus-square"></i> Cadastro de Produto
+      </a>
+      <a
+        routerLink="/app/cadastro-cliente"
+        routerLinkActive="active"
+        appTooltip="Gerencie dados dos seus clientes">
+        <i class="fas fa-user-plus"></i>Clientes
+      </a>
+      <a
+        routerLink="/app/funcionarios"
+        routerLinkActive="active"
+        appTooltip="Gerencie os funcionários da sua equipe">
+        <i class="fas fa-users-cog"></i>Funcionários
+      </a>
+      <a
+        routerLink="/app/relatorios"
+        routerLinkActive="active"
+        appTooltip="Visualize relatórios e análises de vendas">
+        <i class="fas fa-chart-bar"></i> Relatórios
+      </a>
+      <a
+        routerLink="/app/historico-sangria"
+        routerLinkActive="active"
+        *ngIf="cargoUsuario === 'ADMIN'"
+        appTooltip="Acompanhe o histórico de sangrias do caixa">
+        <i class="fas fa-box-open"></i>Sangrias
+      </a>
     </nav>
     <div class="sidebar-bottom">
       <div class="sidebar-actions">
