@@ -59,6 +59,10 @@ export const HELPER_CONTENT: HelperContent = {
     title: 'Histórico de Sangrias',
     content: 'Acompanhe o histórico de retiradas de dinheiro do caixa. Visualize data, valor e responsável por cada sangria.'
   },
+  'historico-aporte': {
+    title: 'Histórico de Aportes',
+    content: 'Acompanhe o histórico de adições de dinheiro ao caixa. Registre novos aportes fornecendo o valor e uma descrição do motivo. Os aportes aumentam o saldo do caixa do dia.'
+  },
   'relatorio-detalhado': {
     title: 'Relatório Detalhado',
     content: 'Veja um relatório completo e detalhado sobre as operações de um dia específico. Inclui vendas, recebimentos e outras operações realizadas.'
