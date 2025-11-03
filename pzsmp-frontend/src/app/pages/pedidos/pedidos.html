@@ -29,30 +29,50 @@
         <strong>Total: {{ pedido.total | currency:'BRL' }}</strong>
       </div>
       <div class="card-actions">
-          <button *ngIf="pedido.status === 'PREPARANDO'" class="btn btn-sucesso" (click)="mudarStatus(pedido.idPedido, 'PRONTO')">
+          <button
+            *ngIf="pedido.status === 'PREPARANDO'"
+            class="btn btn-sucesso"
+            (click)="mudarStatus(pedido.idPedido, 'PRONTO')"
+            appTooltip="Marque o pedido como pronto para indicar que está pronto para ser entregue">
             Marcar como Pronto
           </button>
 
         <div *ngIf="pedido.status === 'PRONTO'">
-          <button *ngIf="pedido.numeroMesa" class="btn btn-info" (click)="fecharPedido(pedido.idPedido)">
+          <button
+            *ngIf="pedido.numeroMesa"
+            class="btn btn-info"
+            (click)="fecharPedido(pedido.idPedido)"
+            appTooltip="Feche o pedido da mesa após o cliente ter recebido os itens">
             Fechar Pedido
           </button>
-          <button *ngIf="!pedido.numeroMesa" class="btn btn-info" (click)="mudarStatus(pedido.idPedido, 'ENTREGUE')">
+          <button
+            *ngIf="!pedido.numeroMesa"
+            class="btn btn-info"
+            (click)="mudarStatus(pedido.idPedido, 'ENTREGUE')"
+            appTooltip="Finalize a entrega e registre que o pedido foi entregue ao cliente">
             Finalizar Entrega
           </button>
         </div>
 
-          <button *ngIf="pedido.status !== 'PAGO'" class="btn btn-primario" [routerLink]="['/app/pagamento', pedido.idPedido]">
+          <button
+            *ngIf="pedido.status !== 'PAGO'"
+            class="btn btn-primario"
+            [routerLink]="['/app/pagamento', pedido.idPedido]"
+            appTooltip="Clique para processar o pagamento deste pedido">
             Ir para Pagamento
           </button>
 
         <div *ngIf="pedido.status === 'PAGO'">
-          <button class="btn btn-sucesso" disabled>
+          <button class="btn btn-sucesso" disabled appTooltip="O pagamento deste pedido já foi realizado">
             Pagamento Realizado
           </button>
         </div>
 
-        <button *ngIf="pedido.status === 'PREPARANDO' || pedido.status === 'PRONTO'" class="btn btn-cancelar" (click)="abrirModalCancelarPedido(pedido)">
+        <button
+          *ngIf="pedido.status === 'PREPARANDO' || pedido.status === 'PRONTO'"
+          class="btn btn-cancelar"
+          (click)="abrirModalCancelarPedido(pedido)"
+          appTooltip="Clique para cancelar este pedido (essa ação não pode ser desfeita)">
           Cancelar Pedido
         </button>
       </div>
