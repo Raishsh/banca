@@ -35,6 +35,12 @@ export class CaixaService {
     return this.http.get<any[]>(`${this.apiUrl}/sangrias`);
   }
 
+  getSangriasByDateRange(dataInicio: string, dataFim: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/sangrias`, {
+      params: { dataInicio, dataFim }
+    });
+  }
+
   /**
    * Envia uma requisição para registrar um aporte no caixa.
    * @param valor O valor a ser adicionado.
@@ -48,5 +54,11 @@ export class CaixaService {
 
   getAportes(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/aportes`);
+  }
+
+  getAportesByDateRange(dataInicio: string, dataFim: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/aportes`, {
+      params: { dataInicio, dataFim }
+    });
   }
 }
