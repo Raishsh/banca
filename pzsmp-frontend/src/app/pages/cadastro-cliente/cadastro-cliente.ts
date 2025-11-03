@@ -5,11 +5,12 @@ import { ClienteService } from '../../core/services/cliente';
 import { Cliente } from '../../core/models/cliente.model';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
+import { InputMaskDirective } from '../../shared/directives/input-mask.directive';
 
 @Component({
   selector: 'app-cadastro-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent, TooltipDirective],
+  imports: [CommonModule, FormsModule, PaginationComponent, TooltipDirective, InputMaskDirective],
   templateUrl: './cadastro-cliente.html',
   styleUrls: ['./cadastro-cliente.css']
 })
