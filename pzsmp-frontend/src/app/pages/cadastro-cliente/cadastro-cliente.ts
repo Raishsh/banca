@@ -149,6 +149,7 @@ export class CadastroClienteComponent implements OnInit {
       this.clienteService.excluirCliente(id).subscribe({
         next: () => {
           alert('Cliente excluído com sucesso.');
+          this.currentPage = 1;
           this.carregarClientes();
         },
         error: (err) => {
