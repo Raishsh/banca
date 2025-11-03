@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProdutoService } from '../../core/services/produto';
+import { InputMaskDirective } from '../../shared/directives/input-mask.directive';
 
 @Component({
   selector: 'app-cadastro-produto',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, InputMaskDirective],
   templateUrl: './cadastro-produto.html',
   styleUrls: ['./cadastro-produto.css']
 })
@@ -33,11 +34,13 @@ export class CadastroProdutoComponent {
   cadastrar(): void {
     this.mensagemSucesso = null;
 
+    const precoNumerico = this.parsePrice(this.produto.preco as any);
+
     // Usamos FormData para enviar dados de formulário e arquivos
     const formData = new FormData();
     formData.append('nome', this.produto.nome);
-    if (this.produto.preco !== null) {
-        formData.append('preco', this.produto.preco as any);
+    if (precoNumerico !== null) {
+        formData.append('preco', precoNumerico as any);
     }
     formData.append('tipo', this.produto.tipo);
     if (this.produto.descricao) {
@@ -58,6 +61,13 @@ export class CadastroProdutoComponent {
         this.mensagemSucesso = 'Erro ao cadastrar produto. Tente novamente.';
       }
     });
+  }
+
+  private parsePrice(value: any): number | null {
+    if (!value) return null;
+    const cleanValue = String(value).replace(/[^0-9,]/g, '').replace(',', '.');
+    const numericValue = parseFloat(cleanValue);
+    return isNaN(numericValue) ? null : numericValue;
   }
 
   limparFormulario(): void {
