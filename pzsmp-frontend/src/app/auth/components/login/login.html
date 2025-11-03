@@ -8,12 +8,26 @@
     <form (ngSubmit)="onLogin()">
       <div class="input-group">
         <label for="email">Email</label>
-        <input type="text" id="email" name="email" [(ngModel)]="credentials.login" required placeholder="exemplo@gmail.com">
+        <input
+          type="text"
+          id="email"
+          name="email"
+          [(ngModel)]="credentials.login"
+          required
+          placeholder="exemplo@gmail.com"
+          appTooltip="Digite seu email de administrador para acessar o sistema">
       </div>
 
       <div class="input-group">
           <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" [(ngModel)]="credentials.senha" required placeholder="Insira sua senha...">
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            [(ngModel)]="credentials.senha"
+            required
+            placeholder="Insira sua senha..."
+            appTooltip="Digite sua senha de acesso ao sistema">
       </div>
 
       <div *ngIf="errorMessage" class="error-message">
