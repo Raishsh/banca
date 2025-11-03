@@ -30,6 +30,8 @@ public class CaixaService {
     @Autowired
     private SangriaRepository sangriaRepository;
     @Autowired
+    private AporteRepository aporteRepository;
+    @Autowired
     private FuncionarioRepository funcionarioRepository;
     @Autowired
     private RelatorioDiarioRepository relatorioDiarioRepository;
