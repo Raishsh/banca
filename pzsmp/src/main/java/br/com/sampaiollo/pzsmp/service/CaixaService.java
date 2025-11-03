@@ -1,14 +1,18 @@
 package br.com.sampaiollo.pzsmp.service;
 
 import br.com.sampaiollo.pzsmp.dto.SangriaRequest;
-import br.com.sampaiollo.pzsmp.dto.SangriaResponseDTO; // <<< Verifique a importação
+import br.com.sampaiollo.pzsmp.dto.SangriaResponseDTO;
+import br.com.sampaiollo.pzsmp.dto.AporteRequest;
+import br.com.sampaiollo.pzsmp.dto.AporteResponseDTO;
 import br.com.sampaiollo.pzsmp.entity.Funcionario;
 import br.com.sampaiollo.pzsmp.entity.RelatorioDiario;
 import br.com.sampaiollo.pzsmp.entity.Sangria;
+import br.com.sampaiollo.pzsmp.entity.Aporte;
 import br.com.sampaiollo.pzsmp.entity.Usuario;
 import br.com.sampaiollo.pzsmp.repository.FuncionarioRepository;
 import br.com.sampaiollo.pzsmp.repository.RelatorioDiarioRepository;
 import br.com.sampaiollo.pzsmp.repository.SangriaRepository;
+import br.com.sampaiollo.pzsmp.repository.AporteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
