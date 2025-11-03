@@ -250,3 +250,336 @@
 
 /* Remova o estilo antigo do .user-profile que estava no rodapé do sidebar */
 /* Procure e apague as regras antigas para .user-profile e seus filhos no seu CSS */
+
+/* Responsivo - Adaptação para Tablets (1024px e menores)
+========================================================= */
+@media (max-width: 1024px) {
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid var(--cor-borda, #e2e8f0);
+    padding: 10px;
+    overflow-x: auto;
+  }
+
+  .sidebar-header {
+    flex-shrink: 0;
+    padding: 10px 15px;
+  }
+
+  .logo-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .header-title h3 {
+    font-size: 1rem;
+  }
+
+  .header-title span {
+    font-size: 0.8rem;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    flex-grow: 1;
+    overflow-y: visible;
+  }
+
+  .sidebar-nav a {
+    padding: 10px 12px;
+    margin: 5px;
+    font-size: 0.9rem;
+  }
+
+  .sidebar-bottom {
+    flex-shrink: 0;
+    padding: 10px;
+  }
+
+  .btn-fechar-caixa {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .content-area {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .content-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .header-info-left {
+    width: 100%;
+  }
+
+  .header-datetime {
+    border-right: none;
+    border-bottom: 1px solid var(--cor-borda, #e2e8f0);
+    margin-right: 0;
+    margin-bottom: 10px;
+    padding-right: 0;
+    padding-bottom: 10px;
+    width: 100%;
+  }
+
+  .user-profile {
+    margin-left: 0;
+    margin-top: 0;
+  }
+}
+
+/* Responsivo - Adaptação para Tablets Pequenos (768px e menores)
+========================================================= */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 8px;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-header {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-title h3 {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .header-title span {
+    font-size: 0.75rem;
+  }
+
+  .sidebar-nav {
+    gap: 5px;
+    padding: 0 10px;
+  }
+
+  .sidebar-nav a {
+    padding: 8px 10px;
+    margin: 3px;
+    font-size: 0.8rem;
+    gap: 8px;
+  }
+
+  .sidebar-nav i {
+    display: none;
+  }
+
+  .sidebar-bottom {
+    padding: 8px;
+  }
+
+  .btn-fechar-caixa {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .content-area {
+    padding: 15px;
+  }
+
+  .content-header {
+    padding: 0;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid var(--cor-borda, #e2e8f0);
+    padding-bottom: 10px;
+  }
+
+  .header-datetime {
+    font-size: 0.9rem;
+    border-right: none;
+    border-bottom: 1px solid var(--cor-borda, #e2e8f0);
+    margin-right: 0;
+    margin-bottom: 8px;
+    padding-right: 0;
+    padding-bottom: 8px;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .header-datetime .date {
+    font-size: 0.85rem;
+  }
+
+  .header-datetime .time {
+    font-size: 1rem;
+  }
+
+  .user-profile {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .user-info {
+    font-size: 0.85rem;
+  }
+
+  .user-info i {
+    font-size: 1.2rem;
+  }
+
+  .btn-logout {
+    font-size: 1rem;
+    padding: 6px;
+  }
+}
+
+/* Responsivo - Adaptação para Celulares (480px e menores)
+========================================================= */
+@media (max-width: 480px) {
+  .main-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 6px;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-header {
+    padding: 6px 8px;
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .header-title h3 {
+    font-size: 0.9rem;
+    line-height: 1.1;
+  }
+
+  .header-title span {
+    font-size: 0.65rem;
+    line-height: 1.1;
+  }
+
+  .sidebar-nav {
+    gap: 3px;
+    padding: 0 5px;
+  }
+
+  .sidebar-nav a {
+    padding: 6px 8px;
+    margin: 2px;
+    font-size: 0.7rem;
+    gap: 0;
+  }
+
+  .sidebar-nav i {
+    display: none;
+  }
+
+  .sidebar-bottom {
+    padding: 6px;
+    flex-shrink: 0;
+  }
+
+  .btn-fechar-caixa {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    border-radius: 6px;
+  }
+
+  .content-area {
+    padding: 10px;
+  }
+
+  .content-header {
+    padding: 0;
+    margin-bottom: 8px;
+    flex-direction: column;
+    gap: 6px;
+    border-bottom: 1px solid var(--cor-borda, #e2e8f0);
+    padding-bottom: 8px;
+  }
+
+  .header-info-left {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .header-datetime {
+    font-size: 0.8rem;
+    border-right: none;
+    border-bottom: 1px solid var(--cor-borda, #e2e8f0);
+    margin-right: 0;
+    margin-bottom: 6px;
+    padding-right: 0;
+    padding-bottom: 6px;
+    width: 100%;
+    gap: 5px;
+  }
+
+  .header-datetime .date {
+    font-size: 0.75rem;
+  }
+
+  .header-datetime .time {
+    font-size: 0.9rem;
+  }
+
+  .user-profile {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .user-info {
+    font-size: 0.75rem;
+  }
+
+  .user-info i {
+    font-size: 1rem;
+  }
+
+  .btn-logout {
+    font-size: 0.9rem;
+    padding: 4px;
+  }
+}

@@ -33,3 +33,161 @@ body {
 *:focus {
   outline: none;
 }
+
+/* Responsivo - Base e tipografia fluida
+========================================================= */
+html {
+  font-size: 16px;
+}
+
+/* Responsivo para tablets e dispositivos menores (1024px)
+========================================================= */
+@media (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+
+  body {
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1.1rem;
+  }
+
+  h5 {
+    font-size: 1rem;
+  }
+}
+
+/* Responsivo para tablets pequenos (768px)
+========================================================= */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  h5 {
+    font-size: 0.95rem;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* Responsivo para celulares (480px e menores)
+========================================================= */
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+
+  body {
+    font-size: 0.85rem;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  h4 {
+    font-size: 0.95rem;
+  }
+
+  h5 {
+    font-size: 0.9rem;
+  }
+
+  p {
+    font-size: 0.85rem;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Ajustes para melhor acessibilidade em telas pequenas
+========================================================= */
+@media (max-width: 480px) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  input,
+  textarea,
+  select {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+}
+
+/* Suporte a scroll suave em dispositivos móveis
+========================================================= */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -13,31 +13,41 @@
   </div>
 
   <div class="content-card" *ngIf="modo === 'lista'">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Cargo</th>
-          <th>Telefone</th>
-          <th>Login</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let funcionario of listaFuncionarios">
-          <td>{{ funcionario.id }}</td>
-          <td>{{ funcionario.nome }}</td>
-          <td>{{ funcionario.cargo }}</td>
-          <td>{{ funcionario.telefone }}</td>
-          <td>{{ funcionario.login }}</td>
-          <td class="acoes-cell">
-        <button class="btn-acao btn-aviso" (click)="abrirModalEdicao(funcionario)">Editar</button>
-        <button class="btn-acao btn-erro" (click)="excluir(funcionario.id)">Excluir</button>
-      </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Cargo</th>
+            <th>Telefone</th>
+            <th>Login</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let funcionario of paginatedFuncionarios">
+            <td>{{ funcionario.id }}</td>
+            <td>{{ funcionario.nome }}</td>
+            <td>{{ funcionario.cargo }}</td>
+            <td>{{ funcionario.telefone }}</td>
+            <td>{{ funcionario.login }}</td>
+            <td class="acoes-cell">
+              <button class="btn-acao btn-aviso" (click)="abrirModalEdicao(funcionario)">Editar</button>
+              <button class="btn-acao btn-erro" (click)="excluir(funcionario.id)">Excluir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      [pageSize]="pageSize"
+      [totalItems]="allFuncionarios.length"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
   </div>
 
   <div class="modal-overlay" *ngIf="funcionarioEmEdicao">
