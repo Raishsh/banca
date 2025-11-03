@@ -179,7 +179,20 @@
             type="text"
             [(ngModel)]="novoCliente.cidade"
             name="cidade"
-            appTooltip="Digite a cidade">
+            placeholder="Digite o nome da cidade"
+            appTooltip="Digite o nome da cidade">
+        </div>
+        <div class="form-group">
+          <label for="uf">UF</label>
+          <input
+            id="uf"
+            type="text"
+            [(ngModel)]="novoCliente.uf"
+            name="uf"
+            maxlength="2"
+            placeholder="Ex: SP"
+            appTooltip="Digite o estado (ex: SP, RJ)"
+            (input)="novoCliente.uf = novoCliente.uf.toUpperCase()">
         </div>
       </div>
       <div class="form-actions">
