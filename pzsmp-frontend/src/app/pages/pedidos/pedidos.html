@@ -13,7 +13,8 @@
         <div class="tags">
           <span class="tag" *ngIf="pedido.numeroMesa">Mesa {{ pedido.numeroMesa }}</span>
           <span class="tag" *ngIf="pedido.nomeClienteTemporario && !pedido.numeroMesa">Balcão</span>
-          <span class="tag status">{{ pedido.status }}</span>
+          <span class="tag status" [class.status-cancelado]="pedido.status === 'CANCELADO'">{{ pedido.status }}</span>
+          <span class="badge-cancelado" *ngIf="pedido.status === 'CANCELADO'">Cancelado</span>
         </div>
       </div>
       <div class="card-body">
