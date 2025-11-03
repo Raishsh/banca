@@ -46,6 +46,8 @@ export class Funcionarios implements OnInit {
     this.funcionarioService.getFuncionarios().subscribe(data => {
       this.allFuncionarios = data;
       this.sortFuncionarios();
+      this.filteredFuncionarios = [...this.allFuncionarios];
+      this.searchQuery = '';
       this.updatePagination();
     });
   }
