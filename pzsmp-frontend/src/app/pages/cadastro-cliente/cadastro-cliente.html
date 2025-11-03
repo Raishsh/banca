@@ -82,15 +82,32 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="nome">Nome Completo</label>
-          <input id="nome" type="text" [(ngModel)]="novoCliente.nome" name="nome" required>
+          <input
+            id="nome"
+            type="text"
+            [(ngModel)]="novoCliente.nome"
+            name="nome"
+            required
+            appTooltip="Digite o nome completo do cliente">
         </div>
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input id="email" type="email" [(ngModel)]="novoCliente.email" name="email" required>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="novoCliente.email"
+            name="email"
+            required
+            appTooltip="Digite um e-mail válido para o cliente">
         </div>
         <div class="form-group">
           <label for="telefone">Telefone</label>
-          <input id="telefone" type="text" [(ngModel)]="novoCliente.telefone" name="telefone">
+          <input
+            id="telefone"
+            type="text"
+            [(ngModel)]="novoCliente.telefone"
+            name="telefone"
+            appTooltip="Digite o telefone de contato do cliente">
         </div>
       </div>
       <hr>
