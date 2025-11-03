@@ -4,14 +4,27 @@
     <p>Visualize todas as adições de dinheiro registradas no caixa.</p>
   </div>
   <div class="header-actions">
-    <button 
-      *ngIf="cargoUsuario === 'ADMIN'" 
-      class="btn-primario" 
+    <button
+      *ngIf="cargoUsuario === 'ADMIN'"
+      class="btn-primario"
       (click)="abrirModalAporte()"
       appTooltip="Clique para adicionar dinheiro ao caixa">
       + Adicionar Aporte
     </button>
   </div>
+</div>
+
+<div class="filtros-header">
+  <div class="form-group">
+    <label for="dataInicio">De:</label>
+    <input id="dataInicio" type="date" [(ngModel)]="dataInicio">
+  </div>
+  <div class="form-group">
+    <label for="dataFim">Até:</label>
+    <input id="dataFim" type="date" [(ngModel)]="dataFim">
+  </div>
+  <button class="btn-buscar" (click)="carregarHistorico()">Buscar</button>
+  <button class="btn-limpar" (click)="limparFiltro()">Limpar</button>
 </div>
 
 <div class="card">
