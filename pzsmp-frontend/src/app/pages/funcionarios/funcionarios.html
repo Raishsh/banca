@@ -12,6 +12,27 @@
     </div>
   </div>
 
+  <div class="search-filter-section" *ngIf="modo === 'lista'">
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="filtrarFuncionarios()"
+        placeholder="Buscar por nome, telefone ou login..."
+        class="search-input">
+      <button
+        class="btn-buscar"
+        (click)="filtrarFuncionarios()">
+        Buscar
+      </button>
+      <button
+        class="btn-limpar"
+        (click)="limparBusca()">
+        Limpar
+      </button>
+    </div>
+  </div>
+
   <div class="content-card" *ngIf="modo === 'lista'">
     <div class="table-responsive">
       <table>
