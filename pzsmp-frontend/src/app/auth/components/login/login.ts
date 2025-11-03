@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth';
+import { HelperPanelComponent } from '../../../shared/components/helper-panel/helper-panel';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,8 @@ import { AuthService } from '../../../core/services/auth';
   standalone: true,
   imports: [
     FormsModule,
-    CommonModule
+    CommonModule,
+    HelperPanelComponent
   ]
 })
 export class LoginComponent {
