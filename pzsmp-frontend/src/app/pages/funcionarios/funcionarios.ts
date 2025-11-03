@@ -65,15 +65,38 @@ export class Funcionarios implements OnInit {
     });
   }
 
+  filtrarFuncionarios(): void {
+    if (!this.searchQuery.trim()) {
+      this.filteredFuncionarios = [...this.allFuncionarios];
+    } else {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredFuncionarios = this.allFuncionarios.filter(funcionario => {
+        const nomeMatch = funcionario.nome.toLowerCase().includes(query);
+        const telefoneMatch = funcionario.telefone.toLowerCase().includes(query);
+        const loginMatch = funcionario.login.toLowerCase().includes(query);
+        return nomeMatch || telefoneMatch || loginMatch;
+      });
+    }
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  limparBusca(): void {
+    this.searchQuery = '';
+    this.filteredFuncionarios = [...this.allFuncionarios];
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
   updatePagination(): void {
-    this.totalPages = Math.ceil(this.allFuncionarios.length / this.pageSize);
+    this.totalPages = Math.ceil(this.filteredFuncionarios.length / this.pageSize);
     if (this.currentPage > this.totalPages && this.totalPages > 0) {
       this.currentPage = this.totalPages;
     }
 
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
-    this.paginatedFuncionarios = this.allFuncionarios.slice(startIndex, endIndex);
+    this.paginatedFuncionarios = this.filteredFuncionarios.slice(startIndex, endIndex);
   }
 
   onPageChange(newPage: number): void {
