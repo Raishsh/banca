@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/auth';
 import { HelperPanelComponent } from '../../../shared/components/helper-panel/helper-panel';
+import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ import { HelperPanelComponent } from '../../../shared/components/helper-panel/he
   imports: [
     FormsModule,
     CommonModule,
-    HelperPanelComponent
+    HelperPanelComponent,
+    TooltipDirective
   ]
 })
 export class LoginComponent {
