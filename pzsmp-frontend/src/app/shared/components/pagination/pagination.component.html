@@ -1,0 +1,39 @@
+<div class="pagination-container">
+  <div class="pagination-info">
+    <p *ngIf="totalItems > 0">
+      Exibindo <strong>{{ startItem }}</strong> - <strong>{{ endItem }}</strong> de <strong>{{ totalItems }}</strong> itens
+    </p>
+  </div>
+  
+  <div class="pagination-controls">
+    <button 
+      class="pagination-btn pagination-prev"
+      [disabled]="!canPrevious"
+      (click)="previousPage()"
+      title="Página anterior">
+      ← Anterior
+    </button>
+
+    <div class="pagination-pages">
+      <button 
+        *ngFor="let page of pages"
+        class="pagination-page-btn"
+        [class.active]="page === currentPage"
+        [class.disabled]="page === '...'"
+        [disabled]="page === '...'"
+        (click)="goToPage(page)"
+        *ngIf="typeof page === 'number'">
+        {{ page }}
+      </button>
+      <span *ngIf="page === '...'" class="pagination-ellipsis">...</span>
+    </div>
+
+    <button 
+      class="pagination-btn pagination-next"
+      [disabled]="!canNext"
+      (click)="nextPage()"
+      title="Próxima página">
+      Próxima →
+    </button>
+  </div>
+</div>
