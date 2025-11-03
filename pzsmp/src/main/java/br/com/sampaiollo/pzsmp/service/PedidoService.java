@@ -207,11 +207,13 @@ public class PedidoService {
         }
 
         // Reseta o sequenciador de número de pedidos para iniciar do 1 no próximo expediente
+        // E atualiza o timestamp de início do expediente para agora
         var seq = sequenciadorRepository.findById(1L).orElse(null);
         if (seq == null) {
-            seq = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1);
+            seq = new br.com.sampaiollo.pzsmp.entity.SequenciadorPedido(1L, 1, LocalDateTime.now());
         } else {
             seq.setProximoNumero(1);
+            seq.setDataInicioExpediente(LocalDateTime.now());
         }
         sequenciadorRepository.save(seq);
 
