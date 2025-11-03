@@ -254,7 +254,21 @@
         </div>
         <div class="form-group">
           <label>Cidade</label>
-          <input type="text" [(ngModel)]="clienteEmEdicao.cidade" name="edit-cidade">
+          <input
+            type="text"
+            [(ngModel)]="clienteEmEdicao.cidade"
+            name="edit-cidade"
+            placeholder="Digite o nome da cidade">
+        </div>
+        <div class="form-group">
+          <label>UF</label>
+          <input
+            type="text"
+            [(ngModel)]="clienteEmEdicao.uf"
+            name="edit-uf"
+            maxlength="2"
+            placeholder="Ex: SP"
+            (input)="clienteEmEdicao.uf = clienteEmEdicao.uf.toUpperCase()">
         </div>
       </div>
       <div class="modal-actions">
