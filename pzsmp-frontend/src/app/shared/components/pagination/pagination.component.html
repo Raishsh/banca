@@ -15,17 +15,17 @@
     </button>
 
     <div class="pagination-pages">
-      <button 
-        *ngFor="let page of pages"
-        class="pagination-page-btn"
-        [class.active]="page === currentPage"
-        [class.disabled]="page === '...'"
-        [disabled]="page === '...'"
-        (click)="goToPage(page)"
-        *ngIf="typeof page === 'number'">
-        {{ page }}
-      </button>
-      <span *ngIf="page === '...'" class="pagination-ellipsis">...</span>
+      <ng-container *ngFor="let page of pages">
+        <button 
+          *ngIf="page !== '...'"
+          class="pagination-page-btn"
+          [class.active]="page === currentPage"
+          [disabled]="false"
+          (click)="goToPage(page)">
+          {{ page }}
+        </button>
+        <span *ngIf="page === '...'" class="pagination-ellipsis">...</span>
+      </ng-container>
     </div>
 
     <button 
