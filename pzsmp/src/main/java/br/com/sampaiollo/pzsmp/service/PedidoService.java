@@ -111,9 +111,23 @@ public class PedidoService {
     }
 
     public List<PedidoResponseDto> listarTodos() {
-        List<StatusPedido> excluir = List.of(StatusPedido.ENTREGUE, StatusPedido.CANCELADO);
+        LocalDate hoje = LocalDate.now();
+        LocalDateTime inicioHoje = hoje.atStartOfDay();
+        LocalDateTime fimHoje = hoje.atTime(23, 59, 59);
+
         return pedidoRepository.findAll().stream()
-                .filter(p -> !excluir.contains(p.getStatus()))
+                .filter(p -> {
+                    // Nunca mostrar pedidos ENTREGUE
+                    if (p.getStatus() == StatusPedido.ENTREGUE) {
+                        return false;
+                    }
+                    // Mostrar pedidos CANCELADO apenas se forem do dia atual
+                    if (p.getStatus() == StatusPedido.CANCELADO) {
+                        return p.getData().isAfter(inicioHoje) && p.getData().isBefore(fimHoje);
+                    }
+                    // Mostrar todos os outros status (PREPARANDO, PRONTO, PAGO)
+                    return true;
+                })
                 .map(PedidoResponseDto::new)
                 .collect(Collectors.toList());
     }
