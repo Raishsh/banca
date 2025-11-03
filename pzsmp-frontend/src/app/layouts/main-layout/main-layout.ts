@@ -4,12 +4,14 @@ import { CommonModule } from '@angular/common'; // Importe CommonModule para usa
 import { AuthService } from '../../core/services/auth';
 import { PedidoService } from '../../core/services/pedido';
 import { SangriaModalComponent } from '../../shared/components/sangria-modal/sangria-modal';
+import { HelperPanelComponent } from '../../shared/components/helper-panel/helper-panel';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  // Adicione CommonModule e SangriaModalComponent aos imports
-  imports: [RouterModule, CommonModule], 
+  // Adicione CommonModule, SangriaModalComponent, HelperPanelComponent e TooltipDirective aos imports
+  imports: [RouterModule, CommonModule, HelperPanelComponent, TooltipDirective],
   templateUrl: './main-layout.html',
   styleUrls: ['./main-layout.css']
 })

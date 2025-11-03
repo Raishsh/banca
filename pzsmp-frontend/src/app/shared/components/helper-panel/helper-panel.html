@@ -1,0 +1,21 @@
+<!-- Helper Icon Button (Fixed at bottom-left) -->
+<button class="helper-icon-button" (click)="toggleHelper()" title="Abrir ajuda (F1)">
+  <span class="helper-question-mark">?</span>
+</button>
+
+<!-- Helper Panel (Modal/Drawer) -->
+<div class="helper-panel-overlay" *ngIf="isOpen" (click)="closeHelper()"></div>
+<div class="helper-panel" [class.open]="isOpen">
+  <div class="helper-panel-header">
+    <h2 class="helper-panel-title">{{ helperTitle }}</h2>
+    <button class="helper-close-button" (click)="closeHelper()" title="Fechar ajuda">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div class="helper-panel-content">
+    <p>{{ helperContent }}</p>
+  </div>
+  <div class="helper-panel-footer">
+    <small class="helper-hint-text">Pressione F1 para abrir/fechar a ajuda em qualquer página</small>
+  </div>
+</div>

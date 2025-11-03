@@ -1,3 +1,5 @@
+<app-helper-panel></app-helper-panel>
+
 <div class="login-container">
   <div class="login-box">
     <h2>Sampaiollo LTDA</h2>
@@ -6,22 +8,47 @@
     <form (ngSubmit)="onLogin()">
       <div class="input-group">
         <label for="email">Email</label>
-        <input type="text" id="email" name="email" [(ngModel)]="credentials.login" required placeholder="exemplo@gmail.com">
+        <input
+          type="text"
+          id="email"
+          name="email"
+          [(ngModel)]="credentials.login"
+          required
+          placeholder="exemplo@gmail.com"
+          appTooltip="Digite seu email de administrador para acessar o sistema">
       </div>
 
       <div class="input-group">
           <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" [(ngModel)]="credentials.senha" required placeholder="Insira sua senha...">
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            [(ngModel)]="credentials.senha"
+            required
+            placeholder="Insira sua senha..."
+            appTooltip="Digite sua senha de acesso ao sistema">
       </div>
 
       <div *ngIf="errorMessage" class="error-message">
             {{ errorMessage }}
       </div>
 
-      <button type="submit" class="login-button">Entrar</button>
+      <button
+        type="submit"
+        class="login-button"
+        appTooltip="Clique para fazer login com suas credenciais">
+        Entrar
+      </button>
     </form>
 
-    <a href="#" class="forgot-password" (click)="$event.preventDefault(); openForgotPassword()">Esqueceu sua senha?</a>
+    <a
+      href="#"
+      class="forgot-password"
+      (click)="$event.preventDefault(); openForgotPassword()"
+      appTooltip="Clique aqui se esqueceu sua senha">
+      Esqueceu sua senha?
+    </a>
   </div>
 
   <div *ngIf="showForgotPassword" class="modal-overlay" (click)="closeForgotPassword()">
