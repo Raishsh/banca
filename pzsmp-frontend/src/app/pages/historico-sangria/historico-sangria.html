@@ -10,6 +10,19 @@
   </div>
 </div>
 
+<div class="filtros-header">
+  <div class="form-group">
+    <label for="dataInicio">De:</label>
+    <input id="dataInicio" type="date" [(ngModel)]="dataInicio">
+  </div>
+  <div class="form-group">
+    <label for="dataFim">Até:</label>
+    <input id="dataFim" type="date" [(ngModel)]="dataFim">
+  </div>
+  <button class="btn-buscar" (click)="carregarHistorico()">Buscar</button>
+  <button class="btn-limpar" (click)="limparFiltro()">Limpar</button>
+</div>
+
 <div class="card">
   <table>
     <thead>
