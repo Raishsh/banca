@@ -61,11 +61,20 @@
 }
 
 
+/* Container para tabela com scroll responsivo
+------------------------------------------------------------------- */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 20px;
+}
+
 /* Estilo Aprimorado para a Tabela de Funcionários
 ------------------------------------------------------------------- */
 table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
 }
 
 th, td {
