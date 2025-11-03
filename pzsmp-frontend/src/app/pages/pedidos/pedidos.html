@@ -90,13 +90,22 @@
   <p>Ainda não há pedidos em andamento. Inicie uma nova venda.</p>
 
   <div class="quick-actions">
-    <button class="btn-action-card" [routerLink]="['/app/mesas']">
+    <button
+      class="btn-action-card"
+      [routerLink]="['/app/mesas']"
+      appTooltip="Registre um novo pedido para uma mesa do restaurante">
       <span>Pedido para Mesa</span>
     </button>
-    <button class="btn-action-card" [routerLink]="['/app/entregas']">
+    <button
+      class="btn-action-card"
+      [routerLink]="['/app/entregas']"
+      appTooltip="Crie um novo pedido para entrega em domicílio">
       <span>Pedido para Entrega</span>
     </button>
-    <button class="btn-action-card" [routerLink]="['/app/balcao']">
+    <button
+      class="btn-action-card"
+      [routerLink]="['/app/balcao']"
+      appTooltip="Registre uma venda rápida do balcão">
       <span>Pedido de Balcão</span>
     </button>
   </div>
