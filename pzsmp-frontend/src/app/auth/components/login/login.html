@@ -34,10 +34,21 @@
             {{ errorMessage }}
       </div>
 
-      <button type="submit" class="login-button">Entrar</button>
+      <button
+        type="submit"
+        class="login-button"
+        appTooltip="Clique para fazer login com suas credenciais">
+        Entrar
+      </button>
     </form>
 
-    <a href="#" class="forgot-password" (click)="$event.preventDefault(); openForgotPassword()">Esqueceu sua senha?</a>
+    <a
+      href="#"
+      class="forgot-password"
+      (click)="$event.preventDefault(); openForgotPassword()"
+      appTooltip="Clique aqui se esqueceu sua senha">
+      Esqueceu sua senha?
+    </a>
   </div>
 
   <div *ngIf="showForgotPassword" class="modal-overlay" (click)="closeForgotPassword()">
