@@ -16,6 +16,7 @@ import { PagamentoStateService } from '../../core/services/pagamento-state';
 export class PagamentoComponent implements OnInit {
   pedido: Pedido | null = null;
   metodoPagamento: string = '';
+  valorRecebido: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,6 +33,9 @@ export class PagamentoComponent implements OnInit {
       this.pagamentoState.add(id);
       this.pedidoService.getPedidoById(id).subscribe(data => {
         this.pedido = data;
+        if (this.pedido) {
+          this.valorRecebido = this.pedido.total; 
+        }
       });
     }
   }
@@ -42,10 +46,15 @@ export class PagamentoComponent implements OnInit {
       return;
     }
 
+    if (this.valorRecebido < this.pedido.total) {
+      alert('O valor pago não pode ser menor que o total do pedido.');
+      return;
+    }
+
     const dadosPagamento = {
       idPedido: this.pedido.idPedido,
       metodo: this.metodoPagamento,
-      valorPago: this.pedido.total
+      valorPago: this.valorRecebido
     };
 
     this.pedidoService.registrarPagamento(dadosPagamento).subscribe({
