@@ -1,0 +1,124 @@
+/* Remove todo o layout principal (menu, etc) desta página */
+:host {
+  display: block;
+  background-color: #f0f2f5; /* Um fundo cinza para a tela */
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.cupom-cozinha {
+  background-color: #ffffff;
+  width: 320px; /* Largura de impressora térmica (aprox) */
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px dashed #333;
+  font-family: 'Courier New', Courier, monospace;
+  color: #000;
+}
+
+.cupom-header {
+  text-align: center;
+  border-bottom: 1px dashed #333;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.cupom-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.cupom-header p {
+  margin: 5px 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.cupom-header .horario {
+  font-size: 0.9rem;
+  font-weight: normal;
+}
+
+.cupom-body {
+  font-size: 1.1rem;
+}
+
+.itens-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.itens-lista li {
+  display: flex;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.itens-lista .qtde {
+  flex-shrink: 0;
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.itens-lista .nome {
+  /* Permite que o nome quebre a linha se for grande */
+  word-break: break-word;
+}
+
+.cupom-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.cupom-footer button {
+  width: 100%;
+  padding: 15px;
+  background-color: rgb(50, 50, 50);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cupom-footer button:hover {
+  background-color: rgb(80, 80, 80);
+}
+
+.loading-mensagem {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 40px;
+}
+
+/* ======================================= */
+/* ESTILOS DE IMPRESSÃO */
+/* ======================================= */
+@media print {
+  /* Esconde tudo que NÃO é o cupom */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Mostra o cupom e seus filhos */
+  .cupom-cozinha, .cupom-cozinha * {
+    visibility: visible;
+  }
+
+  /* Centraliza o cupom na página de impressão */
+  .cupom-cozinha {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  /* Esconde o botão de imprimir */
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}

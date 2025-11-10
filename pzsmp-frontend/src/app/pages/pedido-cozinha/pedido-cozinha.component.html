@@ -1,0 +1,26 @@
+<div class="cupom-cozinha" *ngIf="pedido; else loading">
+  
+  <header class="cupom-header">
+    <h1>PEDIDO #{{ pedido.numeroDia || pedido.idPedido }}</h1>
+    <p>{{ getTipoPedido(pedido) }}</p>
+    <p class="horario">{{ pedido.data | date:'dd/MM/yyyy HH:mm' }}</p>
+  </header>
+
+  <section class="cupom-body">
+    <ul class="itens-lista">
+      <li *ngFor="let item of pedido.itens">
+        <span class="qtde">{{ item.quantidade }}x</span>
+        <span class="nome">{{ item.nomeProduto }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <footer class="cupom-footer no-print">
+    <button (click)="imprimir()">Imprimir Pedido</button>
+  </footer>
+
+</div>
+
+<ng-template #loading>
+  <p class="loading-mensagem">Carregando pedido...</p>
+</ng-template>

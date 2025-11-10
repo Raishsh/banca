@@ -43,8 +43,12 @@ export class PedidoService {
   /**
    * Envia uma lista de novos itens para serem adicionados a um pedido existente.
    */
-  adicionarItensAoPedido(pedidoId: number, itens: { idProduto: number, quantidade: number }[]): Observable<Pedido> {
-    const requestBody = { itens: itens };
+  adicionarItensAoPedido(
+    pedidoId: number, 
+    requestBody: { itens: { idProduto: number, quantidade: number }[] } // <-- Formato "antigo"
+  ): Observable<Pedido> {
+    
+    // Agora enviamos o 'requestBody' diretamente
     return this.http.post<Pedido>(`${this.apiUrl}/${pedidoId}/itens`, requestBody);
   }
 

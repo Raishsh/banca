@@ -101,22 +101,27 @@ export class Mesas implements OnInit {
     this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => total + (item.produto.preco * item.quantidade), 0);
   }
 
-  finalizarPedido(): void {
+finalizarPedido(): void {
     if (this.novoPedidoItens.length === 0) {
       alert('Adicione pelo menos um item ao pedido.');
       return;
     }
 
+    // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
     const itensParaApi = this.novoPedidoItens.map(item => ({
       idProduto: item.produto.id_produto,
       quantidade: item.quantidade
     }));
 
     if (this.pedidosDaMesa.length > 0) {
+      // --- LÓGICA ANTIGA: ADICIONAR ITENS ---
       const pedidoId = this.pedidosDaMesa[0].idPedido;
-      this.pedidoService.adicionarItensAoPedido(pedidoId, itensParaApi).subscribe({
+      
+      // (O seu 'adicionarItensAoPedido' no service espera o formato { itens: [...] } )
+      const requestBody = { itens: itensParaApi }; 
+      
+      this.pedidoService.adicionarItensAoPedido(pedidoId, requestBody).subscribe({
         next: () => {
-          
           this.carregarMesas();
           this.fecharModal();
         },
@@ -126,14 +131,25 @@ export class Mesas implements OnInit {
         }
       });
     } else {
+      // --- LÓGICA NOVA: CRIAR PEDIDO (COM IMPRESSÃO) ---
       const pedidoParaApi = {
         idMesa: this.mesaSelecionada!.numero,
         idCliente: null,
-        itens: itensParaApi
+        nomeClienteTemporario: null,
+        taxaEntrega: 0,
+        itens: itensParaApi // <<< Usa o formato antigo
       };
+      
       this.pedidoService.realizarPedido(pedidoParaApi).subscribe({
-        next: () => {
+        next: (pedidoSalvo) => { // <-- 1. Recebe o pedido salvo
           
+          // ===============================================
+          // == 2. CHAMA O POPUP DE IMPRESSÃO (Mantido) ==
+          // ===============================================
+          const url = `/app/cozinha/${pedidoSalvo.idPedido}?autoprint=true`;
+          window.open(url, 'CupomCozinha', 'width=350,height=500,left=100,top=100');
+
+          // 3. Limpa e fecha
           this.carregarMesas();
           this.fecharModal();
         },

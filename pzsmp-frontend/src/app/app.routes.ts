@@ -14,12 +14,23 @@ import { RelatoriosComponent } from './pages/relatorios/relatorios';
 import { HistoricoSangriaComponent } from './pages/historico-sangria/historico-sangria';
 import { HistoricoAporteComponent } from './pages/historico-aporte/historico-aporte';
 import { RelatorioDetalhadoComponent } from './pages/relatorio-detalhado/relatorio-detalhado';
+import { PedidoCozinhaComponent } from './pages/pedido-cozinha/pedido-cozinha.component';
 
 export const routes: Routes = [
   // Rotas de autenticação (públicas)
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth-module').then(m => m.AuthModule)
+  },
+
+  // =======================================================
+  // == ROTA DA COZINHA ADICIONADA AQUI ==
+  // (Fora do 'MainLayoutComponent' para não ter menu lateral)
+  // =======================================================
+  {
+    path: 'app/cozinha/:id', // A URL será /app/cozinha/123
+    component: PedidoCozinhaComponent,
+    canActivate: [authGuard] // Mas ainda protegida pelo login
   },
 
   // Rotas da aplicação principal (protegidas pelo authGuard)

@@ -70,16 +70,25 @@ export class Balcao implements OnInit {
       idMesa: null,
       idCliente: null,
       nomeClienteTemporario: this.nomeCliente,
+      // taxaEntrega: 0, // Sua tela de balcão não tem taxa
+      
+      // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
       itens: this.novoPedidoItens.map(item => ({
-        idProduto: item.produto.id_produto,
+        idProduto: item.produto.id_produto, 
         quantidade: item.quantidade
       }))
     };
 
     this.pedidoService.realizarPedido(pedidoParaApi).subscribe({
-      next: () => {
+      next: (pedidoSalvo) => { // <-- 1. Recebe o pedido salvo
         
-        // Limpa o formulário
+        // ===============================================
+        // == 2. CHAMA O POPUP DE IMPRESSÃO (Mantido) ==
+        // ===============================================
+        const url = `/app/cozinha/${pedidoSalvo.idPedido}?autoprint=true`;
+        window.open(url, 'CupomCozinha', 'width=350,height=500,left=100,top=100');
+        
+        // 3. Limpa o formulário
         this.novoPedidoItens = [];
         this.totalNovoPedido = 0;
         this.nomeCliente = '';
@@ -90,6 +99,7 @@ export class Balcao implements OnInit {
       }
     });
   }
+  
   
   formatarNomeFiltro(tipo: string): string {
     return tipo.replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
