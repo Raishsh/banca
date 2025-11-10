@@ -44,6 +44,27 @@
 }
 
 
+/* =============================== */
+/* = INÍCIO - ESTILO DA TAXA     = */
+/* =============================== */
+
+.input-taxa-entrega {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 8px;
+  width: 100px;
+  text-align: right;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Ajusta o alinhamento do texto "Taxa de Entrega" com o input */
+.item-pedido-atual .item-info {
+  align-items: center;
+}
+
+
 /* Estilos para o Card de Etapas
 ------------------------------------------------------------------- */
 .card-etapa {

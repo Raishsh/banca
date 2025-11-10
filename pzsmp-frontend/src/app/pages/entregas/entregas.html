@@ -75,6 +75,17 @@
             </button>
           </div>
           <hr>
+          <div class="item-pedido-atual">
+            <div class="item-info">
+              <span>Taxa de Entrega</span>
+              
+              <input type="number" 
+                     class="input-taxa-entrega" 
+                     [(ngModel)]="taxaEntrega"
+                     (ngModelChange)="onTaxaChange()"
+                     placeholder="R$ 0,00">
+            </div>
+          </div>
           <div class="total-pedido">
             <strong>Total: R$ {{ totalNovoPedido.toFixed(2) }}</strong>
           </div>

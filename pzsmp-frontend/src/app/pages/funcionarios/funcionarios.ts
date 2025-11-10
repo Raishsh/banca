@@ -109,7 +109,7 @@ export class Funcionarios implements OnInit {
   cadastrarFuncionario(): void {
     this.funcionarioService.cadastrarFuncionario(this.novoFuncionario).subscribe({
       next: (novoFuncionarioCadastrado) => {
-        alert(`Funcionário "${novoFuncionarioCadastrado.nome}" cadastrado com sucesso!`);
+       
         this.currentPage = 1;
         this.carregarFuncionarios();
         this.voltarParaLista();
@@ -149,7 +149,7 @@ export class Funcionarios implements OnInit {
 
     this.funcionarioService.atualizarFuncionario(this.funcionarioEmEdicao.id, this.funcionarioEmEdicao).subscribe({
       next: () => {
-        alert('Funcionário atualizado com sucesso!');
+        
         this.carregarFuncionarios();
         this.fecharModalEdicao();
       },
@@ -164,7 +164,7 @@ export class Funcionarios implements OnInit {
     if (confirm('Tem certeza que deseja excluir este funcionário?')) {
       this.funcionarioService.excluirFuncionario(id).subscribe({
         next: () => {
-          alert('Funcionário excluído com sucesso.');
+          
           this.currentPage = 1;
           this.carregarFuncionarios();
         },

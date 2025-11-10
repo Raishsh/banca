@@ -78,7 +78,7 @@ export class Balcao implements OnInit {
 
     this.pedidoService.realizarPedido(pedidoParaApi).subscribe({
       next: () => {
-        alert(`Pedido para "${this.nomeCliente}" criado com sucesso!`);
+        
         // Limpa o formulário
         this.novoPedidoItens = [];
         this.totalNovoPedido = 0;

@@ -56,7 +56,7 @@ export class Cardapio implements OnInit {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       this.produtoService.excluirProduto(id_produto).subscribe({
         next: () => {
-          alert('Produto excluído com sucesso!');
+          
           this.todosOsProdutos = this.todosOsProdutos.filter(p => p.id_produto !== id_produto);
           this.filtrarProdutos(this.filtroAtual);
         },
@@ -103,7 +103,7 @@ export class Cardapio implements OnInit {
 
     this.produtoService.atualizarProduto(this.produtoEmEdicao.id_produto, formData).subscribe({
       next: (produtoAtualizado) => {
-        alert('Produto atualizado com sucesso!');
+        
         const index = this.todosOsProdutos.findIndex(p => p.id_produto === this.produtoEmEdicao!.id_produto);
         if (index !== -1) {
           this.todosOsProdutos[index] = produtoAtualizado;

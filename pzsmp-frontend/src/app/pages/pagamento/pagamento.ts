@@ -61,7 +61,7 @@ export class PagamentoComponent implements OnInit {
       next: () => {
         // pagamento concluído, remover da fila local e voltar à lista
         this.pagamentoState.remove(this.pedido!.idPedido);
-        alert('Pagamento registado com sucesso!');
+        
         this.router.navigate(['/app/pedidos']);
       },
       error: (err) => {

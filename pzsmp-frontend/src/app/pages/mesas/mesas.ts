@@ -162,7 +162,7 @@ export class Mesas implements OnInit {
 
     this.reservaService.fazerReserva(dadosReserva).subscribe({
       next: () => {
-        alert(`Mesa ${this.mesaSelecionada?.numero} reservada com sucesso para "${dadosReserva.nomeReserva}"!`);
+       
         this.carregarMesas();
         this.fecharModal();
       },

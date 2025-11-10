@@ -32,7 +32,7 @@ export class AuthService {
     localStorage.setItem('authToken', token);
     localStorage.setItem('userName', nome);
     localStorage.setItem('userRole', cargo);
-    console.log('5. Dados salvos no localStorage com sucesso!');
+    
   }
 
   /**

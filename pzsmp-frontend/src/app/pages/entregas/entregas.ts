@@ -30,6 +30,7 @@ export class Entregas implements OnInit {
   ];
   novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
   totalNovoPedido: number = 0;
+  taxaEntrega: number = 7;
 
   constructor(
     private clienteService: ClienteService,
@@ -83,8 +84,16 @@ export class Entregas implements OnInit {
     this.calcularTotalNovoPedido();
   }
 
+
   calcularTotalNovoPedido(): void {
-    this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => total + (item.produto.preco * item.quantidade), 0);
+    const subtotalItens = this.novoPedidoItens.reduce((total, item) => total + (item.produto.preco * item.quantidade), 0);
+    // Garante que a taxa seja um número, mesmo se o campo estiver vazio
+    const taxa = Number(this.taxaEntrega) || 0;
+    this.totalNovoPedido = subtotalItens + taxa;
+  }
+
+  onTaxaChange(): void {
+    this.calcularTotalNovoPedido();
   }
 
   finalizarPedido(): void {
@@ -97,6 +106,7 @@ export class Entregas implements OnInit {
       idMesa: null,
       idCliente: this.clienteSelecionado.id,
       nomeClienteTemporario: null,
+      taxaEntrega: Number(this.taxaEntrega) || 0,
       itens: this.novoPedidoItens.map(item => ({
         idProduto: item.produto.id_produto,
         quantidade: item.quantidade
@@ -105,7 +115,7 @@ export class Entregas implements OnInit {
 
     this.pedidoService.realizarPedido(pedidoParaApi).subscribe({
       next: () => {
-        alert(`Pedido para "${this.clienteSelecionado?.nome}" criado com sucesso!`);
+       
         this.limparTudo();
       },
       error: (err) => {
@@ -120,6 +130,7 @@ export class Entregas implements OnInit {
     this.termoBusca = '';
     this.novoPedidoItens = [];
     this.totalNovoPedido = 0;
+    this.taxaEntrega = 0;
   }
   
   formatarNomeFiltro(tipo: string): string {

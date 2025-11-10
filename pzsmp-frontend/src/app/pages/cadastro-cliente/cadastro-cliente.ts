@@ -107,7 +107,7 @@ export class CadastroClienteComponent implements OnInit {
   cadastrarCliente(): void {
     this.clienteService.cadastrarCliente(this.novoCliente).subscribe({
       next: (novoClienteCadastrado) => {
-        alert(`Cliente "${novoClienteCadastrado.nome}" cadastrado com sucesso!`);
+       
         this.currentPage = 1;
         this.carregarClientes();
         this.voltarParaLista();
@@ -163,7 +163,7 @@ export class CadastroClienteComponent implements OnInit {
     if (!this.clienteEmEdicao) return;
     this.clienteService.atualizarCliente(this.clienteEmEdicao.id, this.clienteEmEdicao).subscribe({
       next: () => {
-        alert('Cliente atualizado com sucesso!');
+        
         this.carregarClientes();
         this.fecharModalEdicao();
       },
@@ -178,7 +178,7 @@ export class CadastroClienteComponent implements OnInit {
     if (confirm('Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita.')) {
       this.clienteService.excluirCliente(id).subscribe({
         next: () => {
-          alert('Cliente excluído com sucesso.');
+          
           this.currentPage = 1;
           this.carregarClientes();
         },

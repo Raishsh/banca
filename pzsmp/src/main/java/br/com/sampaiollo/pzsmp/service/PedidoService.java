@@ -90,6 +90,9 @@ public class PedidoService {
             totalPedido = totalPedido.add(produto.getPreco().multiply(BigDecimal.valueOf(itemDto.getQuantidade())));
         }
         pedido.setItens(itensDoPedido);
+        BigDecimal taxa = (pedidoDto.getTaxaEntrega() != null) ? pedidoDto.getTaxaEntrega() : BigDecimal.ZERO;
+        pedido.setTaxaEntrega(taxa);
+        totalPedido = totalPedido.add(taxa);
         pedido.setTotal(totalPedido);
 
         Pedido pedidoSalvo = pedidoRepository.save(pedido);

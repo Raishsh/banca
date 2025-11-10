@@ -24,6 +24,9 @@ public class Pedido {
     @Column(nullable = false)
     private StatusPedido status;
 
+    @Column(name = "taxa_entrega", columnDefinition = "NUMERIC(10,2)")
+    private BigDecimal taxaEntrega;
+
     @Column(name = "data", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime data;
 
