@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -79,16 +80,43 @@ public class PedidoService {
         BigDecimal totalPedido = BigDecimal.ZERO;
         List<ItemPedido> itensDoPedido = new ArrayList<>();
         for (var itemDto : pedidoDto.getItens()) {
-            Produto produto = produtoRepository.findById(itemDto.getIdProduto())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + itemDto.getIdProduto()));
+            
+            if (itemDto.getIdsSabores() == null || itemDto.getIdsSabores().isEmpty()) {
+                throw new RuntimeException("Pedido recebido com item sem sabores.");
+            }
+            
+            // 1. Busca todos os produtos (sabores) daquele item
+            List<Produto> saboresDoItem = produtoRepository.findAllById(itemDto.getIdsSabores());
+            
+            if (saboresDoItem.isEmpty()) {
+                throw new RuntimeException("IDs de produto não encontrados: " + itemDto.getIdsSabores());
+            }
+
+            // 2. Lógica do Preço: Calcular a SOMA dos sabores
+            BigDecimal somaDosPrecos = saboresDoItem.stream()
+                .map(Produto::getPreco) // Pega o preço de cada sabor
+                .reduce(BigDecimal.ZERO, BigDecimal::add); // Soma todos eles
+
+            BigDecimal numeroDeSabores = new BigDecimal(saboresDoItem.size());
+
+            // 3. Calcula a MÉDIA (e arredonda para 2 casas decimais)
+            BigDecimal precoCalculadoDoItem = somaDosPrecos.divide(numeroDeSabores, 2, RoundingMode.HALF_UP);
+
+            // 4. Criar o ItemPedido
             ItemPedido itemPedido = new ItemPedido();
-            itemPedido.setProduto(produto);
-            itemPedido.setQuantidade(itemDto.getQuantidade());
-            itemPedido.setPreco(produto.getPreco());
             itemPedido.setPedido(pedido);
+            itemPedido.setQuantidade(itemDto.getQuantidade());
+            itemPedido.setSabores(saboresDoItem); // Seta a LISTA de sabores
+            itemPedido.setPrecoCalculado(precoCalculadoDoItem); // Seta o preço da MÉDIA
+            
             itensDoPedido.add(itemPedido);
-            totalPedido = totalPedido.add(produto.getPreco().multiply(BigDecimal.valueOf(itemDto.getQuantidade())));
+            
+            // 5. Adiciona ao total do pedido (Média * Quantidade)
+            totalPedido = totalPedido.add(
+                precoCalculadoDoItem.multiply(BigDecimal.valueOf(itemDto.getQuantidade()))
+            );
         }
+        
         pedido.setItens(itensDoPedido);
         BigDecimal taxa = (pedidoDto.getTaxaEntrega() != null) ? pedidoDto.getTaxaEntrega() : BigDecimal.ZERO;
         pedido.setTaxaEntrega(taxa);
@@ -149,15 +177,33 @@ public class PedidoService {
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado com ID: " + pedidoId));
 
         for (var itemDto : request.itens()) {
-            Produto produto = produtoRepository.findById(itemDto.getIdProduto())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + itemDto.getIdProduto()));
+            
+            if (itemDto.getIdsSabores() == null || itemDto.getIdsSabores().isEmpty()) {
+                throw new RuntimeException("Item sem sabores.");
+            }
+
+            List<Produto> saboresDoItem = produtoRepository.findAllById(itemDto.getIdsSabores());
+            
+            if (saboresDoItem.isEmpty()) {
+                throw new RuntimeException("IDs de produto não encontrados: " + itemDto.getIdsSabores());
+            }
+
+            BigDecimal somaDosPrecos = saboresDoItem.stream()
+                .map(Produto::getPreco)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            BigDecimal numeroDeSabores = new BigDecimal(saboresDoItem.size());
+            BigDecimal precoCalculadoDoItem = somaDosPrecos.divide(numeroDeSabores, 2, RoundingMode.HALF_UP);
+
             ItemPedido novoItem = new ItemPedido();
-            novoItem.setProduto(produto);
-            novoItem.setQuantidade(itemDto.getQuantidade());
-            novoItem.setPreco(produto.getPreco());
             novoItem.setPedido(pedido);
+            novoItem.setQuantidade(itemDto.getQuantidade());
+            novoItem.setSabores(saboresDoItem);
+            novoItem.setPrecoCalculado(precoCalculadoDoItem);
+            
             pedido.getItens().add(novoItem);
-            BigDecimal valorAdicional = produto.getPreco().multiply(BigDecimal.valueOf(itemDto.getQuantidade()));
+            
+            BigDecimal valorAdicional = precoCalculadoDoItem.multiply(BigDecimal.valueOf(itemDto.getQuantidade()));
             pedido.setTotal(pedido.getTotal().add(valorAdicional));
         }
 

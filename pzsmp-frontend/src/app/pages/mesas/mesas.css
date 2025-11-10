@@ -1,5 +1,5 @@
 /* =================================================================== */
-/* CSS COMPLETO E CONSOLIDADO - PÁGINA MESAS                         */
+/* CSS COMPLETO E CONSOLIDADO - PÁGINA MESAS                           */
 /* =================================================================== */
 
 
@@ -88,7 +88,7 @@
   color: #856404;
 }
 
-/* Estilos para o Modal
+/* Estilos para o Modal (Principal da Mesa)
 ------------------------------------------------------------------- */
 .modal-overlay {
   position: fixed;
@@ -101,6 +101,19 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.3s ease-out; /* Adicionado fadeIn */
+}
+
+/* Animação de Fade-in para o Overlay */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Animação de Slide-up para o Conteúdo */
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-content-large {
@@ -114,6 +127,7 @@
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
+  animation: slideUp 0.3s ease-out; /* Adicionado slideUp */
 }
 
 .btn-fechar {
@@ -265,7 +279,7 @@
 .btn-finalizar-pedido, .btn-salvar {
   width: 100%;
   padding: 12px;
-  background-color: #28a745;
+  background-color: rgb(50, 50, 50); /* Cor padronizada */
   color: white;
   border: none;
   border-radius: 5px;
@@ -273,6 +287,11 @@
   cursor: pointer;
   margin-top: 20px;
 }
+/* Hover padronizado */
+.btn-finalizar-pedido:hover, .btn-salvar:hover {
+  background-color: rgb(80, 80, 80);
+}
+
 
 .pedido-detalhado {
   border: 1px solid #eee;
@@ -299,4 +318,116 @@
   font-size: 1.1rem;
   border-top: 1px solid #eee;
   padding-top: 10px;
+}
+
+
+/* ======================================================= */
+/* == NOVOS ESTILOS PARA O MODAL DE SABORES == */
+/* ======================================================= */
+
+/* O modal de sabores precisa de um z-index maior para ficar sobre o modal da mesa */
+.modal-overlay:has(.modal-content:not(.modal-content-large)) {
+  z-index: 2000 !important;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--cor-borda, #e2e8f0);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  font-weight: 300;
+  color: #718096;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.modal-body {
+  padding: 25px;
+  overflow-y: auto;
+}
+
+.sabores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.sabor-card {
+  border: 2px solid var(--cor-borda, #e2e8f0);
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.sabor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.sabor-card.selected {
+  border-color: rgb(50, 50, 50);
+  background-color: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.sabor-nome {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.sabor-preco {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.modal-footer {
+  padding: 20px 25px;
+  border-top: 1px solid var(--cor-borda, #e2e8f0);
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-confirmar-sabores {
+  background-color: rgb(50, 50, 50);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-confirmar-sabores:hover {
+  background-color: rgb(80, 80, 80);
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -70,4 +71,21 @@ public ResponseEntity<Void> excluirProduto(@PathVariable Integer id) {
     produtoService.excluirProduto(id);
     return ResponseEntity.noContent().build(); // Retorna 204 No Content, indicando sucesso
 }
-}
+
+
+@ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+        // Você pode ser mais específico aqui se criar exceções customizadas
+        if (ex.getMessage().contains("Já existe um produto") || ex.getMessage().contains("já está em uso")) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT) // HTTP 409
+                    .body(Map.of("erro", ex.getMessage()));
+        }return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST) // HTTP 400
+                .body(Map.of("erro", ex.getMessage()));
+    }
+    }
+    
+
+
+

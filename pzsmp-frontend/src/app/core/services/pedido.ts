@@ -43,10 +43,15 @@ export class PedidoService {
   /**
    * Envia uma lista de novos itens para serem adicionados a um pedido existente.
    */
-  adicionarItensAoPedido(pedidoId: number, itens: { idProduto: number, quantidade: number }[]): Observable<Pedido> {
+  // =======================================================
+  // == MUDANÇA AQUI: O TIPO DE 'itens' FOI ATUALIZADO ==
+  // =======================================================
+  adicionarItensAoPedido(pedidoId: number, itens: { idsSabores: number[], quantidade: number }[]): Observable<Pedido> {
     const requestBody = { itens: itens };
     return this.http.post<Pedido>(`${this.apiUrl}/${pedidoId}/itens`, requestBody);
   }
+  // =======================================================
+
 
   getRelatorios(): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/relatorios`);
@@ -79,8 +84,8 @@ getPedidoById(id: number): Observable<Pedido> {
 }
 
 /**
- * Envia uma requisição para cancelar um pedido.
- */
+  * Envia uma requisição para cancelar um pedido.
+  */
 cancelarPedido(pedidoId: number): Observable<Pedido> {
   return this.http.delete<Pedido>(`${this.apiUrl}/${pedidoId}/cancelar`);
 }

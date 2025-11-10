@@ -9,6 +9,14 @@ import { Mesa } from '../../core/models/mesa.model';
 import { Pedido } from '../../core/models/pedido.model';
 import { Produto } from '../../core/models/produto.model';
 
+// Definição da nova estrutura do item do carrinho
+interface ItemPedidoCarrinho {
+  sabores: Produto[];
+  quantidade: number;
+  nomeDisplay: string;
+  precoCalculado: number;
+}
+
 @Component({
   selector: 'app-mesas',
   standalone: true,
@@ -19,11 +27,11 @@ import { Produto } from '../../core/models/produto.model';
 export class Mesas implements OnInit {
   listaMesas: Mesa[] = [];
   
-  // Variáveis do Modal
+  // Variáveis do Modal da MESA
   mesaSelecionada: Mesa | null = null;
   modalView: 'novoPedido' | 'pedidos' | 'reserva' = 'novoPedido';
 
-  // Dados para os diferentes views do modal
+  // Lógica de Cardápio
   pedidosDaMesa: Pedido[] = [];
   cardapioCompleto: Produto[] = [];
   cardapioFiltrado: Produto[] = [];
@@ -33,9 +41,16 @@ export class Mesas implements OnInit {
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
 
-  novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
+  // Lógica do Pedido/Carrinho (NOVA ESTRUTURA)
+  novoPedidoItens: ItemPedidoCarrinho[] = [];
   totalNovoPedido: number = 0;
   novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
+
+  // Lógica do Modal de Sabores (NOVO)
+  showSaborModal = false;
+  saboresDisponiveis: Produto[] = [];
+  saboresSelecionados: Produto[] = [];
+  readonly maxSabores = 2;
 
   constructor(
     private mesaService: MesaService,
@@ -62,12 +77,11 @@ export class Mesas implements OnInit {
     });
   }
 
+  // --- Lógica do Modal MESA ---
   abrirModal(mesa: Mesa): void {
     this.mesaSelecionada = mesa;
-    // O padrão é sempre abrir na tela de "Novo Pedido" para consistência.
     this.modalView = 'novoPedido';
     
-    // Busca os pedidos ativos em segundo plano, para o caso de o usuário navegar para essa aba.
     this.pedidoService.getPedidosPorMesa(mesa.numero).subscribe(pedidos => {
       this.pedidosDaMesa = pedidos;
     });
@@ -79,44 +93,131 @@ export class Mesas implements OnInit {
     this.novoPedidoItens = [];
     this.totalNovoPedido = 0;
     this.novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
+    // Garante que o modal de sabores feche junto
+    this.fecharModalSabores(); 
   }
   
-  // --- Lógica do Novo Pedido ---
+  // --- Lógica do Novo Pedido (Atualizada) ---
   filtrarCardapio(tipo: string): void {
     this.filtroCardapioAtual = tipo;
     this.cardapioFiltrado = this.cardapioCompleto.filter(p => p.tipo === tipo);
   }
 
+  // --- Roteador de Adição de Itens (NOVO) ---
   adicionarAoPedido(produto: Produto): void {
-    const itemExistente = this.novoPedidoItens.find(item => item.produto.id_produto === produto.id_produto);
+    if (produto.tipo.startsWith('PIZZA_')) {
+      this.abrirModalSabores(produto);
+    } else {
+      this.adicionarItemSimples(produto);
+    }
+  }
+
+  adicionarItemSimples(produto: Produto): void {
+    const itemExistente = this.novoPedidoItens.find(item =>
+      item.sabores.length === 1 && item.sabores[0].id_produto === produto.id_produto
+    );
+
     if (itemExistente) {
       itemExistente.quantidade++;
     } else {
-      this.novoPedidoItens.push({ produto: produto, quantidade: 1 });
+      this.novoPedidoItens.push({
+        sabores: [produto],
+        quantidade: 1,
+        nomeDisplay: produto.nome,
+        precoCalculado: produto.preco
+      });
     }
     this.calcularTotalNovoPedido();
   }
 
-  calcularTotalNovoPedido(): void {
-    this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => total + (item.produto.preco * item.quantidade), 0);
+  // --- Lógica do Modal de Sabores (NOVO) ---
+  abrirModalSabores(saborInicial: Produto): void {
+    this.saboresDisponiveis = this.cardapioCompleto.filter(p =>
+      p.tipo.startsWith('PIZZA_')
+    );
+    this.saboresSelecionados = [saborInicial];
+    this.showSaborModal = true;
   }
 
+  fecharModalSabores(): void {
+    this.showSaborModal = false;
+    this.saboresSelecionados = [];
+  }
+
+  toggleSabor(sabor: Produto): void {
+    const index = this.saboresSelecionados.findIndex(s => s.id_produto === sabor.id_produto);
+    if (index > -1) {
+      this.saboresSelecionados.splice(index, 1);
+    } else if (this.saboresSelecionados.length < this.maxSabores) {
+      this.saboresSelecionados.push(sabor);
+    } else {
+      alert(`Você só pode selecionar até ${this.maxSabores} sabores.`);
+    }
+  }
+
+  isSaborSelecionado(sabor: Produto): boolean {
+    return this.saboresSelecionados.some(s => s.id_produto === sabor.id_produto);
+  }
+
+  confirmarPizzaMeioAMeio(): void {
+    if (this.saboresSelecionados.length === 0) {
+      alert('Selecione pelo menos 1 sabor.');
+      return;
+    }
+
+    const somaPrecos = this.saboresSelecionados.reduce((total, sabor) => total + sabor.preco, 0);
+    const precoMedio = somaPrecos / this.saboresSelecionados.length;
+
+    let nomeDisplay: string;
+    if (this.saboresSelecionados.length > 1) {
+      nomeDisplay = "Meia " + this.saboresSelecionados.map(s => s.nome).join(', Meia ');
+    } else {
+      nomeDisplay = this.saboresSelecionados[0].nome;
+    }
+
+    this.novoPedidoItens.push({
+      sabores: [...this.saboresSelecionados],
+      quantidade: 1,
+      nomeDisplay: nomeDisplay,
+      precoCalculado: precoMedio
+    });
+
+    this.calcularTotalNovoPedido();
+    this.fecharModalSabores();
+  }
+
+  // --- Lógica de Pedido (Atualizada) ---
+  calcularTotalNovoPedido(): void {
+    this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) =>
+      total + (item.precoCalculado * item.quantidade)
+    , 0);
+  }
+
+  removerDoPedido(index: number): void {
+    this.novoPedidoItens.splice(index, 1);
+    this.calcularTotalNovoPedido();
+  }
+
+  // --- Finalizar Pedido (Atualizado com novo DTO) ---
   finalizarPedido(): void {
     if (this.novoPedidoItens.length === 0) {
       alert('Adicione pelo menos um item ao pedido.');
       return;
     }
 
+    // Converte o carrinho para o DTO que o backend espera
     const itensParaApi = this.novoPedidoItens.map(item => ({
-      idProduto: item.produto.id_produto,
+      idsSabores: item.sabores.map(sabor => sabor.id_produto),
       quantidade: item.quantidade
     }));
 
     if (this.pedidosDaMesa.length > 0) {
+      // Adiciona itens a um pedido existente
       const pedidoId = this.pedidosDaMesa[0].idPedido;
-      this.pedidoService.adicionarItensAoPedido(pedidoId, itensParaApi).subscribe({
+      
+      // Assumindo que o DTO 'AdicionarItensRequest' espera { itens: [...] }
+     this.pedidoService.adicionarItensAoPedido(pedidoId, itensParaApi).subscribe({
         next: () => {
-          
           this.carregarMesas();
           this.fecharModal();
         },
@@ -126,14 +227,16 @@ export class Mesas implements OnInit {
         }
       });
     } else {
+      // Cria um novo pedido para a mesa
       const pedidoParaApi = {
         idMesa: this.mesaSelecionada!.numero,
         idCliente: null,
+        nomeClienteTemporario: null,
+        taxaEntrega: 0, // Mesas não têm taxa
         itens: itensParaApi
       };
       this.pedidoService.realizarPedido(pedidoParaApi).subscribe({
         next: () => {
-          
           this.carregarMesas();
           this.fecharModal();
         },
@@ -145,13 +248,13 @@ export class Mesas implements OnInit {
     }
   }
 
-  // --- Lógica da Reserva ---
+  // --- Lógica da Reserva (Sem mudanças) ---
   reservarMesa(): void {
     if (!this.mesaSelecionada || !this.novaReserva.nomeReserva || !this.novaReserva.numPessoas) {
       alert('Por favor, preencha o nome para a reserva e o número de pessoas.');
       return;
     }
-
+    
     const dadosReserva = {
       idMesa: this.mesaSelecionada.numero,
       nomeReserva: this.novaReserva.nomeReserva,
@@ -162,7 +265,6 @@ export class Mesas implements OnInit {
 
     this.reservaService.fazerReserva(dadosReserva).subscribe({
       next: () => {
-       
         this.carregarMesas();
         this.fecharModal();
       },
@@ -175,12 +277,5 @@ export class Mesas implements OnInit {
   
   formatarNomeFiltro(tipo: string): string {
     return tipo.replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-  }
-  removerDoPedido(itemParaRemover: any): void {
-    // Filtra a lista de itens, criando uma nova lista que contém todos os itens, EXCETO o que foi clicado.
-    this.novoPedidoItens = this.novoPedidoItens.filter(item => item.produto.id_produto !== itemParaRemover.produto.id_produto);
-    
-    // Após remover, é crucial recalcular o valor total do pedido.
-    this.calcularTotalNovoPedido();
   }
 }

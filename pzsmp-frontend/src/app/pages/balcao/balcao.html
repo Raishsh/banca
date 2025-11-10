@@ -3,8 +3,6 @@
     <h1>Pedido de Balcão</h1>
     <p>Registre um novo pedido para retirada no restaurante.</p>
   </div>
-  <div class="header-actions">
-    </div>
 </div>
 
 <div class="novo-pedido-view">
@@ -19,7 +17,7 @@
     </div>
     <div class="lista-produtos-cardapio">
       <div class="item-cardapio" *ngFor="let produto of cardapioFiltrado" (click)="adicionarAoPedido(produto)">
-        {{ produto.nome }} - R$ {{ produto.preco.toFixed(2) }}
+        {{ produto.nome }} - {{ produto.preco | currency:'BRL' }}
       </div>
     </div>
   </div>
@@ -34,18 +32,18 @@
     
     <div class="itens-container" *ngIf="novoPedidoItens.length > 0; else pedidoVazio">
       
-      <div *ngFor="let item of novoPedidoItens" class="item-pedido-atual">
+      <div *ngFor="let item of novoPedidoItens; let i = index" class="item-pedido-atual">
         <div class="item-info">
-          <span>{{ item.quantidade }}x {{ item.produto.nome }}</span>
-          <span>R$ {{ (item.produto.preco * item.quantidade).toFixed(2) }}</span>
+          <span>{{ item.quantidade }}x {{ item.nomeDisplay }}</span>
+          <span>{{ (item.precoCalculado * item.quantidade) | currency:'BRL' }}</span>
         </div>
-        <button class="btn-remover-item" (click)="removerDoPedido(item)" title="Remover Item">
+        <button class="btn-remover-item" (click)="removerDoPedido(i)" title="Remover Item">
           <i class="fas fa-trash-alt"></i>
         </button>
       </div>
       <hr>
       <div class="total-pedido">
-        <strong>Total: R$ {{ totalNovoPedido.toFixed(2) }}</strong>
+        <strong>Total: {{ totalNovoPedido | currency:'BRL' }}</strong>
       </div>
     </div>
     <ng-template #pedidoVazio>
@@ -53,5 +51,31 @@
     </ng-template>
 
     <button class="btn-finalizar-pedido" (click)="finalizarPedido()">Finalizar Pedido</button>
+  </div>
+</div>
+
+
+<div class="modal-overlay" *ngIf="showSaborModal" (click)="fecharModalSabores()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Monte sua Pizza (Até {{maxSabores}} sabores)</h2>
+      <button class="modal-close-btn" (click)="fecharModalSabores()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="sabores-grid">
+        <div *ngFor="let sabor of saboresDisponiveis" 
+             class="sabor-card"
+             [class.selected]="isSaborSelecionado(sabor)"
+             (click)="toggleSabor(sabor)">
+          <div class="sabor-nome">{{ sabor.nome }}</div>
+          <div class="sabor-preco">{{ sabor.preco | currency:'BRL' }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-confirmar-sabores" (click)="confirmarPizzaMeioAMeio()">
+        Confirmar Sabores
+      </button>
+    </div>
   </div>
 </div>

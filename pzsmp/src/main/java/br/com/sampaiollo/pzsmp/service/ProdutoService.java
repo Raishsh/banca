@@ -33,6 +33,10 @@ public class ProdutoService {
     
 @Transactional
 public Produto cadastrarProduto(ProdutoRequest request, MultipartFile imagem) {
+    if (produtoRepository.existsByNome(request.nome())) {
+            // Lança uma exceção que o Controller vai capturar
+            throw new RuntimeException("Já existe um produto cadastrado com o nome: " + request.nome());
+        }
     Produto novoProduto = new Produto();
     novoProduto.setNome(request.nome());
     novoProduto.setPreco(request.preco());
@@ -76,6 +80,10 @@ public Produto atualizarProduto(Integer id, ProdutoRequest request, MultipartFil
     Produto produtoExistente = produtoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
 
+    Optional<Produto> produtoComMesmoNome = produtoRepository.findByNome(request.nome());
+    if (produtoComMesmoNome.isPresent() && !produtoComMesmoNome.get().getId_produto().equals(id)) {
+            throw new RuntimeException("O nome '" + request.nome() + "' já está em uso por outro produto.");
+        }
     // Se uma nova imagem foi enviada...
     if (imagem != null && !imagem.isEmpty()) {
         // (Opcional, mas recomendado) Apaga a imagem antiga se ela existir
