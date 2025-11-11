@@ -4,11 +4,26 @@ import { FormsModule } from '@angular/forms';
 import { PedidoService } from '../../core/services/pedido';
 import { ProdutoService } from '../../core/services/produto';
 import { Produto } from '../../core/models/produto.model';
+import { FlavorModalComponent } from './flavor-modal/flavor-modal';
+
+export interface Sabor {
+  id: number;
+  nome: string;
+  preco: number;
+}
+
+export interface ItemPedidoInterno {
+  produto: Produto;
+  quantidade: number;
+  tamanho?: string;
+  sabores?: Sabor[];
+  precoFinal?: number;
+}
 
 @Component({
   selector: 'app-balcao',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FlavorModalComponent],
   templateUrl: './balcao.html',
   styleUrls: ['./balcao.css']
 })
@@ -21,12 +36,16 @@ export class Balcao implements OnInit {
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
 
-  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
+  novoPedidoItens: ItemPedidoInterno[] = [];
   totalNovoPedido: number = 0;
   nomeCliente: string = ''; // Para o nome temporário
 
   produtoParaSelecionarTamanho: Produto | null = null;
   showSizeModal: boolean = false;
+
+  showFlavorModal: boolean = false;
+  tamanhoSelecionado: string = '';
+  produtoParaSelecionarSabores: Produto | null = null;
 
   constructor(
     private pedidoService: PedidoService,
