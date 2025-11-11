@@ -110,8 +110,9 @@ export class Balcao implements OnInit {
       
       // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
       itens: this.novoPedidoItens.map(item => ({
-        idProduto: item.produto.id_produto, 
-        quantidade: item.quantidade
+        idProduto: item.produto.id_produto,
+        quantidade: item.quantidade,
+        tamanho: item.tamanho
       }))
     };
 
