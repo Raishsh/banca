@@ -137,7 +137,16 @@
   display: flex;
   justify-content: space-between;
   /* Padding vertical dos itens reduzido */
-  padding: 8px 0; 
+  padding: 8px 0;
+}
+
+.tamanho-pedido {
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: #666;
+  margin-left: 5px;
 }
 
 .pedido-card .card-footer {
