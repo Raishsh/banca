@@ -137,7 +137,6 @@ export class Mesas implements OnInit {
     );
   }
 
-  // CORREÇÃO: Função duplicada removida. Esta é a versão correta.
   adicionarAoPedido(produto: Produto): void {
     if (produto.precoPequeno || produto.precoMedio || produto.precoGrande) {
       this.produtoParaSelecionarTamanho = produto;
@@ -147,34 +146,88 @@ export class Mesas implements OnInit {
     }
   }
 
-  adicionarProdutoAoPedido(produto: Produto, tamanho?: string): void {
-    const itemExistente = this.novoPedidoItens.find(
-      (item) =>
-        item.produto.id_produto === produto.id_produto &&
-        item.tamanho === tamanho
-    );
+  adicionarProdutoAoPedido(produto: Produto, tamanho?: string, sabores?: Sabor[]): void {
+    const chaveItem = JSON.stringify({ id: produto.id_produto, tamanho, sabores: sabores?.map(s => s.id) ?? [] });
+    const itemExistente = this.novoPedidoItens.find(item => {
+      const chaveExistente = JSON.stringify({
+        id: item.produto.id_produto,
+        tamanho: item.tamanho,
+        sabores: item.sabores?.map(s => s.id) ?? []
+      });
+      return chaveExistente === chaveItem;
+    });
+
     if (itemExistente) {
       itemExistente.quantidade++;
     } else {
+      const precoFinal = this.calcularPrecoItem(produto, tamanho, sabores);
       this.novoPedidoItens.push({
         produto: produto,
         quantidade: 1,
         tamanho: tamanho,
+        sabores: sabores,
+        precoFinal: precoFinal
       });
     }
     this.calcularTotalNovoPedido();
   }
 
+  calcularPrecoItem(produto: Produto, tamanho?: string, sabores?: Sabor[]): number {
+    let preco = produto.preco;
+
+    if (tamanho) {
+      if (tamanho === 'P' && produto.precoPequeno) {
+        preco = produto.precoPequeno;
+      } else if (tamanho === 'M' && produto.precoMedio) {
+        preco = produto.precoMedio;
+      } else if (tamanho === 'G' && produto.precoGrande) {
+        preco = produto.precoGrande;
+      }
+    }
+
+    if (sabores && sabores.length > 0) {
+      const mediaPrecos = sabores.reduce((total, sabor) => total + sabor.preco, 0) / sabores.length;
+      preco = mediaPrecos;
+    }
+
+    return preco;
+  }
+
   selecionarTamanho(tamanho: string): void {
     if (this.produtoParaSelecionarTamanho) {
-      this.adicionarProdutoAoPedido(this.produtoParaSelecionarTamanho, tamanho);
+      const isPizza = this.produtoParaSelecionarTamanho.tipo.includes('PIZZA');
+      if (isPizza) {
+        this.tamanhoSelecionado = tamanho;
+        this.produtoParaSelecionarSabores = this.produtoParaSelecionarTamanho;
+        this.showFlavorModal = true;
+        this.fecharSizeModal();
+      } else {
+        this.adicionarProdutoAoPedido(this.produtoParaSelecionarTamanho, tamanho);
+        this.fecharSizeModal();
+      }
     }
-    this.fecharSizeModal();
   }
 
   fecharSizeModal(): void {
     this.showSizeModal = false;
     this.produtoParaSelecionarTamanho = null;
+  }
+
+  fecharFlavorModal(): void {
+    this.showFlavorModal = false;
+    this.produtoParaSelecionarSabores = null;
+    this.tamanhoSelecionado = '';
+  }
+
+  onSaboresSelecionados(data: { sabores: Sabor[], precoMedio: number }): void {
+    if (this.produtoParaSelecionarSabores) {
+      this.adicionarProdutoAoPedido(this.produtoParaSelecionarSabores, this.tamanhoSelecionado, data.sabores);
+    }
+    this.fecharFlavorModal();
+  }
+
+  onSaboresCancelados(): void {
+    this.fecharFlavorModal();
   }
 
   calcularTotalNovoPedido(): void {
