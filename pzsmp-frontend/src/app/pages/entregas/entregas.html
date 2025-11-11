@@ -132,3 +132,11 @@
     <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">Cancelar</button>
   </div>
 </div>
+
+<!-- Modal de Seleção de Sabores -->
+<app-flavor-modal
+  *ngIf="showFlavorModal"
+  [tamanho]="tamanhoSelecionado"
+  (saboreSelecionado)="onSaboresSelecionados($event)"
+  (cancelado)="onSaboresCancelados()"
+></app-flavor-modal>
