@@ -14,4 +14,8 @@ export class MesaService {
   getMesas(): Observable<Mesa[]> {
     return this.http.get<Mesa[]>(this.apiUrl);
   }
+
+  getMesaPorNumero(numero: number): Observable<Mesa> {
+    return this.http.get<Mesa>(`${this.apiUrl}/${numero}`);
+  }
 }
