@@ -245,28 +245,34 @@ export class Mesas implements OnInit {
   }
 
   // --- Lógica da Reserva ---
-  reservarMesa(): void {
-    if (
-      !this.mesaSelecionada ||
-      !this.novaReserva.nomeReserva ||
-      !this.novaReserva.numPessoas
-    ) {
-      alert('Por favor, preencha o nome para a reserva e o número de pessoas.');
+  alternarReserva(): void {
+    if (!this.mesaSelecionada) {
+      return;
+    }
+
+    if (this.mesaSelecionada.status === 'LIVRE') {
+      this.fazerReservaSimplificada();
+    } else if (this.mesaSelecionada.status === 'RESERVADA') {
+      this.cancelarReservaAtiva();
+    }
+  }
+
+  private fazerReservaSimplificada(): void {
+    if (!this.mesaSelecionada) {
       return;
     }
 
     const dadosReserva = {
       idMesa: this.mesaSelecionada.numero,
-      nomeReserva: this.novaReserva.nomeReserva,
-      numPessoas: this.novaReserva.numPessoas,
-      observacoes: this.novaReserva.observacoes,
+      nomeReserva: 'Reserva',
+      numPessoas: 1,
+      observacoes: '',
       dataReserva: new Date().toISOString(),
     };
 
     this.reservaService.fazerReserva(dadosReserva).subscribe({
       next: () => {
         this.carregarMesas();
-        this.novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
         if (this.mesaSelecionada) {
           this.reservaService.getReservasPorMesa(this.mesaSelecionada.numero).subscribe((reservas) => {
             this.reservasDaMesa = reservas;
@@ -280,12 +286,15 @@ export class Mesas implements OnInit {
     });
   }
 
-  cancelarReserva(idReserva: number): void {
-    if (!confirm('Tem certeza que deseja cancelar esta reserva?')) {
+  private cancelarReservaAtiva(): void {
+    if (this.reservasDaMesa.length === 0) {
+      alert('Nenhuma reserva encontrada para esta mesa.');
       return;
     }
 
-    this.reservaService.cancelarReserva(idReserva).subscribe({
+    const reserva = this.reservasDaMesa[0];
+
+    this.reservaService.cancelarReserva(reserva.idReserva).subscribe({
       next: () => {
         this.carregarMesas();
         if (this.mesaSelecionada) {
