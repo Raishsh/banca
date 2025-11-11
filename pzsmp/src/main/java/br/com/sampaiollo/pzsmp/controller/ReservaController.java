@@ -31,6 +31,19 @@ public class ReservaController {
     }
 
     /**
+     * Endpoint para obter reservas de uma mesa específica.
+     */
+    @GetMapping("/mesa/{numeroMesa}")
+    public ResponseEntity<?> obterReservasPorMesa(@PathVariable Integer numeroMesa) {
+        try {
+            var reservas = reservaService.obterReservasPorMesa(numeroMesa);
+            return ResponseEntity.ok(reservas);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
      * Endpoint para cancelar uma reserva.
      * (Este método não precisa de alterações)
      */
