@@ -1,0 +1,56 @@
+<div class="modal-overlay" (click)="cancelar()">
+  <div class="modal-sabores" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Selecione os Sabores</h3>
+      <p class="tamanho-info">Tamanho: <strong>{{ tamanho }}</strong></p>
+      <p class="instrucoes">{{ textoMaximo }}</p>
+    </div>
+
+    <div class="modal-body">
+      <div class="sabores-grid">
+        <div
+          *ngFor="let sabor of saboresDisponiveis"
+          class="sabor-item"
+          [class.selecionado]="isSabor(sabor)"
+          [class.desabilitado]="
+            saboresSelecionados.length >= maxSabores && !isSabor(sabor)
+          "
+          (click)="toggleSabor(sabor)"
+        >
+          <div class="sabor-nome">{{ sabor.nome }}</div>
+          <div class="sabor-preco">R$ {{ sabor.preco.toFixed(2) }}</div>
+          <div *ngIf="isSabor(sabor)" class="sabor-check">
+            <i class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="sabores-selecionados">
+        <h4>Sabores Selecionados ({{ saboresSelecionados.length }}/{{ maxSabores }})</h4>
+        <div class="sabor-selecionado-list">
+          <div *ngFor="let sabor of saboresSelecionados" class="sabor-selecionado">
+            <span>{{ sabor.nome }} - R$ {{ sabor.preco.toFixed(2) }}</span>
+            <button class="btn-remover" (click)="toggleSabor(sabor)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="preco-medio" *ngIf="saboresSelecionados.length > 0">
+          <strong>Preço Médio: R$ {{ precoMedio.toFixed(2) }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+      <button
+        class="btn-confirmar"
+        [disabled]="saboresSelecionados.length === 0"
+        (click)="confirmar()"
+      >
+        Confirmar Sabores
+      </button>
+    </div>
+  </div>
+</div>
