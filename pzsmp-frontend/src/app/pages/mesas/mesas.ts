@@ -208,6 +208,10 @@ export class Mesas implements OnInit {
     }
   }
 
+  obterProdutosPizzaParaFlavors(): Produto[] {
+    return this.cardapioCompleto.filter(p => p.tipo.includes('PIZZA'));
+  }
+
   fecharSizeModal(): void {
     this.showSizeModal = false;
     this.produtoParaSelecionarTamanho = null;
