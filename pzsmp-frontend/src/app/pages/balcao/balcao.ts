@@ -21,9 +21,12 @@ export class Balcao implements OnInit {
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
 
-  novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
+  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
   totalNovoPedido: number = 0;
   nomeCliente: string = ''; // Para o nome temporário
+
+  produtoParaSelecionarTamanho: Produto | null = null;
+  showSizeModal: boolean = false;
 
   constructor(
     private pedidoService: PedidoService,
