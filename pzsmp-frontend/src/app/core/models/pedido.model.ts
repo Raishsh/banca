@@ -2,6 +2,7 @@ export interface ItemPedido {
   nomeProduto: string;
   quantidade: number;
   precoUnitario: number;
+  tamanho?: string;
 }
 
 export interface Cliente {
