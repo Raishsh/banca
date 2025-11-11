@@ -163,14 +163,7 @@ export class Balcao implements OnInit {
 
   calcularTotalNovoPedido(): void {
     this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => {
-      let preco = item.produto.preco;
-      if (item.tamanho === 'P' && item.produto.precoPequeno) {
-        preco = item.produto.precoPequeno;
-      } else if (item.tamanho === 'M' && item.produto.precoMedio) {
-        preco = item.produto.precoMedio;
-      } else if (item.tamanho === 'G' && item.produto.precoGrande) {
-        preco = item.produto.precoGrande;
-      }
+      const preco = item.precoFinal ?? item.produto.preco;
       return total + (preco * item.quantidade);
     }, 0);
   }
