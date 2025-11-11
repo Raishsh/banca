@@ -87,18 +87,22 @@ export class Mesas implements OnInit {
   }
 
   abrirModal(mesa: Mesa): void {
-    this.mesaSelecionada = mesa;
-    // O padrão é sempre abrir na tela de "Novo Pedido" para consistência.
-    this.modalView = 'novoPedido';
+    // Refresh da mesa para obter o status mais recente do servidor
+    // Isso garante que após um pagamento, a mesa tenha status LIVRE atualizado
+    this.mesaService.getMesaPorNumero(mesa.numero).subscribe((mesaAtualizada) => {
+      this.mesaSelecionada = mesaAtualizada;
+      // O padrão é sempre abrir na tela de "Novo Pedido" para consistência.
+      this.modalView = 'novoPedido';
 
-    // Busca os pedidos ativos em segundo plano, para o caso de o usuário navegar para essa aba.
-    this.pedidoService.getPedidosPorMesa(mesa.numero).subscribe((pedidos) => {
-      this.pedidosDaMesa = pedidos;
-    });
+      // Busca os pedidos ativos em segundo plano, para o caso de o usuário navegar para essa aba.
+      this.pedidoService.getPedidosPorMesa(mesaAtualizada.numero).subscribe((pedidos) => {
+        this.pedidosDaMesa = pedidos;
+      });
 
-    // Busca as reservas ativas para a mesa
-    this.reservaService.getReservasPorMesa(mesa.numero).subscribe((reservas) => {
-      this.reservasDaMesa = reservas;
+      // Busca as reservas ativas para a mesa (agora apenas retorna reservas PENDENTE ou CONFIRMADA)
+      this.reservaService.getReservasPorMesa(mesaAtualizada.numero).subscribe((reservas) => {
+        this.reservasDaMesa = reservas;
+      });
     });
   }
 
