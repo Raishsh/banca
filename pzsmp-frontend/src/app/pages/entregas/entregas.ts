@@ -74,39 +74,14 @@ export class Entregas implements OnInit {
     this.cardapioFiltrado = this.cardapioCompleto.filter(p => p.tipo === tipo);
   }
 
-  abrirModalTamanho(produto: Produto): void {
-    this.produtoSelecionadoParaTamanho = produto;
-    this.mostrarModalTamanho = true;
-  }
-
-  fecharModalTamanho(): void {
-    this.mostrarModalTamanho = false;
-    this.produtoSelecionadoParaTamanho = null;
-  }
-
-  selecionarTamanhoEAdicionar(tamanho: string): void {
-    if (!this.produtoSelecionadoParaTamanho) return;
-
-    const itemExistente = this.novoPedidoItens.find(
-      item => item.produto.id_produto === this.produtoSelecionadoParaTamanho!.id_produto && item.tamanho === tamanho
-    );
-
+  adicionarAoPedido(produto: Produto): void {
+    const itemExistente = this.novoPedidoItens.find(item => item.produto.id_produto === produto.id_produto);
     if (itemExistente) {
       itemExistente.quantidade++;
     } else {
-      this.novoPedidoItens.push({
-        produto: this.produtoSelecionadoParaTamanho,
-        quantidade: 1,
-        tamanho: tamanho
-      });
+      this.novoPedidoItens.push({ produto: produto, quantidade: 1 });
     }
-
     this.calcularTotalNovoPedido();
-    this.fecharModalTamanho();
-  }
-
-  adicionarAoPedido(produto: Produto): void {
-    this.abrirModalTamanho(produto);
   }
 
 
