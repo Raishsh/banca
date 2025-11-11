@@ -33,9 +33,14 @@ export class Mesas implements OnInit {
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
 
-  novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
+  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
   totalNovoPedido: number = 0;
   novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
+
+  // Modal de Seleção de Tamanho
+  mostrarModalTamanho: boolean = false;
+  produtoSelecionadoParaTamanho: Produto | null = null;
+  tamanhosSelecionaveis: string[] = ['P', 'M', 'G'];
 
   constructor(
     private mesaService: MesaService,
