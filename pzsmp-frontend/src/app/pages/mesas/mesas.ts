@@ -232,7 +232,11 @@ export class Mesas implements OnInit {
 
           // 3. Limpa e fecha
           this.carregarMesas();
-          this.fecharModal();
+          this.pedidoService.getPedidosPorMesa(this.mesaSelecionada!.numero).subscribe((pedidos) => {
+            this.pedidosDaMesa = pedidos;
+          });
+          this.novoPedidoItens = [];
+          this.totalNovoPedido = 0;
         },
         error: (err) => {
           alert('Erro ao criar o pedido.');
