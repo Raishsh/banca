@@ -6,5 +6,8 @@ public record ProdutoRequest(
     String nome,
     String tipo,
     BigDecimal preco,
-    String descricao
+    String descricao,
+    BigDecimal precoPequeno,
+    BigDecimal precoMedio,
+    BigDecimal precoGrande
 ) {}

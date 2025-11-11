@@ -10,7 +10,7 @@
     <ul class="itens-lista">
       <li *ngFor="let item of pedido.itens">
         <span class="qtde">{{ item.quantidade }}x</span>
-        <span class="nome">{{ item.nomeProduto }}</span>
+        <span class="nome">{{ item.nomeProduto }}<span *ngIf="item.tamanho" class="tamanho-cozinha"> ({{ item.tamanho }})</span></span>
       </li>
     </ul>
   </section>

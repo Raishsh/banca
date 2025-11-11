@@ -33,6 +33,11 @@
     <div class="produto-info">
       <h3>{{ produto.nome }}</h3>
       <p>R$ {{ produto.preco.toFixed(2) }}</p>
+      <div *ngIf="produto.precoPequeno || produto.precoMedio || produto.precoGrande" class="tamanhos-preco">
+        <span *ngIf="produto.precoPequeno" class="tamanho-badge">P: R$ {{ produto.precoPequeno.toFixed(2) }}</span>
+        <span *ngIf="produto.precoMedio" class="tamanho-badge">M: R$ {{ produto.precoMedio.toFixed(2) }}</span>
+        <span *ngIf="produto.precoGrande" class="tamanho-badge">G: R$ {{ produto.precoGrande.toFixed(2) }}</span>
+      </div>
       <p *ngIf="produto.descricao" class="produto-descricao">{{ produto.descricao }}</p>
     </div>
     <div class="card-actions">
@@ -85,6 +90,21 @@
       <div class="form-group">
         <label for="edit-descricao">Descrição (opcional)</label>
         <textarea id="edit-descricao" [(ngModel)]="produtoEmEdicao.descricao" name="edit-descricao" rows="3" placeholder="Ex.: Ingredientes, observações, porções..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-precoPequeno">Preço P (Pequeno - opcional)</label>
+        <input type="number" id="edit-precoPequeno" [(ngModel)]="produtoEmEdicao.precoPequeno" name="edit-precoPequeno" step="0.01" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
+        <label for="edit-precoMedio">Preço M (Médio - opcional)</label>
+        <input type="number" id="edit-precoMedio" [(ngModel)]="produtoEmEdicao.precoMedio" name="edit-precoMedio" step="0.01" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
+        <label for="edit-precoGrande">Preço G (Grande - opcional)</label>
+        <input type="number" id="edit-precoGrande" [(ngModel)]="produtoEmEdicao.precoGrande" name="edit-precoGrande" step="0.01" placeholder="0.00">
       </div>
 
       <div class="form-group">

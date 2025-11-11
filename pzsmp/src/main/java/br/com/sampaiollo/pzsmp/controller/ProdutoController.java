@@ -41,9 +41,12 @@ public ResponseEntity<Produto> cadastrarProduto(
         @RequestParam("preco") BigDecimal preco,
         @RequestParam("tipo") String tipo,
         @RequestParam(value = "descricao", required = false) String descricao,
+        @RequestParam(value = "precoPequeno", required = false) BigDecimal precoPequeno,
+        @RequestParam(value = "precoMedio", required = false) BigDecimal precoMedio,
+        @RequestParam(value = "precoGrande", required = false) BigDecimal precoGrande,
         @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
 
-    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao);
+    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao, precoPequeno, precoMedio, precoGrande);
 
     Produto produtoSalvo = produtoService.cadastrarProduto(request, imagem);
     return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
@@ -57,9 +60,12 @@ public ResponseEntity<Produto> atualizarProduto(
         @RequestParam("preco") BigDecimal preco,
         @RequestParam("tipo") String tipo,
         @RequestParam(value = "descricao", required = false) String descricao,
+        @RequestParam(value = "precoPequeno", required = false) BigDecimal precoPequeno,
+        @RequestParam(value = "precoMedio", required = false) BigDecimal precoMedio,
+        @RequestParam(value = "precoGrande", required = false) BigDecimal precoGrande,
         @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
 
-    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao);
+    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao, precoPequeno, precoMedio, precoGrande);
     Produto produtoAtualizado = produtoService.atualizarProduto(id, request, imagem);
 
     return ResponseEntity.ok(produtoAtualizado);
