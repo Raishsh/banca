@@ -26,6 +26,7 @@ export class Mesas implements OnInit {
 
   // Dados para os diferentes views do modal
   pedidosDaMesa: Pedido[] = [];
+  reservasDaMesa: any[] = [];
   cardapioCompleto: Produto[] = [];
   cardapioFiltrado: Produto[] = [];
   filtroCardapioAtual: string = 'PIZZA_ESPECIAL';
@@ -64,7 +65,8 @@ export class Mesas implements OnInit {
     private mesaService: MesaService,
     private pedidoService: PedidoService,
     private reservaService: ReservaService,
-    private produtoService: ProdutoService
+    private produtoService: ProdutoService,
+    private pagamentoState: PagamentoStateService
   ) {}
 
   ngOnInit(): void {
