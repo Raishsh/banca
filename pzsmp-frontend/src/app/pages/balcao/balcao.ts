@@ -213,11 +213,15 @@ export class Balcao implements OnInit {
   formatarNomeFiltro(tipo: string): string {
     return tipo.replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   }
-  removerDoPedido(itemParaRemover: any): void {
-    // Filtra a lista de itens, criando uma nova lista que contém todos os itens, EXCETO o que foi clicado.
-    this.novoPedidoItens = this.novoPedidoItens.filter(item => item.produto.id_produto !== itemParaRemover.produto.id_produto);
-    
-    // Após remover, é crucial recalcular o valor total do pedido.
+  removerDoPedido(itemParaRemover: ItemPedidoInterno): void {
+    this.novoPedidoItens = this.novoPedidoItens.filter(item => {
+      const mesmoId = item.produto.id_produto === itemParaRemover.produto.id_produto;
+      const mesmoTamanho = item.tamanho === itemParaRemover.tamanho;
+      const mesmosSabores = JSON.stringify(item.sabores?.map(s => s.id) ?? []) ===
+                            JSON.stringify(itemParaRemover.sabores?.map(s => s.id) ?? []);
+      return !(mesmoId && mesmoTamanho && mesmosSabores);
+    });
+
     this.calcularTotalNovoPedido();
   }
 }
