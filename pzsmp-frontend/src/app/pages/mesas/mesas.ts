@@ -50,7 +50,6 @@ export class Mesas implements OnInit {
     tamanho?: string;
   }[] = [];
   totalNovoPedido: number = 0;
-  novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
 
   // Modal de Seleção de Tamanho
   mostrarModalTamanho: boolean = false; // (Propriedade do modal antigo, mantida para evitar quebras se usada em outro lugar)
