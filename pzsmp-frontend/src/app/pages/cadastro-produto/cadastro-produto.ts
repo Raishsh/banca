@@ -90,7 +90,15 @@ export class CadastroProdutoComponent {
   }
 
   limparFormulario(): void {
-    this.produto = { nome: '', preco: null, tipo: '', descricao: '' };
+    this.produto = {
+      nome: '',
+      preco: null,
+      tipo: '',
+      descricao: '',
+      precoPequeno: null,
+      precoMedio: null,
+      precoGrande: null
+    };
     this.arquivoSelecionado = null;
     // Opcional: resetar o input de arquivo (um pouco mais complexo)
     const fileInput = document.getElementById('imagem') as HTMLInputElement;
