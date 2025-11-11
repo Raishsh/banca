@@ -49,6 +49,8 @@
 
             <div *ngFor="let item of novoPedidoItens" class="item-pedido-atual">
               <div class="item-info">
+                <span>{{ item.quantidade }}x {{ item.produto.nome }} <span *ngIf="item.tamanho" class="item-tamanho">({{ item.tamanho }})</span></span>
+                <span>R$ {{ (item.produto.preco * item.quantidade).toFixed(2) }}</span>
                 <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span></span>
                 <span>R$ {{ (
                   (item.tamanho === 'P' && item.produto.precoPequeno ? item.produto.precoPequeno :
@@ -79,6 +81,22 @@
         </div>
     </div>
   </div>
+
+  <!-- Modal de Seleção de Tamanho -->
+  <div class="modal-overlay-tamanho" *ngIf="mostrarModalTamanho">
+    <div class="modal-content-tamanho">
+      <button class="btn-fechar-tamanho" (click)="fecharModalTamanho()">✕</button>
+      <h2>Selecione o Tamanho</h2>
+      <p>{{ produtoSelecionadoParaTamanho?.nome }}</p>
+      <div class="tamanho-opcoes">
+        <button *ngFor="let tamanho of tamanhosSelecionaveis"
+                class="btn-tamanho"
+                (click)="selecionarTamanhoEAdicionar(tamanho)">
+          {{ tamanho }}
+        </button>
+      </div>
+      <button class="btn-fechar-modal-tamanho" (click)="fecharModalTamanho()">Cancelar</button>
+    </div>
 </div>
 
 <!-- Modal de Seleção de Tamanho -->

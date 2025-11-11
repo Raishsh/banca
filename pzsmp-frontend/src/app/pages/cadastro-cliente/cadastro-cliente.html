@@ -120,9 +120,8 @@
             type="email"
             [(ngModel)]="novoCliente.email"
             name="email"
-            required
             placeholder="exemplo@gmail.com"
-            appTooltip="Digite um e-mail válido para o cliente">
+            appTooltip="Digite um e-mail válido para o cliente (opcional)">
         </div>
         <div class="form-group">
           <label for="telefone">Telefone</label>
@@ -231,7 +230,7 @@
         </div>
         <div class="form-group">
           <label>E-mail</label>
-          <input type="email" [(ngModel)]="clienteEmEdicao.email" name="edit-email" placeholder="exemplo@gmail.com" required>
+          <input type="email" [(ngModel)]="clienteEmEdicao.email" name="edit-email" placeholder="exemplo@gmail.com">
         </div>
         <div class="form-group">
           <label>Telefone</label>

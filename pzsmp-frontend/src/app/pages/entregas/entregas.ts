@@ -28,9 +28,14 @@ export class Entregas implements OnInit {
     'PIZZA_ESPECIAL', 'PIZZA_TRADICIONAL', 'PIZZA_DOCE', 'PASTEL_DOCE',
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
-  novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
+  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
   totalNovoPedido: number = 0;
   taxaEntrega: number = 7;
+
+  // Modal de Seleção de Tamanho
+  mostrarModalTamanho: boolean = false;
+  produtoSelecionadoParaTamanho: Produto | null = null;
+  tamanhosSelecionaveis: string[] = ['P', 'M', 'G'];
 
   constructor(
     private clienteService: ClienteService,
@@ -74,14 +79,39 @@ export class Entregas implements OnInit {
     this.cardapioFiltrado = this.cardapioCompleto.filter(p => p.tipo === tipo);
   }
 
-  adicionarAoPedido(produto: Produto): void {
-    const itemExistente = this.novoPedidoItens.find(item => item.produto.id_produto === produto.id_produto);
+  abrirModalTamanho(produto: Produto): void {
+    this.produtoSelecionadoParaTamanho = produto;
+    this.mostrarModalTamanho = true;
+  }
+
+  fecharModalTamanho(): void {
+    this.mostrarModalTamanho = false;
+    this.produtoSelecionadoParaTamanho = null;
+  }
+
+  selecionarTamanhoEAdicionar(tamanho: string): void {
+    if (!this.produtoSelecionadoParaTamanho) return;
+
+    const itemExistente = this.novoPedidoItens.find(
+      item => item.produto.id_produto === this.produtoSelecionadoParaTamanho!.id_produto && item.tamanho === tamanho
+    );
+
     if (itemExistente) {
       itemExistente.quantidade++;
     } else {
-      this.novoPedidoItens.push({ produto: produto, quantidade: 1 });
+      this.novoPedidoItens.push({
+        produto: this.produtoSelecionadoParaTamanho,
+        quantidade: 1,
+        tamanho: tamanho
+      });
     }
+
     this.calcularTotalNovoPedido();
+    this.fecharModalTamanho();
+  }
+
+  adicionarAoPedido(produto: Produto): void {
+    this.abrirModalTamanho(produto);
   }
 
 
