@@ -28,14 +28,9 @@ export class Entregas implements OnInit {
     'PIZZA_ESPECIAL', 'PIZZA_TRADICIONAL', 'PIZZA_DOCE', 'PASTEL_DOCE',
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
-  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
+  novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
   totalNovoPedido: number = 0;
   taxaEntrega: number = 7;
-
-  // Modal de Seleção de Tamanho
-  mostrarModalTamanho: boolean = false;
-  produtoSelecionadoParaTamanho: Produto | null = null;
-  tamanhosSelecionaveis: string[] = ['P', 'M', 'G'];
 
   constructor(
     private clienteService: ClienteService,
