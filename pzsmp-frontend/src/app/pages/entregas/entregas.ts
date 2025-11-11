@@ -184,9 +184,16 @@ export class Entregas implements OnInit {
   }
 
   removerDoPedido(itemParaRemover: any): void {
-    // Filtra a lista de itens, criando uma nova lista que contém todos os itens, EXCETO o que foi clicado.
-    this.novoPedidoItens = this.novoPedidoItens.filter(item => item.produto.id_produto !== itemParaRemover.produto.id_produto);
-    
+    // Filtra a lista de itens, criando uma nova lista que cont��m todos os itens, EXCETO o que foi clicado.
+    // CORREÇÃO: Comparação precisa checar o ID E o tamanho
+    this.novoPedidoItens = this.novoPedidoItens.filter(
+      (item) =>
+        !(
+          item.produto.id_produto === itemParaRemover.produto.id_produto &&
+          item.tamanho === itemParaRemover.tamanho
+        )
+    );
+
     // Após remover, é crucial recalcular o valor total do pedido.
     this.calcularTotalNovoPedido();
   }
