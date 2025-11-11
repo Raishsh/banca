@@ -16,7 +16,10 @@ export class CadastroProdutoComponent {
     nome: '',
     preco: null as number | null,
     tipo: '',
-    descricao: ''
+    descricao: '',
+    precoPequeno: null as number | null,
+    precoMedio: null as number | null,
+    precoGrande: null as number | null
   };
   arquivoSelecionado: File | null = null;
   mensagemSucesso: string | null = null;
