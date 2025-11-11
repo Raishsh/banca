@@ -70,7 +70,10 @@ public class ReservaService {
         Mesa mesa = mesaRepository.findById(numeroMesa)
                 .orElseThrow(() -> new RuntimeException("Mesa não encontrada com número: " + numeroMesa));
 
-        return reservaRepository.findByMesaNumero(numeroMesa);
+        // Retorna apenas reservas ativas (PENDENTE ou CONFIRMADA)
+        // Isso garante que reservas canceladas não apareçam e não bloqueiem novas reservas
+        List<StatusReserva> statusAtivos = List.of(StatusReserva.PENDENTE, StatusReserva.CONFIRMADA);
+        return reservaRepository.findByMesaAndStatusIn(mesa, statusAtivos);
     }
 
     @Transactional
