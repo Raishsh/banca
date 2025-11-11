@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Produto } from '../../../core/models/produto.model';
 
@@ -15,14 +15,14 @@ export interface Sabor {
   templateUrl: './flavor-modal.html',
   styleUrls: ['./flavor-modal.css']
 })
-export class FlavorModalComponent {
+export class FlavorModalComponent implements OnInit {
   @Input() tamanho: string = '';
-  @Input() saboresDisponiveis: Sabor[] = [];
   @Input() produtosDisponiveisPizza: Produto[] = [];
 
   @Output() saboreSelecionado = new EventEmitter<{ sabores: Sabor[], precoMedio: number }>();
   @Output() cancelado = new EventEmitter<void>();
 
+  saboresDisponiveis: Sabor[] = [];
   saboresSelecionados: Sabor[] = [];
 
   ngOnInit(): void {
@@ -30,6 +30,9 @@ export class FlavorModalComponent {
   }
 
   private inicializarSaboresDisponiveisAPizzas(): void {
+    this.saboresDisponiveis = [];
+    this.saboresSelecionados = [];
+
     if (this.produtosDisponiveisPizza && this.produtosDisponiveisPizza.length > 0) {
       this.saboresDisponiveis = this.produtosDisponiveisPizza.map(produto => ({
         id: produto.id_produto,
