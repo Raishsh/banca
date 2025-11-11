@@ -130,7 +130,7 @@
       </div>
 
       <div *ngIf="modalView === 'pedidos'" class="pedidos-view">
-        <h4>Pedidos Ativos da Mesa {{ mesaSelecionada?.numero }}</h4>
+        <h4>Pedidos Ativos da Mesa {{ mesaSelecionada!.numero }}</h4>
         <div *ngIf="pedidosDaMesa.length > 0; else nenhumPedido" class="pedidos-lista">
           <div *ngFor="let pedido of pedidosDaMesa" class="pedido-card">
             <div class="pedido-header">
