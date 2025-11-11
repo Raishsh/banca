@@ -36,13 +36,13 @@
       
       <div *ngFor="let item of novoPedidoItens" class="item-pedido-atual">
         <div class="item-info">
-          <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span></span>
-          <span>R$ {{ (
-            (item.tamanho === 'P' && item.produto.precoPequeno ? item.produto.precoPequeno :
-             item.tamanho === 'M' && item.produto.precoMedio ? item.produto.precoMedio :
-             item.tamanho === 'G' && item.produto.precoGrande ? item.produto.precoGrande :
-             item.produto.preco) * item.quantidade
-          ).toFixed(2) }}</span>
+          <div class="item-detalhes">
+            <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span></span>
+            <span *ngIf="formatarSabores(item.sabores)" class="sabores-item">
+              {{ formatarSabores(item.sabores) }}
+            </span>
+          </div>
+          <span>R$ {{ ((item.precoFinal ?? item.produto.preco) * item.quantidade).toFixed(2) }}</span>
         </div>
         <button class="btn-remover-item" (click)="removerDoPedido(item)" title="Remover Item">
           <i class="fas fa-trash-alt"></i>
@@ -89,3 +89,11 @@
     <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">Cancelar</button>
   </div>
 </div>
+
+<!-- Modal de Seleção de Sabores -->
+<app-flavor-modal
+  *ngIf="showFlavorModal"
+  [tamanho]="tamanhoSelecionado"
+  (saboreSelecionado)="onSaboresSelecionados($event)"
+  (cancelado)="onSaboresCancelados()"
+></app-flavor-modal>

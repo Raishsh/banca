@@ -8,11 +8,26 @@ import { Cliente } from '../../core/models/cliente.model';
 import { Produto } from '../../core/models/produto.model';
 import { AuthRoutingModule } from "../../auth/auth-routing-module";
 import { RouterModule } from '@angular/router';
+import { FlavorModalComponent } from '../balcao/flavor-modal/flavor-modal';
+
+export interface Sabor {
+  id: number;
+  nome: string;
+  preco: number;
+}
+
+export interface ItemPedidoInterno {
+  produto: Produto;
+  quantidade: number;
+  tamanho?: string;
+  sabores?: Sabor[];
+  precoFinal?: number;
+}
 
 @Component({
   selector: 'app-entregas',
   standalone: true,
-  imports: [CommonModule, FormsModule, AuthRoutingModule, RouterModule],
+  imports: [CommonModule, FormsModule, AuthRoutingModule, RouterModule, FlavorModalComponent],
   templateUrl: './entregas.html',
   styleUrls: ['./entregas.css']
 })
@@ -28,12 +43,16 @@ export class Entregas implements OnInit {
     'PIZZA_ESPECIAL', 'PIZZA_TRADICIONAL', 'PIZZA_DOCE', 'PASTEL_DOCE',
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
-  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
+  novoPedidoItens: ItemPedidoInterno[] = [];
   totalNovoPedido: number = 0;
   taxaEntrega: number = 7;
 
   produtoParaSelecionarTamanho: Produto | null = null;
   showSizeModal: boolean = false;
+
+  showFlavorModal: boolean = false;
+  tamanhoSelecionado: string = '';
+  produtoParaSelecionarSabores: Produto | null = null;
 
   constructor(
     private clienteService: ClienteService,
@@ -86,23 +105,66 @@ export class Entregas implements OnInit {
     }
   }
 
-  adicionarProdutoAoPedido(produto: Produto, tamanho?: string): void {
-    const itemExistente = this.novoPedidoItens.find(item =>
-      item.produto.id_produto === produto.id_produto && item.tamanho === tamanho
-    );
+  adicionarProdutoAoPedido(produto: Produto, tamanho?: string, sabores?: Sabor[]): void {
+    const chaveItem = JSON.stringify({ id: produto.id_produto, tamanho, sabores: sabores?.map(s => s.id) ?? [] });
+    const itemExistente = this.novoPedidoItens.find(item => {
+      const chaveExistente = JSON.stringify({
+        id: item.produto.id_produto,
+        tamanho: item.tamanho,
+        sabores: item.sabores?.map(s => s.id) ?? []
+      });
+      return chaveExistente === chaveItem;
+    });
+
     if (itemExistente) {
       itemExistente.quantidade++;
     } else {
-      this.novoPedidoItens.push({ produto: produto, quantidade: 1, tamanho: tamanho });
+      const precoFinal = this.calcularPrecoItem(produto, tamanho, sabores);
+      this.novoPedidoItens.push({
+        produto: produto,
+        quantidade: 1,
+        tamanho: tamanho,
+        sabores: sabores,
+        precoFinal: precoFinal
+      });
     }
     this.calcularTotalNovoPedido();
   }
 
+  calcularPrecoItem(produto: Produto, tamanho?: string, sabores?: Sabor[]): number {
+    let preco = produto.preco;
+
+    if (tamanho) {
+      if (tamanho === 'P' && produto.precoPequeno) {
+        preco = produto.precoPequeno;
+      } else if (tamanho === 'M' && produto.precoMedio) {
+        preco = produto.precoMedio;
+      } else if (tamanho === 'G' && produto.precoGrande) {
+        preco = produto.precoGrande;
+      }
+    }
+
+    if (sabores && sabores.length > 0) {
+      const mediaPrecos = sabores.reduce((total, sabor) => total + sabor.preco, 0) / sabores.length;
+      preco = mediaPrecos;
+    }
+
+    return preco;
+  }
+
   selecionarTamanho(tamanho: string): void {
     if (this.produtoParaSelecionarTamanho) {
-      this.adicionarProdutoAoPedido(this.produtoParaSelecionarTamanho, tamanho);
+      const isPizza = this.produtoParaSelecionarTamanho.tipo.includes('PIZZA');
+      if (isPizza) {
+        this.tamanhoSelecionado = tamanho;
+        this.produtoParaSelecionarSabores = this.produtoParaSelecionarTamanho;
+        this.showFlavorModal = true;
+        this.fecharSizeModal();
+      } else {
+        this.adicionarProdutoAoPedido(this.produtoParaSelecionarTamanho, tamanho);
+        this.fecharSizeModal();
+      }
     }
-    this.fecharSizeModal();
   }
 
   fecharSizeModal(): void {
@@ -110,20 +172,29 @@ export class Entregas implements OnInit {
     this.produtoParaSelecionarTamanho = null;
   }
 
+  fecharFlavorModal(): void {
+    this.showFlavorModal = false;
+    this.produtoParaSelecionarSabores = null;
+    this.tamanhoSelecionado = '';
+  }
+
+  onSaboresSelecionados(data: { sabores: Sabor[], precoMedio: number }): void {
+    if (this.produtoParaSelecionarSabores) {
+      this.adicionarProdutoAoPedido(this.produtoParaSelecionarSabores, this.tamanhoSelecionado, data.sabores);
+    }
+    this.fecharFlavorModal();
+  }
+
+  onSaboresCancelados(): void {
+    this.fecharFlavorModal();
+  }
+
 
   calcularTotalNovoPedido(): void {
     const subtotalItens = this.novoPedidoItens.reduce((total, item) => {
-      let preco = item.produto.preco;
-      if (item.tamanho === 'P' && item.produto.precoPequeno) {
-        preco = item.produto.precoPequeno;
-      } else if (item.tamanho === 'M' && item.produto.precoMedio) {
-        preco = item.produto.precoMedio;
-      } else if (item.tamanho === 'G' && item.produto.precoGrande) {
-        preco = item.produto.precoGrande;
-      }
+      const preco = item.precoFinal ?? item.produto.preco;
       return total + (preco * item.quantidade);
     }, 0);
-    // Garante que a taxa seja um número, mesmo se o campo estiver vazio
     const taxa = Number(this.taxaEntrega) || 0;
     this.totalNovoPedido = subtotalItens + taxa;
   }
@@ -144,11 +215,11 @@ export class Entregas implements OnInit {
       nomeClienteTemporario: null,
       taxaEntrega: Number(this.taxaEntrega) || 0,
 
-      // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
       itens: this.novoPedidoItens.map(item => ({
         idProduto: item.produto.id_produto,
         quantidade: item.quantidade,
-        tamanho: item.tamanho
+        tamanho: item.tamanho,
+        sabores: item.sabores?.map(s => s.nome) ?? null
       }))
     };
 
@@ -183,18 +254,23 @@ export class Entregas implements OnInit {
     return tipo.replace(/_/g, ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   }
 
-  removerDoPedido(itemParaRemover: any): void {
-    // Filtra a lista de itens, criando uma nova lista que cont��m todos os itens, EXCETO o que foi clicado.
-    // CORREÇÃO: Comparação precisa checar o ID E o tamanho
-    this.novoPedidoItens = this.novoPedidoItens.filter(
-      (item) =>
-        !(
-          item.produto.id_produto === itemParaRemover.produto.id_produto &&
-          item.tamanho === itemParaRemover.tamanho
-        )
-    );
+  removerDoPedido(itemParaRemover: ItemPedidoInterno): void {
+    this.novoPedidoItens = this.novoPedidoItens.filter(item => {
+      const mesmoId = item.produto.id_produto === itemParaRemover.produto.id_produto;
+      const mesmoTamanho = item.tamanho === itemParaRemover.tamanho;
+      const saborIds1 = (item.sabores ?? []).map(s => s.id).sort((a, b) => a - b);
+      const saborIds2 = (itemParaRemover.sabores ?? []).map(s => s.id).sort((a, b) => a - b);
+      const mesmosSabores = JSON.stringify(saborIds1) === JSON.stringify(saborIds2);
+      return !(mesmoId && mesmoTamanho && mesmosSabores);
+    });
 
-    // Após remover, é crucial recalcular o valor total do pedido.
     this.calcularTotalNovoPedido();
+  }
+
+  formatarSabores(sabores?: Sabor[]): string {
+    if (!sabores || sabores.length === 0) {
+      return '';
+    }
+    return sabores.map(s => s.nome).join(', ');
   }
 }

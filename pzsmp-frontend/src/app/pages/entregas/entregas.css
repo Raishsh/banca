@@ -242,7 +242,20 @@
 .item-pedido-atual .item-info {
   display: flex;
   justify-content: space-between;
-  flex-grow: 1; /* Faz esta div ocupar o máximo de espaço */
+  align-items: flex-start;
+  flex-grow: 1;
+}
+
+.item-detalhes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sabores-item {
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
 }
 
 

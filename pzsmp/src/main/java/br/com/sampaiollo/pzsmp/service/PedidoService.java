@@ -97,6 +97,10 @@ public class PedidoService {
                 }
             }
 
+            if (itemDto.getSabores() != null && !itemDto.getSabores().isEmpty()) {
+                itemPedido.setSabores(String.join(",", itemDto.getSabores()));
+            }
+
             itemPedido.setPreco(preco);
             itemPedido.setPedido(pedido);
             itensDoPedido.add(itemPedido);
@@ -178,6 +182,10 @@ public class PedidoService {
                 } else if ("G".equalsIgnoreCase(itemDto.getTamanho()) && produto.getPrecoGrande() != null) {
                     preco = produto.getPrecoGrande();
                 }
+            }
+
+            if (itemDto.getSabores() != null && !itemDto.getSabores().isEmpty()) {
+                novoItem.setSabores(String.join(",", itemDto.getSabores()));
             }
 
             novoItem.setPreco(preco);
