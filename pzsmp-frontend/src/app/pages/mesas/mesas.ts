@@ -296,7 +296,7 @@ export class Mesas implements OnInit {
 
     const reserva = this.reservasDaMesa[0];
 
-    this.reservaService.cancelarReserva(reserva.idReserva).subscribe({
+    this.reservaService.cancelarReserva(reserva.id).subscribe({
       next: () => {
         this.carregarMesas();
         if (this.mesaSelecionada) {
@@ -310,6 +310,32 @@ export class Mesas implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  private obterDataReservaPadrao(): string {
+    const agora = new Date();
+    const hora = agora.getHours();
+    const minuto = agora.getMinutes();
+
+    let dataReserva: Date;
+
+    if (hora < 19 || (hora === 19 && minuto === 0)) {
+      dataReserva = new Date(agora);
+      dataReserva.setHours(19, 0, 0, 0);
+    } else {
+      dataReserva = new Date(agora);
+      dataReserva.setDate(dataReserva.getDate() + 1);
+      dataReserva.setHours(19, 0, 0, 0);
+    }
+
+    const ano = dataReserva.getFullYear();
+    const mes = String(dataReserva.getMonth() + 1).padStart(2, '0');
+    const dia = String(dataReserva.getDate()).padStart(2, '0');
+    const horas = String(dataReserva.getHours()).padStart(2, '0');
+    const minutos = String(dataReserva.getMinutes()).padStart(2, '0');
+    const segundos = String(dataReserva.getSeconds()).padStart(2, '0');
+
+    return `${ano}-${mes}-${dia}T${horas}:${minutos}:${segundos}`;
   }
 
   formatarNomeFiltro(tipo: string): string {
