@@ -33,6 +33,11 @@
     <div class="produto-info">
       <h3>{{ produto.nome }}</h3>
       <p>R$ {{ produto.preco.toFixed(2) }}</p>
+      <div *ngIf="produto.precoPequeno || produto.precoMedio || produto.precoGrande" class="tamanhos-preco">
+        <span *ngIf="produto.precoPequeno" class="tamanho-badge">P: R$ {{ produto.precoPequeno.toFixed(2) }}</span>
+        <span *ngIf="produto.precoMedio" class="tamanho-badge">M: R$ {{ produto.precoMedio.toFixed(2) }}</span>
+        <span *ngIf="produto.precoGrande" class="tamanho-badge">G: R$ {{ produto.precoGrande.toFixed(2) }}</span>
+      </div>
       <p *ngIf="produto.descricao" class="produto-descricao">{{ produto.descricao }}</p>
     </div>
     <div class="card-actions">
