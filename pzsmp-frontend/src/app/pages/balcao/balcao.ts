@@ -179,12 +179,12 @@ export class Balcao implements OnInit {
       idCliente: null,
       nomeClienteTemporario: this.nomeCliente,
       // taxaEntrega: 0, // Sua tela de balcão não tem taxa
-      
-      // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
+
       itens: this.novoPedidoItens.map(item => ({
         idProduto: item.produto.id_produto,
         quantidade: item.quantidade,
-        tamanho: item.tamanho
+        tamanho: item.tamanho,
+        sabores: item.sabores?.map(s => s.nome) ?? null
       }))
     };
 
