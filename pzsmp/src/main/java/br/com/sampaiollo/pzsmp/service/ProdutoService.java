@@ -41,6 +41,9 @@ public Produto cadastrarProduto(ProdutoRequest request, MultipartFile imagem) {
     novoProduto.setPrecoPequeno(request.precoPequeno());
     novoProduto.setPrecoMedio(request.precoMedio());
     novoProduto.setPrecoGrande(request.precoGrande());
+    if (produtoRepository.existsByNome(request.nome())) {
+    throw new RuntimeException("Já existe um produto cadastrado com o nome: " + request.nome());
+}
 
     if (imagem != null && !imagem.isEmpty()) {
         String nomeArquivo = salvarImagem(imagem);
@@ -79,6 +82,12 @@ public Produto atualizarProduto(Integer id, ProdutoRequest request, MultipartFil
     Produto produtoExistente = produtoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
 
+        Optional<Produto> produtoComMesmoNome = produtoRepository.findByNome(request.nome());
+
+// Verifica se o nome já existe E se pertence a um produto DIFERENTE do que estamos editando
+if (produtoComMesmoNome.isPresent() && !produtoComMesmoNome.get().getId_produto().equals(id)) {
+    throw new RuntimeException("O nome '" + request.nome() + "' já está em uso por outro produto.");
+}
     // Se uma nova imagem foi enviada...
     if (imagem != null && !imagem.isEmpty()) {
         // (Opcional, mas recomendado) Apaga a imagem antiga se ela existir
