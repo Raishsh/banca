@@ -49,7 +49,7 @@
 
             <div *ngFor="let item of novoPedidoItens" class="item-pedido-atual">
               <div class="item-info">
-                <span>{{ item.quantidade }}x {{ item.produto.nome }} <span *ngIf="item.tamanho" class="item-tamanho">({{ item.tamanho }})</span></span>
+                <span>{{ item.quantidade }}x {{ item.produto.nome }}</span>
                 <span>R$ {{ (item.produto.preco * item.quantidade).toFixed(2) }}</span>
               </div>
               <button class="btn-remover-item" (click)="removerDoPedido(item)" title="Remover Item">
