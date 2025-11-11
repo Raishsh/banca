@@ -80,3 +80,32 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Seleção de Tamanho -->
+<div class="modal-overlay" *ngIf="showSizeModal" (click)="fecharSizeModal()">
+  <div class="modal-tamanho" (click)="$event.stopPropagation()">
+    <h3>Selecione o Tamanho</h3>
+    <p *ngIf="produtoParaSelecionarTamanho">{{ produtoParaSelecionarTamanho.nome }}</p>
+    <div class="tamanho-opcoes">
+      <button
+        *ngIf="produtoParaSelecionarTamanho?.precoPequeno"
+        class="tamanho-btn"
+        (click)="selecionarTamanho('P')">
+        P - R$ {{ produtoParaSelecionarTamanho?.precoPequeno.toFixed(2) }}
+      </button>
+      <button
+        *ngIf="produtoParaSelecionarTamanho?.precoMedio"
+        class="tamanho-btn"
+        (click)="selecionarTamanho('M')">
+        M - R$ {{ produtoParaSelecionarTamanho?.precoMedio.toFixed(2) }}
+      </button>
+      <button
+        *ngIf="produtoParaSelecionarTamanho?.precoGrande"
+        class="tamanho-btn"
+        (click)="selecionarTamanho('G')">
+        G - R$ {{ produtoParaSelecionarTamanho?.precoGrande.toFixed(2) }}
+      </button>
+    </div>
+    <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">Cancelar</button>
+  </div>
+</div>
