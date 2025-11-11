@@ -98,12 +98,15 @@ public Produto atualizarProduto(Integer id, ProdutoRequest request, MultipartFil
     }
 
     // Atualiza os outros campos
-produtoExistente.setNome(request.nome());
-produtoExistente.setPreco(request.preco());
-produtoExistente.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
-produtoExistente.setDescricao(request.descricao());
+    produtoExistente.setNome(request.nome());
+    produtoExistente.setPreco(request.preco());
+    produtoExistente.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
+    produtoExistente.setDescricao(request.descricao());
+    produtoExistente.setPrecoPequeno(request.precoPequeno());
+    produtoExistente.setPrecoMedio(request.precoMedio());
+    produtoExistente.setPrecoGrande(request.precoGrande());
 
-return produtoRepository.save(produtoExistente);
+    return produtoRepository.save(produtoExistente);
 }
 
 @Transactional
