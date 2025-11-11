@@ -93,6 +93,21 @@
       </div>
 
       <div class="form-group">
+        <label for="edit-precoPequeno">Preço P (Pequeno - opcional)</label>
+        <input type="number" id="edit-precoPequeno" [(ngModel)]="produtoEmEdicao.precoPequeno" name="edit-precoPequeno" step="0.01" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
+        <label for="edit-precoMedio">Preço M (Médio - opcional)</label>
+        <input type="number" id="edit-precoMedio" [(ngModel)]="produtoEmEdicao.precoMedio" name="edit-precoMedio" step="0.01" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
+        <label for="edit-precoGrande">Preço G (Grande - opcional)</label>
+        <input type="number" id="edit-precoGrande" [(ngModel)]="produtoEmEdicao.precoGrande" name="edit-precoGrande" step="0.01" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
         <label for="edit-imagem">Trocar Imagem (opcional)</label>
         <input type="file" id="edit-imagem" (change)="onFileSelected($event)">
       </div>
