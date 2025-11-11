@@ -20,6 +20,9 @@ public class ItemPedido {
     @Column(nullable = false, columnDefinition = "NUMERIC(10,2)")
     private BigDecimal preco;
 
+    @Column(length = 1)
+    private String tamanho;
+
     // Muitos ItemPedidos pertencem a um Pedido
     @ManyToOne
     @JoinColumn(name = "id_pedido", nullable = false)
