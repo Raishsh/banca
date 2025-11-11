@@ -96,6 +96,11 @@ export class Mesas implements OnInit {
     this.pedidoService.getPedidosPorMesa(mesa.numero).subscribe((pedidos) => {
       this.pedidosDaMesa = pedidos;
     });
+
+    // Busca as reservas ativas para a mesa
+    this.reservaService.getReservasPorMesa(mesa.numero).subscribe((reservas) => {
+      this.reservasDaMesa = reservas;
+    });
   }
 
   fecharModal(): void {
