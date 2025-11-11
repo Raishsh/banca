@@ -6,10 +6,11 @@ import java.math.BigDecimal;
 public record ItemPedidoResponseDto(
         String nomeProduto,
         int quantidade,
-        BigDecimal precoUnitario
+        BigDecimal precoUnitario,
+        String tamanho
 ) {
     // Construtor que converte a entidade para o DTO
     public ItemPedidoResponseDto(ItemPedido item) {
-        this(item.getProduto().getNome(), item.getQuantidade(), item.getPreco());
+        this(item.getProduto().getNome(), item.getQuantidade(), item.getPreco(), item.getTamanho());
     }
 }

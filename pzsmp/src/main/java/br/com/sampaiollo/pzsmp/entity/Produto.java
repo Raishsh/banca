@@ -13,7 +13,7 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_produto;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nome;
 
     @Enumerated(EnumType.STRING)
@@ -22,9 +22,18 @@ public class Produto {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal preco;
-    
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precoPequeno;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precoMedio;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precoGrande;
+
     private String imagemUrl;
-    
-    @Column(length = 500) 
+
+    @Column(length = 500)
     private String descricao;
 }
