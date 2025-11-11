@@ -415,12 +415,20 @@ export class Mesas implements OnInit {
     this.novoPedidoItens = this.novoPedidoItens.filter(item => {
       const mesmoId = item.produto.id_produto === itemParaRemover.produto.id_produto;
       const mesmoTamanho = item.tamanho === itemParaRemover.tamanho;
-      const mesmosSabores = JSON.stringify(item.sabores?.map(s => s.id) ?? []) ===
-                            JSON.stringify(itemParaRemover.sabores?.map(s => s.id) ?? []);
+      const saborIds1 = (item.sabores ?? []).map(s => s.id).sort((a, b) => a - b);
+      const saborIds2 = (itemParaRemover.sabores ?? []).map(s => s.id).sort((a, b) => a - b);
+      const mesmosSabores = JSON.stringify(saborIds1) === JSON.stringify(saborIds2);
       return !(mesmoId && mesmoTamanho && mesmosSabores);
     });
 
     this.calcularTotalNovoPedido();
+  }
+
+  formatarSabores(sabores?: Sabor[]): string {
+    if (!sabores || sabores.length === 0) {
+      return '';
+    }
+    return sabores.map(s => s.nome).join(', ');
   }
 }
 // CORREÇÃO: Chave "}" extra removida daqui.
