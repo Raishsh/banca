@@ -106,6 +106,7 @@ export class Mesas implements OnInit {
   fecharModal(): void {
     this.mesaSelecionada = null;
     this.pedidosDaMesa = [];
+    this.reservasDaMesa = [];
     this.novoPedidoItens = [];
     this.totalNovoPedido = 0;
     this.novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
