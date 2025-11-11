@@ -38,6 +38,9 @@ public Produto cadastrarProduto(ProdutoRequest request, MultipartFile imagem) {
     novoProduto.setPreco(request.preco());
     novoProduto.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
     novoProduto.setDescricao(request.descricao());
+    novoProduto.setPrecoPequeno(request.precoPequeno());
+    novoProduto.setPrecoMedio(request.precoMedio());
+    novoProduto.setPrecoGrande(request.precoGrande());
 
     if (imagem != null && !imagem.isEmpty()) {
         String nomeArquivo = salvarImagem(imagem);
