@@ -192,17 +192,9 @@ export class Entregas implements OnInit {
 
   calcularTotalNovoPedido(): void {
     const subtotalItens = this.novoPedidoItens.reduce((total, item) => {
-      let preco = item.produto.preco;
-      if (item.tamanho === 'P' && item.produto.precoPequeno) {
-        preco = item.produto.precoPequeno;
-      } else if (item.tamanho === 'M' && item.produto.precoMedio) {
-        preco = item.produto.precoMedio;
-      } else if (item.tamanho === 'G' && item.produto.precoGrande) {
-        preco = item.produto.precoGrande;
-      }
+      const preco = item.precoFinal ?? item.produto.preco;
       return total + (preco * item.quantidade);
     }, 0);
-    // Garante que a taxa seja um número, mesmo se o campo estiver vazio
     const taxa = Number(this.taxaEntrega) || 0;
     this.totalNovoPedido = subtotalItens + taxa;
   }
