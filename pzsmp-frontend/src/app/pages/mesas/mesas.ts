@@ -108,7 +108,6 @@ export class Mesas implements OnInit {
     this.reservasDaMesa = [];
     this.novoPedidoItens = [];
     this.totalNovoPedido = 0;
-    this.novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
   }
 
   // --- Lógica do Novo Pedido ---
