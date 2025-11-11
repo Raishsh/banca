@@ -215,11 +215,11 @@ export class Entregas implements OnInit {
       nomeClienteTemporario: null,
       taxaEntrega: Number(this.taxaEntrega) || 0,
 
-      // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
       itens: this.novoPedidoItens.map(item => ({
         idProduto: item.produto.id_produto,
         quantidade: item.quantidade,
-        tamanho: item.tamanho
+        tamanho: item.tamanho,
+        sabores: item.sabores?.map(s => s.nome) ?? null
       }))
     };
 
