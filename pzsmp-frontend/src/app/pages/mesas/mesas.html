@@ -51,6 +51,13 @@
               <div class="item-info">
                 <span>{{ item.quantidade }}x {{ item.produto.nome }}</span>
                 <span>R$ {{ (item.produto.preco * item.quantidade).toFixed(2) }}</span>
+                <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span></span>
+                <span>R$ {{ (
+                  (item.tamanho === 'P' && item.produto.precoPequeno ? item.produto.precoPequeno :
+                   item.tamanho === 'M' && item.produto.precoMedio ? item.produto.precoMedio :
+                   item.tamanho === 'G' && item.produto.precoGrande ? item.produto.precoGrande :
+                   item.produto.preco) * item.quantidade
+                ).toFixed(2) }}</span>
               </div>
               <button class="btn-remover-item" (click)="removerDoPedido(item)" title="Remover Item">
                 <i class="fas fa-trash-alt"></i>
@@ -73,5 +80,50 @@
       <div *ngIf="modalView === 'reserva'">
         </div>
     </div>
+  </div>
+
+  <!-- Modal de Seleção de Tamanho -->
+  <div class="modal-overlay-tamanho" *ngIf="mostrarModalTamanho">
+    <div class="modal-content-tamanho">
+      <button class="btn-fechar-tamanho" (click)="fecharModalTamanho()">✕</button>
+      <h2>Selecione o Tamanho</h2>
+      <p>{{ produtoSelecionadoParaTamanho?.nome }}</p>
+      <div class="tamanho-opcoes">
+        <button *ngFor="let tamanho of tamanhosSelecionaveis"
+                class="btn-tamanho"
+                (click)="selecionarTamanhoEAdicionar(tamanho)">
+          {{ tamanho }}
+        </button>
+      </div>
+      <button class="btn-fechar-modal-tamanho" (click)="fecharModalTamanho()">Cancelar</button>
+    </div>
+</div>
+
+<!-- Modal de Seleção de Tamanho -->
+<div class="modal-overlay" *ngIf="showSizeModal" (click)="fecharSizeModal()">
+  <div class="modal-tamanho" (click)="$event.stopPropagation()">
+    <h3>Selecione o Tamanho</h3>
+    <p *ngIf="produtoParaSelecionarTamanho">{{ produtoParaSelecionarTamanho.nome }}</p>
+    <div class="tamanho-opcoes">
+      <button
+        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoPequeno"
+        class="tamanho-btn"
+        (click)="selecionarTamanho('P')">
+        P - R$ {{ produtoParaSelecionarTamanho.precoPequeno.toFixed(2) }}
+      </button>
+      <button
+        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoMedio"
+        class="tamanho-btn"
+        (click)="selecionarTamanho('M')">
+        M - R$ {{ produtoParaSelecionarTamanho.precoMedio.toFixed(2) }}
+      </button>
+      <button
+        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoGrande"
+        class="tamanho-btn"
+        (click)="selecionarTamanho('G')">
+        G - R$ {{ produtoParaSelecionarTamanho.precoGrande.toFixed(2) }}
+      </button>
+    </div>
+    <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">Cancelar</button>
   </div>
 </div>

@@ -21,9 +21,12 @@ export class Balcao implements OnInit {
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
 
-  novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
+  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
   totalNovoPedido: number = 0;
   nomeCliente: string = ''; // Para o nome temporário
+
+  produtoParaSelecionarTamanho: Produto | null = null;
+  showSizeModal: boolean = false;
 
   constructor(
     private pedidoService: PedidoService,
@@ -47,17 +50,50 @@ export class Balcao implements OnInit {
   }
 
   adicionarAoPedido(produto: Produto): void {
-    const itemExistente = this.novoPedidoItens.find(item => item.produto.id_produto === produto.id_produto);
+    if (produto.precoPequeno || produto.precoMedio || produto.precoGrande) {
+      this.produtoParaSelecionarTamanho = produto;
+      this.showSizeModal = true;
+    } else {
+      this.adicionarProdutoAoPedido(produto, undefined);
+    }
+  }
+
+  adicionarProdutoAoPedido(produto: Produto, tamanho?: string): void {
+    const itemExistente = this.novoPedidoItens.find(item =>
+      item.produto.id_produto === produto.id_produto && item.tamanho === tamanho
+    );
     if (itemExistente) {
       itemExistente.quantidade++;
     } else {
-      this.novoPedidoItens.push({ produto: produto, quantidade: 1 });
+      this.novoPedidoItens.push({ produto: produto, quantidade: 1, tamanho: tamanho });
     }
     this.calcularTotalNovoPedido();
   }
 
+  selecionarTamanho(tamanho: string): void {
+    if (this.produtoParaSelecionarTamanho) {
+      this.adicionarProdutoAoPedido(this.produtoParaSelecionarTamanho, tamanho);
+    }
+    this.fecharSizeModal();
+  }
+
+  fecharSizeModal(): void {
+    this.showSizeModal = false;
+    this.produtoParaSelecionarTamanho = null;
+  }
+
   calcularTotalNovoPedido(): void {
-    this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => total + (item.produto.preco * item.quantidade), 0);
+    this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => {
+      let preco = item.produto.preco;
+      if (item.tamanho === 'P' && item.produto.precoPequeno) {
+        preco = item.produto.precoPequeno;
+      } else if (item.tamanho === 'M' && item.produto.precoMedio) {
+        preco = item.produto.precoMedio;
+      } else if (item.tamanho === 'G' && item.produto.precoGrande) {
+        preco = item.produto.precoGrande;
+      }
+      return total + (preco * item.quantidade);
+    }, 0);
   }
 
   finalizarPedido(): void {
@@ -74,8 +110,9 @@ export class Balcao implements OnInit {
       
       // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
       itens: this.novoPedidoItens.map(item => ({
-        idProduto: item.produto.id_produto, 
-        quantidade: item.quantidade
+        idProduto: item.produto.id_produto,
+        quantidade: item.quantidade,
+        tamanho: item.tamanho
       }))
     };
 

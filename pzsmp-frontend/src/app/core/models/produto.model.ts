@@ -5,4 +5,7 @@ export interface Produto {
   tipo: string;
   imagemUrl?: string;
   descricao?: string;
+  precoPequeno?: number;
+  precoMedio?: number;
+  precoGrande?: number;
 }

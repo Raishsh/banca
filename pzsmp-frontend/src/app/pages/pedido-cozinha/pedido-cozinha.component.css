@@ -66,6 +66,12 @@
   word-break: break-word;
 }
 
+.tamanho-cozinha {
+  font-weight: normal;
+  font-size: 0.9rem;
+  margin-left: 3px;
+}
+
 .cupom-footer {
   margin-top: 20px;
   text-align: center;

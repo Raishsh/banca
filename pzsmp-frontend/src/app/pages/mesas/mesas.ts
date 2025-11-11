@@ -37,6 +37,13 @@ export class Mesas implements OnInit {
   totalNovoPedido: number = 0;
   novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
 
+  // Modal de Seleção de Tamanho
+  mostrarModalTamanho: boolean = false;
+  produtoSelecionadoParaTamanho: Produto | null = null;
+  tamanhosSelecionaveis: string[] = ['P', 'M', 'G'];
+  produtoParaSelecionarTamanho: Produto | null = null;
+  showSizeModal: boolean = false;
+
   constructor(
     private mesaService: MesaService,
     private pedidoService: PedidoService,
@@ -93,12 +100,56 @@ export class Mesas implements OnInit {
       itemExistente.quantidade++;
     } else {
       this.novoPedidoItens.push({ produto: produto, quantidade: 1 });
+      this.novoPedidoItens.push({
+        produto: this.produtoSelecionadoParaTamanho,
+        quantidade: 1,
+        tamanho: tamanho
+      });
+  adicionarAoPedido(produto: Produto): void {
+    if (produto.precoPequeno || produto.precoMedio || produto.precoGrande) {
+      this.produtoParaSelecionarTamanho = produto;
+      this.showSizeModal = true;
+    } else {
+      this.adicionarProdutoAoPedido(produto, undefined);
+    }
+  }
+
+  adicionarProdutoAoPedido(produto: Produto, tamanho?: string): void {
+    const itemExistente = this.novoPedidoItens.find(item =>
+      item.produto.id_produto === produto.id_produto && item.tamanho === tamanho
+    );
+    if (itemExistente) {
+      itemExistente.quantidade++;
+    } else {
+      this.novoPedidoItens.push({ produto: produto, quantidade: 1, tamanho: tamanho });
     }
     this.calcularTotalNovoPedido();
   }
 
+  selecionarTamanho(tamanho: string): void {
+    if (this.produtoParaSelecionarTamanho) {
+      this.adicionarProdutoAoPedido(this.produtoParaSelecionarTamanho, tamanho);
+    }
+    this.fecharSizeModal();
+  }
+
+  fecharSizeModal(): void {
+    this.showSizeModal = false;
+    this.produtoParaSelecionarTamanho = null;
+  }
+
   calcularTotalNovoPedido(): void {
-    this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => total + (item.produto.preco * item.quantidade), 0);
+    this.totalNovoPedido = this.novoPedidoItens.reduce((total, item) => {
+      let preco = item.produto.preco;
+      if (item.tamanho === 'P' && item.produto.precoPequeno) {
+        preco = item.produto.precoPequeno;
+      } else if (item.tamanho === 'M' && item.produto.precoMedio) {
+        preco = item.produto.precoMedio;
+      } else if (item.tamanho === 'G' && item.produto.precoGrande) {
+        preco = item.produto.precoGrande;
+      }
+      return total + (preco * item.quantidade);
+    }, 0);
   }
 
 finalizarPedido(): void {
@@ -110,7 +161,8 @@ finalizarPedido(): void {
     // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
     const itensParaApi = this.novoPedidoItens.map(item => ({
       idProduto: item.produto.id_produto,
-      quantidade: item.quantidade
+      quantidade: item.quantidade,
+      tamanho: item.tamanho
     }));
 
     if (this.pedidosDaMesa.length > 0) {

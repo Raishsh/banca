@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -41,9 +42,12 @@ public ResponseEntity<Produto> cadastrarProduto(
         @RequestParam("preco") BigDecimal preco,
         @RequestParam("tipo") String tipo,
         @RequestParam(value = "descricao", required = false) String descricao,
+        @RequestParam(value = "precoPequeno", required = false) BigDecimal precoPequeno,
+        @RequestParam(value = "precoMedio", required = false) BigDecimal precoMedio,
+        @RequestParam(value = "precoGrande", required = false) BigDecimal precoGrande,
         @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
 
-    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao);
+    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao, precoPequeno, precoMedio, precoGrande);
 
     Produto produtoSalvo = produtoService.cadastrarProduto(request, imagem);
     return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
@@ -57,9 +61,12 @@ public ResponseEntity<Produto> atualizarProduto(
         @RequestParam("preco") BigDecimal preco,
         @RequestParam("tipo") String tipo,
         @RequestParam(value = "descricao", required = false) String descricao,
+        @RequestParam(value = "precoPequeno", required = false) BigDecimal precoPequeno,
+        @RequestParam(value = "precoMedio", required = false) BigDecimal precoMedio,
+        @RequestParam(value = "precoGrande", required = false) BigDecimal precoGrande,
         @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
 
-    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao);
+    ProdutoRequest request = new ProdutoRequest(nome, tipo, preco, descricao, precoPequeno, precoMedio, precoGrande);
     Produto produtoAtualizado = produtoService.atualizarProduto(id, request, imagem);
 
     return ResponseEntity.ok(produtoAtualizado);
@@ -69,5 +76,19 @@ public ResponseEntity<Produto> atualizarProduto(
 public ResponseEntity<Void> excluirProduto(@PathVariable Integer id) {
     produtoService.excluirProduto(id);
     return ResponseEntity.noContent().build(); // Retorna 204 No Content, indicando sucesso
+}
+@ExceptionHandler(RuntimeException.class)
+public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+    // Verifica a mensagem de erro que criamos no service
+    if (ex.getMessage().contains("Já existe um produto") || ex.getMessage().contains("já está em uso")) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT) // HTTP 409
+                .body(Map.of("erro", ex.getMessage()));
+    }
+
+    // Para outros erros (como "Produto não encontrado")
+    return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST) // HTTP 400
+            .body(Map.of("erro", ex.getMessage()));
 }
 }

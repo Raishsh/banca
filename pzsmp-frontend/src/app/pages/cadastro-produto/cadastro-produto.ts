@@ -16,7 +16,10 @@ export class CadastroProdutoComponent {
     nome: '',
     preco: null as number | null,
     tipo: '',
-    descricao: ''
+    descricao: '',
+    precoPequeno: null as number | null,
+    precoMedio: null as number | null,
+    precoGrande: null as number | null
   };
   arquivoSelecionado: File | null = null;
   mensagemSucesso: string | null = null;
@@ -46,6 +49,22 @@ export class CadastroProdutoComponent {
     if (this.produto.descricao) {
       formData.append('descricao', this.produto.descricao);
     }
+
+    const precoPequenoNumerico = this.parsePrice(this.produto.precoPequeno as any);
+    if (precoPequenoNumerico !== null) {
+      formData.append('precoPequeno', precoPequenoNumerico as any);
+    }
+
+    const precoMedioNumerico = this.parsePrice(this.produto.precoMedio as any);
+    if (precoMedioNumerico !== null) {
+      formData.append('precoMedio', precoMedioNumerico as any);
+    }
+
+    const precoGrandeNumerico = this.parsePrice(this.produto.precoGrande as any);
+    if (precoGrandeNumerico !== null) {
+      formData.append('precoGrande', precoGrandeNumerico as any);
+    }
+
     if (this.arquivoSelecionado) {
       formData.append('imagem', this.arquivoSelecionado, this.arquivoSelecionado.name);
     }
@@ -71,7 +90,15 @@ export class CadastroProdutoComponent {
   }
 
   limparFormulario(): void {
-    this.produto = { nome: '', preco: null, tipo: '', descricao: '' };
+    this.produto = {
+      nome: '',
+      preco: null,
+      tipo: '',
+      descricao: '',
+      precoPequeno: null,
+      precoMedio: null,
+      precoGrande: null
+    };
     this.arquivoSelecionado = null;
     // Opcional: resetar o input de arquivo (um pouco mais complexo)
     const fileInput = document.getElementById('imagem') as HTMLInputElement;

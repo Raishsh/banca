@@ -164,6 +164,24 @@
   color: rgb(50, 50, 50); /* Cor de destaque para o preço */
 }
 
+.tamanhos-preco {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.tamanho-badge {
+  display: inline-block;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+}
+
 .card-actions {
   display: flex;
   gap: 10px;

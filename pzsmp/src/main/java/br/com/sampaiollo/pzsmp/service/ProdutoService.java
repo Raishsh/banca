@@ -38,6 +38,12 @@ public Produto cadastrarProduto(ProdutoRequest request, MultipartFile imagem) {
     novoProduto.setPreco(request.preco());
     novoProduto.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
     novoProduto.setDescricao(request.descricao());
+    novoProduto.setPrecoPequeno(request.precoPequeno());
+    novoProduto.setPrecoMedio(request.precoMedio());
+    novoProduto.setPrecoGrande(request.precoGrande());
+    if (produtoRepository.existsByNome(request.nome())) {
+    throw new RuntimeException("Já existe um produto cadastrado com o nome: " + request.nome());
+}
 
     if (imagem != null && !imagem.isEmpty()) {
         String nomeArquivo = salvarImagem(imagem);
@@ -76,6 +82,12 @@ public Produto atualizarProduto(Integer id, ProdutoRequest request, MultipartFil
     Produto produtoExistente = produtoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
 
+        Optional<Produto> produtoComMesmoNome = produtoRepository.findByNome(request.nome());
+
+// Verifica se o nome já existe E se pertence a um produto DIFERENTE do que estamos editando
+if (produtoComMesmoNome.isPresent() && !produtoComMesmoNome.get().getId_produto().equals(id)) {
+    throw new RuntimeException("O nome '" + request.nome() + "' já está em uso por outro produto.");
+}
     // Se uma nova imagem foi enviada...
     if (imagem != null && !imagem.isEmpty()) {
         // (Opcional, mas recomendado) Apaga a imagem antiga se ela existir
@@ -95,12 +107,15 @@ public Produto atualizarProduto(Integer id, ProdutoRequest request, MultipartFil
     }
 
     // Atualiza os outros campos
-produtoExistente.setNome(request.nome());
-produtoExistente.setPreco(request.preco());
-produtoExistente.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
-produtoExistente.setDescricao(request.descricao());
+    produtoExistente.setNome(request.nome());
+    produtoExistente.setPreco(request.preco());
+    produtoExistente.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
+    produtoExistente.setDescricao(request.descricao());
+    produtoExistente.setPrecoPequeno(request.precoPequeno());
+    produtoExistente.setPrecoMedio(request.precoMedio());
+    produtoExistente.setPrecoGrande(request.precoGrande());
 
-return produtoRepository.save(produtoExistente);
+    return produtoRepository.save(produtoExistente);
 }
 
 @Transactional

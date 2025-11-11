@@ -7,18 +7,24 @@ public record ProdutoResponseDto(
     Integer id_produto,
     String nome,
     BigDecimal preco,
-    String tipo,    
+    String tipo,
     String imagemUrl,
-    String descricao
+    String descricao,
+    BigDecimal precoPequeno,
+    BigDecimal precoMedio,
+    BigDecimal precoGrande
 ) {
     public ProdutoResponseDto(Produto produto) {
         this(
             produto.getId_produto(),
             produto.getNome(),
             produto.getPreco(),
-            produto.getTipo().name(), 
+            produto.getTipo().name(),
             produto.getImagemUrl(),
-            produto.getDescricao()
+            produto.getDescricao(),
+            produto.getPrecoPequeno(),
+            produto.getPrecoMedio(),
+            produto.getPrecoGrande()
         );
     }
 }

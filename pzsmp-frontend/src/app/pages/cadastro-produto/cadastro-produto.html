@@ -47,6 +47,21 @@
       </div>
 
       <div class="form-group">
+        <label for="precoPequeno">Preço P (Pequeno - opcional)</label>
+        <input type="text" id="precoPequeno" [(ngModel)]="produto.precoPequeno" name="precoPequeno" appInputMask="currency" placeholder="R$ 0,00">
+      </div>
+
+      <div class="form-group">
+        <label for="precoMedio">Preço M (Médio - opcional)</label>
+        <input type="text" id="precoMedio" [(ngModel)]="produto.precoMedio" name="precoMedio" appInputMask="currency" placeholder="R$ 0,00">
+      </div>
+
+      <div class="form-group">
+        <label for="precoGrande">Preço G (Grande - opcional)</label>
+        <input type="text" id="precoGrande" [(ngModel)]="produto.precoGrande" name="precoGrande" appInputMask="currency" placeholder="R$ 0,00">
+      </div>
+
+      <div class="form-group">
           <label for="imagem">Imagem do Produto</label>
           <input type="file" id="imagem" (change)="onFileSelected($event)">
       </div>

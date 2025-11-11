@@ -1,27 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core'; // Adicionei OnDestroy
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common'; // Importe CommonModule para usar *ngIf no template
+import { CommonModule } from '@angular/common'; 
 import { AuthService } from '../../core/services/auth';
 import { PedidoService } from '../../core/services/pedido';
-import { SangriaModalComponent } from '../../shared/components/sangria-modal/sangria-modal';
+// Removi a importação do SangriaModalComponent, pois não está sendo usado aqui
 import { HelperPanelComponent } from '../../shared/components/helper-panel/helper-panel';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  // Adicione CommonModule, SangriaModalComponent, HelperPanelComponent e TooltipDirective aos imports
   imports: [RouterModule, CommonModule, HelperPanelComponent, TooltipDirective],
   templateUrl: './main-layout.html',
   styleUrls: ['./main-layout.css']
 })
-export class MainLayoutComponent implements OnInit {
+export class MainLayoutComponent implements OnInit, OnDestroy { // Implementei OnDestroy
 
   // Propriedades para dados do usuário
   nomeUsuarioLogado: string | null = null;
   cargoUsuario: string | null = null;
   dataAtual: Date = new Date();
   private intervalId: any;
+
+  // ===============================================
+  // == NOVO ESTADO PARA O MENU HAMBÚRGUER ==
+  // ===============================================
+  public isMenuAberto = false;
 
 
   constructor(
@@ -60,6 +64,8 @@ export class MainLayoutComponent implements OnInit {
    * Inicia o processo de fechamento de caixa, com uma confirmação.
    */
   fecharCaixa(): void {
+    // IMPORTANTE: 'confirm' não funciona bem em todos os ambientes.
+    // Seria melhor criar um modal customizado para isso.
     const confirmacao = confirm(
       'Fechar caixa irá liberar todas as mesas e encerrar o expediente. Todos os pedidos realizados permanecerão salvos no Relatório Detalhado.\n\nDeseja continuar?'
     );
@@ -76,5 +82,23 @@ export class MainLayoutComponent implements OnInit {
         }
       });
     }
+  }
+
+  // ===============================================
+  // == NOVAS FUNÇÕES PARA O MENU HAMBÚRGUER ==
+  // ===============================================
+
+  /**
+   * Alterna a visibilidade do menu (abre/fecha).
+   */
+  toggleMenu(): void {
+    this.isMenuAberto = !this.isMenuAberto;
+  }
+
+  /**
+   * Fecha o menu (usado pelo overlay ou ao clicar num link).
+   */
+  fecharMenu(): void {
+    this.isMenuAberto = false;
   }
 }
