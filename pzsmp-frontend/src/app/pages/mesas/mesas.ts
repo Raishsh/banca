@@ -243,11 +243,11 @@ export class Mesas implements OnInit {
       return;
     }
 
-    // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
     const itensParaApi = this.novoPedidoItens.map((item) => ({
       idProduto: item.produto.id_produto,
       quantidade: item.quantidade,
       tamanho: item.tamanho,
+      sabores: item.sabores?.map(s => s.nome) ?? null
     }));
 
     if (this.pedidosDaMesa.length > 0) {
