@@ -3,6 +3,7 @@ export interface ItemPedido {
   quantidade: number;
   precoUnitario: number;
   tamanho?: string;
+  sabores?: string[];
 }
 
 export interface Cliente {
