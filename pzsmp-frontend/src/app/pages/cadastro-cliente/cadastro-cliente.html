@@ -151,13 +151,13 @@
             appTooltip="Digite o CEP do endereço do cliente">
         </div>
         <div class="form-group">
-          <label for="rua">Rua</label>
+          <label for="rua">Logradouro</label>
           <input
             id="rua"
             type="text"
             [(ngModel)]="novoCliente.rua"
             name="rua"
-            appTooltip="Digite o nome da rua">
+            appTooltip="Digite o nome do Logradouro">
         </div>
         <div class="form-group">
           <label for="numero">Número</label>
@@ -195,8 +195,8 @@
             [(ngModel)]="novoCliente.uf"
             name="uf"
             maxlength="2"
-            placeholder="Ex: SP"
-            appTooltip="Digite o estado (ex: SP, RJ)"
+            placeholder="Ex: PR"
+            appTooltip="Digite o estado (ex: PR)"
             (input)="novoCliente.uf = novoCliente.uf.toUpperCase()">
         </div>
       </div>
@@ -246,7 +246,7 @@
           <input type="text" [(ngModel)]="clienteEmEdicao.cep" name="edit-cep" appInputMask="cep" placeholder="99999-999">
         </div>
         <div class="form-group">
-          <label>Rua</label>
+          <label>Logradouro</label>
           <input type="text" [(ngModel)]="clienteEmEdicao.rua" name="edit-rua">
         </div>
         <div class="form-group">
