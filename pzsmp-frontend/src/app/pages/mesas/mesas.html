@@ -87,8 +87,8 @@
                       ({{ item.tamanho }})</span
                     ></span
                   >
-                  <span *ngIf="item.sabores && item.sabores.length > 0" class="sabores-item">
-                    {{ item.sabores.map(s => s.nome).join(', ') }}
+                  <span *ngIf="formatarSabores(item.sabores)" class="sabores-item">
+                    {{ formatarSabores(item.sabores) }}
                   </span>
                 </div>
                 <span
