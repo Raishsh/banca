@@ -6,4 +6,5 @@ import lombok.Data;
 public class ItemPedidoDto {
     private Integer idProduto;
     private int quantidade;
+    private String tamanho;
 }
