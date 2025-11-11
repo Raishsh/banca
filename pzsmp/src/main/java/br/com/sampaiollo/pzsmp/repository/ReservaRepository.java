@@ -35,6 +35,16 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     // --- Outros métodos que você possa ter ---
     
     List<Reserva> findByDataReservaBetween(LocalDateTime inicio, LocalDateTime fim);
-    
+
     List<Reserva> findByMesaNumero(Integer numeroMesa);
+
+    /**
+     * Busca apenas reservas ativas (PENDENTE ou CONFIRMADA) para uma mesa específica.
+     * Isso garante que canceladas e outras reservas inativas não sejam retornadas.
+     * @param mesa A mesa para a qual se quer obter reservas ativas
+     * @param statusAtivos Lista de status considerados como ativos
+     * @return Lista de reservas ativas para a mesa
+     */
+    @Query("SELECT r FROM Reserva r WHERE r.mesa = :mesa AND r.status IN :statusAtivos")
+    List<Reserva> findByMesaAndStatusIn(@Param("mesa") Mesa mesa, @Param("statusAtivos") List<StatusReserva> statusAtivos);
 }
