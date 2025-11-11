@@ -300,3 +300,108 @@
   border-top: 1px solid #eee;
   padding-top: 10px;
 }
+
+.item-tamanho {
+  color: #718096;
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
+/* Modal de Seleção de Tamanho */
+.modal-overlay-tamanho {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.modal-content-tamanho {
+  position: relative;
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.btn-fechar-tamanho {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-fechar-tamanho:hover {
+  color: #333;
+}
+
+.modal-content-tamanho h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.modal-content-tamanho p {
+  color: #718096;
+  margin: 0 0 30px 0;
+  font-size: 1rem;
+}
+
+.tamanho-opcoes {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.btn-tamanho {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: 2px solid #ddd;
+  background-color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+}
+
+.btn-tamanho:hover {
+  background-color: rgb(50, 50, 50);
+  color: white;
+  border-color: rgb(50, 50, 50);
+  transform: translateY(-2px);
+}
+
+.btn-fechar-modal-tamanho {
+  background-color: #e2e8f0;
+  color: #2d3748;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-fechar-modal-tamanho:hover {
+  background-color: #cbd5e0;
+}
