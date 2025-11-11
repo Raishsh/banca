@@ -9,11 +9,26 @@ import { PagamentoStateService } from '../../core/services/pagamento-state';
 import { Mesa } from '../../core/models/mesa.model';
 import { Pedido } from '../../core/models/pedido.model';
 import { Produto } from '../../core/models/produto.model';
+import { FlavorModalComponent } from '../balcao/flavor-modal/flavor-modal';
+
+export interface Sabor {
+  id: number;
+  nome: string;
+  preco: number;
+}
+
+export interface ItemPedidoInterno {
+  produto: Produto;
+  quantidade: number;
+  tamanho?: string;
+  sabores?: Sabor[];
+  precoFinal?: number;
+}
 
 @Component({
   selector: 'app-mesas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FlavorModalComponent],
   templateUrl: './mesas.html',
   styleUrls: ['./mesas.css'],
 })
@@ -43,22 +58,22 @@ export class Mesas implements OnInit {
     'BEBIDA',
   ];
 
-  // CORREÇÃO AQUI: Adicionado "tamanho?: string"
-  novoPedidoItens: {
-    produto: Produto;
-    quantidade: number;
-    tamanho?: string;
-  }[] = [];
+  novoPedidoItens: ItemPedidoInterno[] = [];
   totalNovoPedido: number = 0;
 
   // Modal de Seleção de Tamanho
-  mostrarModalTamanho: boolean = false; // (Propriedade do modal antigo, mantida para evitar quebras se usada em outro lugar)
-  produtoSelecionadoParaTamanho: Produto | null = null; // (Propriedade do modal antigo)
+  mostrarModalTamanho: boolean = false;
+  produtoSelecionadoParaTamanho: Produto | null = null;
   tamanhosSelecionaveis: string[] = ['P', 'M', 'G'];
 
-  // Propriedades do NOVO modal de tamanho (corretas)
+  // Propriedades do modal de tamanho
   produtoParaSelecionarTamanho: Produto | null = null;
   showSizeModal: boolean = false;
+
+  // Propriedades do modal de sabores
+  showFlavorModal: boolean = false;
+  tamanhoSelecionado: string = '';
+  produtoParaSelecionarSabores: Produto | null = null;
 
   constructor(
     private mesaService: MesaService,
