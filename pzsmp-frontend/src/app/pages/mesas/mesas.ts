@@ -5,6 +5,7 @@ import { MesaService } from '../../core/services/mesa';
 import { PedidoService } from '../../core/services/pedido';
 import { ReservaService } from '../../core/services/reserva';
 import { ProdutoService } from '../../core/services/produto';
+import { PagamentoStateService } from '../../core/services/pagamento-state';
 import { Mesa } from '../../core/models/mesa.model';
 import { Pedido } from '../../core/models/pedido.model';
 import { Produto } from '../../core/models/produto.model';
