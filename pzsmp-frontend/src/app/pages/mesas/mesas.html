@@ -159,37 +159,24 @@
 
       <div *ngIf="modalView === 'reserva'" class="reserva-view">
         <h4>Gerenciar Reserva</h4>
-        <div *ngIf="mesaSelecionada?.status === 'RESERVADA'; else formReserva" class="reserva-ativa">
-          <div *ngIf="reservasDaMesa.length > 0" class="reserva-card">
-            <div *ngFor="let reserva of reservasDaMesa" class="reserva-detalhes">
-              <p><strong>Nome:</strong> {{ reserva.nomeReserva }}</p>
-              <p><strong>Pessoas:</strong> {{ reserva.numPessoas }}</p>
-              <p *ngIf="reserva.observacoes"><strong>Observações:</strong> {{ reserva.observacoes }}</p>
-              <p><strong>Data:</strong> {{ reserva.dataReserva | date: 'dd/MM/yyyy HH:mm' }}</p>
-              <button class="btn-cancelar-reserva" (click)="cancelarReserva(reserva.idReserva)">
-                Cancelar Reserva
-              </button>
-            </div>
-          </div>
+        <div class="reserva-toggle-container">
+          <p *ngIf="mesaSelecionada?.status === 'OCUPADA'" class="reserva-status-mensagem">
+            Esta mesa está ocupada. Não é possível fazer ou cancelar reservas.
+          </p>
+          <p *ngIf="mesaSelecionada?.status !== 'OCUPADA'" class="reserva-info">
+            {{ mesaSelecionada?.status === 'RESERVADA' ? 'Esta mesa está reservada. Clique abaixo para cancelar a reserva.' : 'Esta mesa está disponível. Clique abaixo para fazer uma reserva.' }}
+          </p>
+          <button
+            class="btn-toggle-reserva"
+            [ngClass]="{
+              'reservar': mesaSelecionada?.status === 'LIVRE',
+              'cancelar': mesaSelecionada?.status === 'RESERVADA'
+            }"
+            [disabled]="mesaSelecionada?.status === 'OCUPADA'"
+            (click)="alternarReserva()">
+            {{ mesaSelecionada?.status === 'LIVRE' ? 'Reservar Mesa' : mesaSelecionada?.status === 'RESERVADA' ? 'Cancelar Reserva' : '' }}
+          </button>
         </div>
-        <ng-template #formReserva>
-          <p class="info-mensagem">A mesa está disponível. Preencha os dados para fazer uma reserva.</p>
-          <div class="form-reserva">
-            <div class="form-group">
-              <label for="nomeReserva">Nome para a Reserva</label>
-              <input id="nomeReserva" type="text" [(ngModel)]="novaReserva.nomeReserva" placeholder="Ex: João Silva" required>
-            </div>
-            <div class="form-group">
-              <label for="numPessoas">Número de Pessoas</label>
-              <input id="numPessoas" type="number" [(ngModel)]="novaReserva.numPessoas" placeholder="Ex: 4" required min="1">
-            </div>
-            <div class="form-group">
-              <label for="observacoes">Observações (opcional)</label>
-              <textarea id="observacoes" [(ngModel)]="novaReserva.observacoes" placeholder="Ex: Alergia a pimenta"></textarea>
-            </div>
-            <button class="btn-fazer-reserva" (click)="reservarMesa()">Fazer Reserva</button>
-          </div>
-        </ng-template>
       </div>
     </div>
   </div>
