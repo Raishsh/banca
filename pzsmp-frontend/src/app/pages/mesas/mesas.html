@@ -129,8 +129,68 @@
         </div>
       </div>
 
-      <div *ngIf="modalView === 'pedidos'"></div>
-      <div *ngIf="modalView === 'reserva'"></div>
+      <div *ngIf="modalView === 'pedidos'" class="pedidos-view">
+        <h4>Pedidos Ativos da Mesa {{ mesaSelecionada!.numero }}</h4>
+        <div *ngIf="pedidosDaMesa.length > 0; else nenhumPedido" class="pedidos-lista">
+          <div *ngFor="let pedido of pedidosDaMesa" class="pedido-card">
+            <div class="pedido-header">
+              <span class="pedido-id">Pedido #{{ pedido.idPedido }}</span>
+              <span class="pedido-status" [ngClass]="'status-' + pedido.status.toLowerCase()">{{ pedido.status }}</span>
+            </div>
+            <div class="pedido-detalhes">
+              <p><strong>Data:</strong> {{ pedido.data | date: 'dd/MM/yyyy HH:mm' }}</p>
+              <p><strong>Total:</strong> R$ {{ pedido.total.toFixed(2) }}</p>
+              <p *ngIf="pedido.cliente"><strong>Cliente:</strong> {{ pedido.cliente.nome }}</p>
+            </div>
+            <div class="pedido-itens">
+              <strong>Itens:</strong>
+              <ul>
+                <li *ngFor="let item of pedido.itens">
+                  {{ item.quantidade }}x {{ item.nomeProduto }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span> - R$ {{ (item.precoUnitario * item.quantidade).toFixed(2) }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <ng-template #nenhumPedido>
+          <p class="pedido-vazio-mensagem">Nenhum pedido ativo para esta mesa.</p>
+        </ng-template>
+      </div>
+
+      <div *ngIf="modalView === 'reserva'" class="reserva-view">
+        <h4>Gerenciar Reserva</h4>
+        <div *ngIf="mesaSelecionada?.status === 'RESERVADA'; else formReserva" class="reserva-ativa">
+          <div *ngIf="reservasDaMesa.length > 0" class="reserva-card">
+            <div *ngFor="let reserva of reservasDaMesa" class="reserva-detalhes">
+              <p><strong>Nome:</strong> {{ reserva.nomeReserva }}</p>
+              <p><strong>Pessoas:</strong> {{ reserva.numPessoas }}</p>
+              <p *ngIf="reserva.observacoes"><strong>Observações:</strong> {{ reserva.observacoes }}</p>
+              <p><strong>Data:</strong> {{ reserva.dataReserva | date: 'dd/MM/yyyy HH:mm' }}</p>
+              <button class="btn-cancelar-reserva" (click)="cancelarReserva(reserva.idReserva)">
+                Cancelar Reserva
+              </button>
+            </div>
+          </div>
+        </div>
+        <ng-template #formReserva>
+          <p class="info-mensagem">A mesa está disponível. Preencha os dados para fazer uma reserva.</p>
+          <div class="form-reserva">
+            <div class="form-group">
+              <label for="nomeReserva">Nome para a Reserva</label>
+              <input id="nomeReserva" type="text" [(ngModel)]="novaReserva.nomeReserva" placeholder="Ex: João Silva" required>
+            </div>
+            <div class="form-group">
+              <label for="numPessoas">Número de Pessoas</label>
+              <input id="numPessoas" type="number" [(ngModel)]="novaReserva.numPessoas" placeholder="Ex: 4" required min="1">
+            </div>
+            <div class="form-group">
+              <label for="observacoes">Observações (opcional)</label>
+              <textarea id="observacoes" [(ngModel)]="novaReserva.observacoes" placeholder="Ex: Alergia a pimenta"></textarea>
+            </div>
+            <button class="btn-fazer-reserva" (click)="reservarMesa()">Fazer Reserva</button>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>
