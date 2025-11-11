@@ -264,10 +264,36 @@ export class Mesas implements OnInit {
     this.reservaService.fazerReserva(dadosReserva).subscribe({
       next: () => {
         this.carregarMesas();
-        this.fecharModal();
+        this.novaReserva = { nomeReserva: '', numPessoas: null, observacoes: '' };
+        if (this.mesaSelecionada) {
+          this.reservaService.getReservasPorMesa(this.mesaSelecionada.numero).subscribe((reservas) => {
+            this.reservasDaMesa = reservas;
+          });
+        }
       },
       error: (err) => {
         alert('Erro ao fazer a reserva.');
+        console.error(err);
+      },
+    });
+  }
+
+  cancelarReserva(idReserva: number): void {
+    if (!confirm('Tem certeza que deseja cancelar esta reserva?')) {
+      return;
+    }
+
+    this.reservaService.cancelarReserva(idReserva).subscribe({
+      next: () => {
+        this.carregarMesas();
+        if (this.mesaSelecionada) {
+          this.reservaService.getReservasPorMesa(this.mesaSelecionada.numero).subscribe((reservas) => {
+            this.reservasDaMesa = reservas;
+          });
+        }
+      },
+      error: (err) => {
+        alert('Erro ao cancelar a reserva.');
         console.error(err);
       },
     });
