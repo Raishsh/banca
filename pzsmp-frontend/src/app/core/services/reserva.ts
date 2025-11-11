@@ -18,4 +18,20 @@ export class ReservaService {
   fazerReserva(reservaData: any): Observable<any> {
     return this.http.post(this.apiUrl, reservaData);
   }
+
+  /**
+   * Cancela uma reserva existente.
+   * @param idReserva ID da reserva a ser cancelada
+   */
+  cancelarReserva(idReserva: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${idReserva}/cancelar`, {});
+  }
+
+  /**
+   * Busca reservas ativas para uma mesa específica.
+   * @param numeroMesa Número da mesa
+   */
+  getReservasPorMesa(numeroMesa: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/mesa/${numeroMesa}`);
+  }
 }
