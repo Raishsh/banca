@@ -88,22 +88,22 @@
     <p *ngIf="produtoParaSelecionarTamanho">{{ produtoParaSelecionarTamanho.nome }}</p>
     <div class="tamanho-opcoes">
       <button
-        *ngIf="produtoParaSelecionarTamanho?.precoPequeno"
+        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoPequeno"
         class="tamanho-btn"
         (click)="selecionarTamanho('P')">
-        P - R$ {{ produtoParaSelecionarTamanho?.precoPequeno.toFixed(2) }}
+        P - R$ {{ produtoParaSelecionarTamanho.precoPequeno?.toFixed(2) }}
       </button>
       <button
-        *ngIf="produtoParaSelecionarTamanho?.precoMedio"
+        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoMedio"
         class="tamanho-btn"
         (click)="selecionarTamanho('M')">
-        M - R$ {{ produtoParaSelecionarTamanho?.precoMedio.toFixed(2) }}
+        M - R$ {{ produtoParaSelecionarTamanho.precoMedio?.toFixed(2) }}
       </button>
       <button
-        *ngIf="produtoParaSelecionarTamanho?.precoGrande"
+        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoGrande"
         class="tamanho-btn"
         (click)="selecionarTamanho('G')">
-        G - R$ {{ produtoParaSelecionarTamanho?.precoGrande.toFixed(2) }}
+        G - R$ {{ produtoParaSelecionarTamanho.precoGrande?.toFixed(2) }}
       </button>
     </div>
     <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">Cancelar</button>
