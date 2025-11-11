@@ -97,6 +97,10 @@ public class PedidoService {
                 }
             }
 
+            if (itemDto.getSabores() != null && !itemDto.getSabores().isEmpty()) {
+                itemPedido.setSabores(String.join(",", itemDto.getSabores()));
+            }
+
             itemPedido.setPreco(preco);
             itemPedido.setPedido(pedido);
             itensDoPedido.add(itemPedido);
