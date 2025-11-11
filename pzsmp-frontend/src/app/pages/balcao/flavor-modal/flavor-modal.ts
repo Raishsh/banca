@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Produto } from '../../../core/models/produto.model';
 
 export interface Sabor {
   id: number;
@@ -14,23 +15,43 @@ export interface Sabor {
   templateUrl: './flavor-modal.html',
   styleUrls: ['./flavor-modal.css']
 })
-export class FlavorModalComponent {
+export class FlavorModalComponent implements OnInit {
   @Input() tamanho: string = '';
-  @Input() saboresDisponiveis: Sabor[] = [
-    { id: 1, nome: 'Calabresa', preco: 25.00 },
-    { id: 2, nome: 'Margherita', preco: 28.00 },
-    { id: 3, nome: 'Frango com Catupiry', preco: 30.00 },
-    { id: 4, nome: 'Portuguesa', preco: 32.00 },
-    { id: 5, nome: 'Quatro Queijos', preco: 35.00 },
-    { id: 6, nome: 'Brigadeiro', preco: 20.00 },
-    { id: 7, nome: 'Brócolis', preco: 24.00 },
-    { id: 8, nome: 'Bacon e Ovos', preco: 31.00 }
-  ];
+  @Input() produtosDisponiveisPizza: Produto[] = [];
 
   @Output() saboreSelecionado = new EventEmitter<{ sabores: Sabor[], precoMedio: number }>();
   @Output() cancelado = new EventEmitter<void>();
 
+  saboresDisponiveis: Sabor[] = [];
   saboresSelecionados: Sabor[] = [];
+
+  ngOnInit(): void {
+    this.inicializarSaboresDisponiveisAPizzas();
+  }
+
+  private inicializarSaboresDisponiveisAPizzas(): void {
+    this.saboresDisponiveis = [];
+    this.saboresSelecionados = [];
+
+    if (this.produtosDisponiveisPizza && this.produtosDisponiveisPizza.length > 0) {
+      this.saboresDisponiveis = this.produtosDisponiveisPizza.map(produto => ({
+        id: produto.id_produto,
+        nome: produto.nome,
+        preco: this.obterPrecoParaTamanho(produto)
+      }));
+    }
+  }
+
+  private obterPrecoParaTamanho(produto: Produto): number {
+    if (this.tamanho === 'P' && produto.precoPequeno) {
+      return produto.precoPequeno;
+    } else if (this.tamanho === 'M' && produto.precoMedio) {
+      return produto.precoMedio;
+    } else if (this.tamanho === 'G' && produto.precoGrande) {
+      return produto.precoGrande;
+    }
+    return produto.preco;
+  }
 
   get maxSabores(): number {
     switch (this.tamanho) {
