@@ -67,13 +67,13 @@
 
           <div *ngFor="let item of novoPedidoItens" class="item-pedido-atual">
             <div class="item-info">
-              <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span></span>
-              <span>R$ {{ (
-                (item.tamanho === 'P' && item.produto.precoPequeno ? item.produto.precoPequeno :
-                 item.tamanho === 'M' && item.produto.precoMedio ? item.produto.precoMedio :
-                 item.tamanho === 'G' && item.produto.precoGrande ? item.produto.precoGrande :
-                 item.produto.preco) * item.quantidade
-              ).toFixed(2) }}</span>
+              <div class="item-detalhes">
+                <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span></span>
+                <span *ngIf="item.sabores && item.sabores.length > 0" class="sabores-item">
+                  {{ item.sabores.map(s => s.nome).join(', ') }}
+                </span>
+              </div>
+              <span>R$ {{ ((item.precoFinal ?? item.produto.preco) * item.quantidade).toFixed(2) }}</span>
             </div>
             <button class="btn-remover-item" (click)="removerDoPedido(item)" title="Remover Item">
               <i class="fas fa-trash-alt"></i>
