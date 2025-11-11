@@ -262,12 +262,14 @@ export class Mesas implements OnInit {
       return;
     }
 
+    const dataReservaPadrao = this.obterDataReservaPadrao();
+
     const dadosReserva = {
       idMesa: this.mesaSelecionada.numero,
       nomeReserva: 'Reserva',
       numPessoas: 1,
       observacoes: '',
-      dataReserva: new Date().toISOString(),
+      dataReserva: dataReservaPadrao,
     };
 
     this.reservaService.fazerReserva(dadosReserva).subscribe({
