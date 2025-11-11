@@ -28,9 +28,12 @@ export class Entregas implements OnInit {
     'PIZZA_ESPECIAL', 'PIZZA_TRADICIONAL', 'PIZZA_DOCE', 'PASTEL_DOCE',
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
-  novoPedidoItens: { produto: Produto, quantidade: number }[] = [];
+  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
   totalNovoPedido: number = 0;
   taxaEntrega: number = 7;
+
+  produtoParaSelecionarTamanho: Produto | null = null;
+  showSizeModal: boolean = false;
 
   constructor(
     private clienteService: ClienteService,
@@ -75,18 +78,51 @@ export class Entregas implements OnInit {
   }
 
   adicionarAoPedido(produto: Produto): void {
-    const itemExistente = this.novoPedidoItens.find(item => item.produto.id_produto === produto.id_produto);
+    if (produto.precoPequeno || produto.precoMedio || produto.precoGrande) {
+      this.produtoParaSelecionarTamanho = produto;
+      this.showSizeModal = true;
+    } else {
+      this.adicionarProdutoAoPedido(produto, undefined);
+    }
+  }
+
+  adicionarProdutoAoPedido(produto: Produto, tamanho?: string): void {
+    const itemExistente = this.novoPedidoItens.find(item =>
+      item.produto.id_produto === produto.id_produto && item.tamanho === tamanho
+    );
     if (itemExistente) {
       itemExistente.quantidade++;
     } else {
-      this.novoPedidoItens.push({ produto: produto, quantidade: 1 });
+      this.novoPedidoItens.push({ produto: produto, quantidade: 1, tamanho: tamanho });
     }
     this.calcularTotalNovoPedido();
   }
 
+  selecionarTamanho(tamanho: string): void {
+    if (this.produtoParaSelecionarTamanho) {
+      this.adicionarProdutoAoPedido(this.produtoParaSelecionarTamanho, tamanho);
+    }
+    this.fecharSizeModal();
+  }
+
+  fecharSizeModal(): void {
+    this.showSizeModal = false;
+    this.produtoParaSelecionarTamanho = null;
+  }
+
 
   calcularTotalNovoPedido(): void {
-    const subtotalItens = this.novoPedidoItens.reduce((total, item) => total + (item.produto.preco * item.quantidade), 0);
+    const subtotalItens = this.novoPedidoItens.reduce((total, item) => {
+      let preco = item.produto.preco;
+      if (item.tamanho === 'P' && item.produto.precoPequeno) {
+        preco = item.produto.precoPequeno;
+      } else if (item.tamanho === 'M' && item.produto.precoMedio) {
+        preco = item.produto.precoMedio;
+      } else if (item.tamanho === 'G' && item.produto.precoGrande) {
+        preco = item.produto.precoGrande;
+      }
+      return total + (preco * item.quantidade);
+    }, 0);
     // Garante que a taxa seja um número, mesmo se o campo estiver vazio
     const taxa = Number(this.taxaEntrega) || 0;
     this.totalNovoPedido = subtotalItens + taxa;
@@ -107,11 +143,12 @@ export class Entregas implements OnInit {
       idCliente: this.clienteSelecionado.id,
       nomeClienteTemporario: null,
       taxaEntrega: Number(this.taxaEntrega) || 0,
-      
+
       // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
       itens: this.novoPedidoItens.map(item => ({
         idProduto: item.produto.id_produto,
-        quantidade: item.quantidade
+        quantidade: item.quantidade,
+        tamanho: item.tamanho
       }))
     };
 
@@ -147,9 +184,16 @@ export class Entregas implements OnInit {
   }
 
   removerDoPedido(itemParaRemover: any): void {
-    // Filtra a lista de itens, criando uma nova lista que contém todos os itens, EXCETO o que foi clicado.
-    this.novoPedidoItens = this.novoPedidoItens.filter(item => item.produto.id_produto !== itemParaRemover.produto.id_produto);
-    
+    // Filtra a lista de itens, criando uma nova lista que cont��m todos os itens, EXCETO o que foi clicado.
+    // CORREÇÃO: Comparação precisa checar o ID E o tamanho
+    this.novoPedidoItens = this.novoPedidoItens.filter(
+      (item) =>
+        !(
+          item.produto.id_produto === itemParaRemover.produto.id_produto &&
+          item.tamanho === itemParaRemover.tamanho
+        )
+    );
+
     // Após remover, é crucial recalcular o valor total do pedido.
     this.calcularTotalNovoPedido();
   }
