@@ -20,7 +20,7 @@
       <div class="card-body">
         <ul class="itens-lista">
           <li *ngFor="let item of pedido.itens">
-            <span>{{ item.quantidade }}x {{ item.nomeProduto }}</span>
+            <span>{{ item.quantidade }}x {{ item.nomeProduto }}<span *ngIf="item.tamanho" class="tamanho-pedido"> ({{ item.tamanho }})</span></span>
             <span>{{ item.precoUnitario | currency:'BRL' }}</span>
           </li>
         </ul>
