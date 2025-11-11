@@ -146,7 +146,8 @@ finalizarPedido(): void {
     // <<< ESTA É A LINHA CORRETA (voltando ao formato antigo) >>>
     const itensParaApi = this.novoPedidoItens.map(item => ({
       idProduto: item.produto.id_produto,
-      quantidade: item.quantidade
+      quantidade: item.quantidade,
+      tamanho: item.tamanho
     }));
 
     if (this.pedidosDaMesa.length > 0) {
