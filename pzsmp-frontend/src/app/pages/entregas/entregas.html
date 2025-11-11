@@ -97,21 +97,4 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal de Seleção de Tamanho -->
-  <div class="modal-overlay-tamanho" *ngIf="mostrarModalTamanho">
-    <div class="modal-content-tamanho">
-      <button class="btn-fechar-tamanho" (click)="fecharModalTamanho()">✕</button>
-      <h2>Selecione o Tamanho</h2>
-      <p>{{ produtoSelecionadoParaTamanho?.nome }}</p>
-      <div class="tamanho-opcoes">
-        <button *ngFor="let tamanho of tamanhosSelecionaveis"
-                class="btn-tamanho"
-                (click)="selecionarTamanhoEAdicionar(tamanho)">
-          {{ tamanho }}
-        </button>
-      </div>
-      <button class="btn-fechar-modal-tamanho" (click)="fecharModalTamanho()">Cancelar</button>
-    </div>
-  </div>
 </div>
