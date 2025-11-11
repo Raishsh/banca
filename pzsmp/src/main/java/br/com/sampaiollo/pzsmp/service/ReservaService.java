@@ -66,13 +66,20 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
     
+    public List<Reserva> obterReservasPorMesa(Integer numeroMesa) {
+        Mesa mesa = mesaRepository.findById(numeroMesa)
+                .orElseThrow(() -> new RuntimeException("Mesa não encontrada com número: " + numeroMesa));
+
+        return reservaRepository.findByMesaNumero(numeroMesa);
+    }
+
     @Transactional
     public Reserva cancelarReserva(Integer reservaId) {
         Reserva reserva = reservaRepository.findById(reservaId)
                 .orElseThrow(() -> new RuntimeException("Reserva não encontrada com ID: " + reservaId));
-        
+
         reserva.setStatus(StatusReserva.CANCELADA_CLIENTE);
-        
+
         // Libera a mesa se ela estava reservada por esta reserva
         Mesa mesa = reserva.getMesa();
         if (mesa.getStatus() == StatusMesa.RESERVADA) {
