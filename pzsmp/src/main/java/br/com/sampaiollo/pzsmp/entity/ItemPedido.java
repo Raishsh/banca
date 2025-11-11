@@ -23,6 +23,9 @@ public class ItemPedido {
     @Column(length = 1)
     private String tamanho;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String sabores;
+
     // Muitos ItemPedidos pertencem a um Pedido
     @ManyToOne
     @JoinColumn(name = "id_pedido", nullable = false)
