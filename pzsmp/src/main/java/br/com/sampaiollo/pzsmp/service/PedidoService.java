@@ -167,10 +167,23 @@ public class PedidoService {
             ItemPedido novoItem = new ItemPedido();
             novoItem.setProduto(produto);
             novoItem.setQuantidade(itemDto.getQuantidade());
-            novoItem.setPreco(produto.getPreco());
+            novoItem.setTamanho(itemDto.getTamanho());
+
+            BigDecimal preco = produto.getPreco();
+            if (itemDto.getTamanho() != null && !itemDto.getTamanho().isEmpty()) {
+                if ("P".equalsIgnoreCase(itemDto.getTamanho()) && produto.getPrecoPequeno() != null) {
+                    preco = produto.getPrecoPequeno();
+                } else if ("M".equalsIgnoreCase(itemDto.getTamanho()) && produto.getPrecoMedio() != null) {
+                    preco = produto.getPrecoMedio();
+                } else if ("G".equalsIgnoreCase(itemDto.getTamanho()) && produto.getPrecoGrande() != null) {
+                    preco = produto.getPrecoGrande();
+                }
+            }
+
+            novoItem.setPreco(preco);
             novoItem.setPedido(pedido);
             pedido.getItens().add(novoItem);
-            BigDecimal valorAdicional = produto.getPreco().multiply(BigDecimal.valueOf(itemDto.getQuantidade()));
+            BigDecimal valorAdicional = preco.multiply(BigDecimal.valueOf(itemDto.getQuantidade()));
             pedido.setTotal(pedido.getTotal().add(valorAdicional));
         }
 
