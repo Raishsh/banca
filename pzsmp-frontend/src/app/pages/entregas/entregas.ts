@@ -8,11 +8,26 @@ import { Cliente } from '../../core/models/cliente.model';
 import { Produto } from '../../core/models/produto.model';
 import { AuthRoutingModule } from "../../auth/auth-routing-module";
 import { RouterModule } from '@angular/router';
+import { FlavorModalComponent } from '../balcao/flavor-modal/flavor-modal';
+
+export interface Sabor {
+  id: number;
+  nome: string;
+  preco: number;
+}
+
+export interface ItemPedidoInterno {
+  produto: Produto;
+  quantidade: number;
+  tamanho?: string;
+  sabores?: Sabor[];
+  precoFinal?: number;
+}
 
 @Component({
   selector: 'app-entregas',
   standalone: true,
-  imports: [CommonModule, FormsModule, AuthRoutingModule, RouterModule],
+  imports: [CommonModule, FormsModule, AuthRoutingModule, RouterModule, FlavorModalComponent],
   templateUrl: './entregas.html',
   styleUrls: ['./entregas.css']
 })
@@ -28,12 +43,16 @@ export class Entregas implements OnInit {
     'PIZZA_ESPECIAL', 'PIZZA_TRADICIONAL', 'PIZZA_DOCE', 'PASTEL_DOCE',
     'LANCHES', 'PASTEL', 'SUCOS', 'DRINKS', 'SOBREMESA', 'BEBIDA'
   ];
-  novoPedidoItens: { produto: Produto, quantidade: number, tamanho?: string }[] = [];
+  novoPedidoItens: ItemPedidoInterno[] = [];
   totalNovoPedido: number = 0;
   taxaEntrega: number = 7;
 
   produtoParaSelecionarTamanho: Produto | null = null;
   showSizeModal: boolean = false;
+
+  showFlavorModal: boolean = false;
+  tamanhoSelecionado: string = '';
+  produtoParaSelecionarSabores: Produto | null = null;
 
   constructor(
     private clienteService: ClienteService,
