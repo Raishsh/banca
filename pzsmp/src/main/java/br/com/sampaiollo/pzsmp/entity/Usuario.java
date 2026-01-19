@@ -34,13 +34,11 @@ public class Usuario implements UserDetails { // Implementa UserDetails
     private TipoUsuario tipo;
 
     // MÉTODOS DA INTERFACE UserDetails
-    @Override
+   @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.tipo == TipoUsuario.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        }
+        // Isso pega o valor exato do Enum (ADMIN ou FUNCIONARIO) e cria a permissão
+        // Assim bate certinho com o hasAuthority("ADMIN") do SecurityConfig
+        return List.of(new SimpleGrantedAuthority(this.tipo.name()));
     }
 
     @Override

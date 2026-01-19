@@ -10,8 +10,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // <<< NOVA IMPORTAÇÃO
-import org.springframework.security.crypto.password.PasswordEncoder; // <<< NOVA IMPORTAÇÃO
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -45,20 +45,25 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/mesas").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/pedidos/**").authenticated()
                         
-                        // Permissões específicas de ADMIN
-                        .requestMatchers(HttpMethod.POST, "/api/produtos").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/funcionarios").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/funcionarios").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/funcionarios/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/funcionarios/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/clientes/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/clientes/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/pedidos/fechar-caixa").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/caixa/sangria").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/caixa/sangrias").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/relatorios", "/api/relatorios/**").hasRole("ADMIN")
+                        // --- CORREÇÃO AQUI: Trocado de hasRole para hasAuthority ---
+                        // ADMIN (Gestão de Produtos)
+                        .requestMatchers(HttpMethod.POST, "/api/produtos").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasAuthority("ADMIN")
+                        
+                        // ADMIN (Gestão de Funcionários)
+                        .requestMatchers(HttpMethod.POST, "/api/funcionarios").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/funcionarios").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/funcionarios/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/funcionarios/**").hasAuthority("ADMIN")
+                        
+                        // ADMIN (Outros)
+                        .requestMatchers(HttpMethod.PUT, "/api/clientes/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/clientes/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/pedidos/fechar-caixa").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/caixa/sangria").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/caixa/sangrias").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/relatorios", "/api/relatorios/**").hasAuthority("ADMIN")
                         
                         // Qualquer outra requisição precisa de autenticação
                         .anyRequest().authenticated() 
@@ -72,10 +77,6 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    /**
-     * <<< ESTE É O BEAN QUE FALTAVA >>>
-     * Define o BCrypt como o codificador de senhas padrão para toda a aplicação.
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -84,9 +85,10 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        // Ajuste para permitir a origem do Angular corretamente
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "x-requested-with"));
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

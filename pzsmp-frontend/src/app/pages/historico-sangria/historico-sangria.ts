@@ -34,8 +34,8 @@ export class HistoricoSangriaComponent implements OnInit {
     const seteDiasAtras = new Date();
     seteDiasAtras.setDate(hoje.getDate() - 7);
 
-    this.dataFim = formatDate(hoje, 'yyyy-MM-dd', 'en-US');
-    this.dataInicio = formatDate(seteDiasAtras, 'yyyy-MM-dd', 'en-US');
+    this.dataFim = formatDate(hoje, 'ydd/MM/yyyy', 'pt-BR');
+    this.dataInicio = formatDate(seteDiasAtras, 'dd/MM/yyyy', 'pt-BR');
 
     this.carregarHistorico();
   }
