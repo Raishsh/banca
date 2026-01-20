@@ -315,6 +315,35 @@
   margin-left: 5px;
 }
 
+
+.btn-fechar-conta {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #28a745; /* Verde Sucesso */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-fechar-conta:hover {
+    background-color: #218838;
+}
+
+.total-destaque {
+    font-size: 1.2rem;
+    color: #333;
+    margin: 10px 0;
+}
+
 .sabores-item {
   font-size: 0.85rem;
   color: #666;

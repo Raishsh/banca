@@ -133,7 +133,7 @@
             </div>
             <div class="pedido-detalhes">
               <p><strong>Data:</strong> {{ pedido.data | date: 'dd/MM/yyyy HH:mm' }}</p>
-              <p><strong>Total:</strong> R$ {{ pedido.total.toFixed(2) }}</p>
+              <p class="total-destaque"><strong>Total: R$ {{ pedido.total.toFixed(2) }}</strong></p>
               <p *ngIf="pedido.cliente"><strong>Cliente:</strong> {{ pedido.cliente.nome }}</p>
             </div>
             <div class="pedido-itens">
@@ -143,6 +143,11 @@
                   {{ item.quantidade }}x {{ item.nomeProduto }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span> - R$ {{ (item.precoUnitario * item.quantidade).toFixed(2) }}
                 </li>
               </ul>
+            </div>
+            <div class="pedido-actions" *ngIf="pedido.status !== 'PAGO' && pedido.status !== 'ENTREGUE' && pedido.status !== 'CANCELADO'">
+                <button class="btn-fechar-conta" (click)="irParaPagamento(pedido)">
+                    <i class="fas fa-cash-register"></i> Fechar Conta / Pagar
+                </button>
             </div>
           </div>
         </div>
@@ -220,7 +225,6 @@
   </div>
 </div>
 
-<!-- Modal de Seleção de Sabores -->
 <app-flavor-modal
   *ngIf="showFlavorModal"
   [tamanho]="tamanhoSelecionado"

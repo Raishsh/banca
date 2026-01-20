@@ -23,16 +23,16 @@ public class ItemPedido {
     @Column(length = 1)
     private String tamanho;
 
-    @Column(columnDefinition = "LONGTEXT")
+    // --- CORREÇÃO AQUI ---
+    // Trocamos LONGTEXT (MySQL) por TEXT (PostgreSQL)
+    @Column(columnDefinition = "TEXT") 
     private String sabores;
 
-    // Muitos ItemPedidos pertencem a um Pedido
     @ManyToOne
     @JoinColumn(name = "id_pedido", nullable = false)
     @JsonBackReference("pedido-itens")
     private Pedido pedido;
 
-    // Muitos ItemPedidos podem se referir ao mesmo Produto
     @ManyToOne
     @JoinColumn(name = "id_produto", nullable = false)
     private Produto produto;

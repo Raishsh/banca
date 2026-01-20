@@ -12,6 +12,7 @@ import { InputMaskDirective } from '../../shared/directives/input-mask.directive
   styleUrls: ['./cadastro-produto.css']
 })
 export class CadastroProdutoComponent {
+  
   produto = {
     nome: '',
     preco: null as number | null,
@@ -19,14 +20,15 @@ export class CadastroProdutoComponent {
     descricao: '',
     precoPequeno: null as number | null,
     precoMedio: null as number | null,
-    precoGrande: null as number | null
+    precoGrande: null as number | null,
+    precoFamilia: null as number | null // <--- NOVO
   };
+  
   arquivoSelecionado: File | null = null;
   mensagemSucesso: string | null = null;
 
   constructor(private produtoService: ProdutoService) {}
 
-  // Este método é chamado quando um arquivo é selecionado
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -39,17 +41,20 @@ export class CadastroProdutoComponent {
 
     const precoNumerico = this.parsePrice(this.produto.preco as any);
 
-    // Usamos FormData para enviar dados de formulário e arquivos
     const formData = new FormData();
     formData.append('nome', this.produto.nome);
+    
     if (precoNumerico !== null) {
         formData.append('preco', precoNumerico as any);
     }
+    
     formData.append('tipo', this.produto.tipo);
+    
     if (this.produto.descricao) {
       formData.append('descricao', this.produto.descricao);
     }
 
+    // --- PROCESSAMENTO DOS TAMANHOS ---
     const precoPequenoNumerico = this.parsePrice(this.produto.precoPequeno as any);
     if (precoPequenoNumerico !== null) {
       formData.append('precoPequeno', precoPequenoNumerico as any);
@@ -65,23 +70,30 @@ export class CadastroProdutoComponent {
       formData.append('precoGrande', precoGrandeNumerico as any);
     }
 
+    // NOVO: Processar Preço Família
+    const precoFamiliaNumerico = this.parsePrice(this.produto.precoFamilia as any);
+    if (precoFamiliaNumerico !== null) {
+      formData.append('precoFamilia', precoFamiliaNumerico as any);
+    }
+    // ----------------------------------
+
     if (this.arquivoSelecionado) {
       formData.append('imagem', this.arquivoSelecionado, this.arquivoSelecionado.name);
     }
 
     this.produtoService.cadastrarProduto(formData).subscribe({
       next: (response) => {
-        
         this.mensagemSucesso = `Produto "${response.nome}" cadastrado com sucesso!`;
         this.limparFormulario();
       },
       error: (err) => {
         console.error('Erro ao cadastrar produto', err);
-        this.mensagemSucesso = 'Erro ao cadastrar produto. Tente novamente.';
+        this.mensagemSucesso = 'Erro ao cadastrar produto. Verifique se o nome já existe.';
       }
     });
   }
 
+  // Converte string "R$ 1.200,50" para number 1200.50
   private parsePrice(value: any): number | null {
     if (!value) return null;
     const cleanValue = String(value).replace(/[^0-9,]/g, '').replace(',', '.');
@@ -97,10 +109,10 @@ export class CadastroProdutoComponent {
       descricao: '',
       precoPequeno: null,
       precoMedio: null,
-      precoGrande: null
+      precoGrande: null,
+      precoFamilia: null // <--- LIMPAR NOVO CAMPO
     };
     this.arquivoSelecionado = null;
-    // Opcional: resetar o input de arquivo (um pouco mais complexo)
     const fileInput = document.getElementById('imagem') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';

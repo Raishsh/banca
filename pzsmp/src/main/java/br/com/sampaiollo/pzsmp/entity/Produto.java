@@ -1,12 +1,12 @@
 package br.com.sampaiollo.pzsmp.entity;
 
 import jakarta.persistence.*;
-import lombok.Data; // A "mágica" acontece por causa desta linha
+import lombok.Data; 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "produto")
-@Data // Esta anotação cria os getters, setters e outros métodos para você
+@Data
 public class Produto {
 
     @Id
@@ -21,16 +21,20 @@ public class Produto {
     private TipoProduto tipo;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal preco;
+    private BigDecimal preco; // Preço padrão (Geralmente usamos o Grande aqui)
 
     @Column(precision = 10, scale = 2)
-    private BigDecimal precoPequeno;
+    private BigDecimal precoPequeno; // Broto
 
     @Column(precision = 10, scale = 2)
     private BigDecimal precoMedio;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal precoGrande;
+
+    // --- NOVO CAMPO ADICIONADO ---
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precoFamilia; 
 
     private String imagemUrl;
 

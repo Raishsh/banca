@@ -23,7 +23,7 @@ export class Cardapio implements OnInit {
   ];
   
   produtoEmEdicao: Produto | null = null;
-  arquivoSelecionado: File | null = null; // Para guardar a nova imagem
+  arquivoSelecionado: File | null = null;
 
   constructor(private produtoService: ProdutoService) {}
 
@@ -52,11 +52,16 @@ export class Cardapio implements OnInit {
   
   // --- MÉTODOS DE GERENCIAMENTO ---
 
-  excluirProduto(id_produto: number): void {
+  // CORREÇÃO: Aceitar undefined e validar antes de usar
+  excluirProduto(id_produto?: number): void {
+    if (!id_produto) {
+        alert('Erro: Produto sem ID identificado.');
+        return;
+    }
+
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       this.produtoService.excluirProduto(id_produto).subscribe({
         next: () => {
-          
           this.todosOsProdutos = this.todosOsProdutos.filter(p => p.id_produto !== id_produto);
           this.filtrarProdutos(this.filtroAtual);
         },
@@ -70,14 +75,13 @@ export class Cardapio implements OnInit {
 
   abrirModalEdicao(produto: Produto): void {
     this.produtoEmEdicao = { ...produto };
-    this.arquivoSelecionado = null; // Limpa seleção anterior
+    this.arquivoSelecionado = null;
   }
 
   fecharModalEdicao(): void {
     this.produtoEmEdicao = null;
   }
   
-  // Novo método para lidar com a seleção do arquivo
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -85,7 +89,6 @@ export class Cardapio implements OnInit {
     }
   }
 
-  // Método de salvar atualizado para usar FormData
   salvarEdicao(): void {
     if (!this.produtoEmEdicao) return;
 
@@ -97,34 +100,33 @@ export class Cardapio implements OnInit {
       formData.append('descricao', this.produtoEmEdicao.descricao);
     }
 
-    if (this.produtoEmEdicao.precoPequeno) {
-      formData.append('precoPequeno', this.produtoEmEdicao.precoPequeno.toString());
-    }
-    if (this.produtoEmEdicao.precoMedio) {
-      formData.append('precoMedio', this.produtoEmEdicao.precoMedio.toString());
-    }
-    if (this.produtoEmEdicao.precoGrande) {
-      formData.append('precoGrande', this.produtoEmEdicao.precoGrande.toString());
-    }
+    if (this.produtoEmEdicao.precoPequeno) formData.append('precoPequeno', this.produtoEmEdicao.precoPequeno.toString());
+    if (this.produtoEmEdicao.precoMedio) formData.append('precoMedio', this.produtoEmEdicao.precoMedio.toString());
+    if (this.produtoEmEdicao.precoGrande) formData.append('precoGrande', this.produtoEmEdicao.precoGrande.toString());
+    if (this.produtoEmEdicao.precoFamilia) formData.append('precoFamilia', this.produtoEmEdicao.precoFamilia.toString());
 
     if (this.arquivoSelecionado) {
       formData.append('imagem', this.arquivoSelecionado, this.arquivoSelecionado.name);
     }
 
-    this.produtoService.atualizarProduto(this.produtoEmEdicao.id_produto, formData).subscribe({
-      next: (produtoAtualizado) => {
-        
-        const index = this.todosOsProdutos.findIndex(p => p.id_produto === this.produtoEmEdicao!.id_produto);
-        if (index !== -1) {
-          this.todosOsProdutos[index] = produtoAtualizado;
-        }
-        this.filtrarProdutos(this.filtroAtual);
-        this.fecharModalEdicao();
-      },
-      error: (err) => {
-        alert('Erro ao atualizar produto.');
-        console.error(err);
-      }
-    });
+    // CORREÇÃO: Verificar se ID existe antes de atualizar
+    if (this.produtoEmEdicao.id_produto) {
+        this.produtoService.atualizarProduto(this.produtoEmEdicao.id_produto, formData).subscribe({
+            next: (produtoAtualizado) => {
+                const index = this.todosOsProdutos.findIndex(p => p.id_produto === this.produtoEmEdicao!.id_produto);
+                if (index !== -1) {
+                this.todosOsProdutos[index] = produtoAtualizado;
+                }
+                this.filtrarProdutos(this.filtroAtual);
+                this.fecharModalEdicao();
+            },
+            error: (err) => {
+                alert('Erro ao atualizar produto.');
+                console.error(err);
+            }
+        });
+    } else {
+        console.error("Tentativa de atualizar produto sem ID");
+    }
   }
 }

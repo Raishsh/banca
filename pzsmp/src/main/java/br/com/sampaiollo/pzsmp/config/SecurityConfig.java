@@ -34,38 +34,37 @@ public class SecurityConfig {
                 .cors(withDefaults()) 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // Endpoints públicos
+                        // 1. Endpoints Públicos (Sem login)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/clientes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/product-images/**").permitAll()
                         
-                        // Permissões para utilizadores autenticados
-                        .requestMatchers(HttpMethod.GET, "/api/pedidos").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/mesas").authenticated()
+                        // 2. Permissões GERAIS (Qualquer usuário logado: Admin ou Funcionário)
+                        .requestMatchers(HttpMethod.GET, "/api/pedidos/**").authenticated() // Listar
+                        .requestMatchers(HttpMethod.GET, "/api/mesas/**").authenticated()   // Ver mesas
+                        .requestMatchers(HttpMethod.GET, "/api/reservas/**").authenticated()
+                        
+                        // >>> A CORREÇÃO ESTÁ AQUI: LIBERAR O POST PARA QUEM ESTÁ LOGADO <<<
+                        .requestMatchers(HttpMethod.POST, "/api/pedidos").authenticated() 
+                        .requestMatchers(HttpMethod.POST, "/api/pedidos/**").authenticated() 
                         .requestMatchers(HttpMethod.PUT, "/api/pedidos/**").authenticated()
                         
-                        // --- CORREÇÃO AQUI: Trocado de hasRole para hasAuthority ---
-                        // ADMIN (Gestão de Produtos)
+                        // 3. Permissões EXCLUSIVAS DE ADMIN
                         .requestMatchers(HttpMethod.POST, "/api/produtos").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/produtos/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/produtos/**").hasAuthority("ADMIN")
                         
-                        // ADMIN (Gestão de Funcionários)
                         .requestMatchers(HttpMethod.POST, "/api/funcionarios").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/funcionarios").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/funcionarios/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/funcionarios/**").hasAuthority("ADMIN")
                         
-                        // ADMIN (Outros)
-                        .requestMatchers(HttpMethod.PUT, "/api/clientes/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/clientes/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/pedidos/fechar-caixa").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/caixa/sangria").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/caixa/sangrias").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/relatorios", "/api/relatorios/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/relatorios/**").hasAuthority("ADMIN")
                         
-                        // Qualquer outra requisição precisa de autenticação
+                        .requestMatchers(HttpMethod.GET, "/api/estatisticas/**").hasAuthority("ADMIN")
+                        // Bloqueia qualquer outra coisa não listada acima
                         .anyRequest().authenticated() 
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

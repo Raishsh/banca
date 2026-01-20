@@ -1,7 +1,7 @@
 <div class="cupom-cozinha" *ngIf="pedido; else loading">
   
   <header class="cupom-header">
-    <h1>PEDIDO #{{ pedido.numeroDia || pedido.idPedido }}</h1>
+    <h1>#{{ pedido.numeroDia || pedido.idPedido }}</h1>
     <p>{{ getTipoPedido(pedido) }}</p>
     <p class="horario">{{ pedido.data | date:'dd/MM/yyyy HH:mm' }}</p>
   </header>
@@ -9,18 +9,39 @@
   <section class="cupom-body">
     <ul class="itens-lista">
       <li *ngFor="let item of pedido.itens">
-        <span class="qtde">{{ item.quantidade }}x</span>
-        <span class="nome">{{ item.nomeProduto }}<span *ngIf="item.tamanho" class="tamanho-cozinha"> ({{ item.tamanho }})</span></span>
+        
+        <div class="item-linha-principal">
+          <span class="qtde">{{ item.quantidade }}x</span>
+          <div class="detalhes-item">
+            <span class="nome">
+              {{ item.nomeProduto }}
+              <span *ngIf="item.tamanho" class="tamanho-cozinha">({{ item.tamanho }})</span>
+            </span>
+            
+            <div class="sabores-lista" *ngIf="item.sabores && item.sabores.length > 0">
+               <span *ngFor="let sabor of item.sabores; let last = last">
+                 + {{ formatarSabor(sabor) }}<br> 
+               </span>
+            </div>
+
+            </div>
+        </div>
       </li>
     </ul>
   </section>
 
   <footer class="cupom-footer no-print">
-    <button (click)="imprimir()">Imprimir Pedido</button>
+    <button (click)="imprimir()">
+      <i class="fas fa-print"></i> Imprimir Agora
+    </button>
+    <br><br>
+    <small style="color: #666">Esta janela pode ser fechada após a impressão.</small>
   </footer>
 
 </div>
 
 <ng-template #loading>
-  <p class="loading-mensagem">Carregando pedido...</p>
+  <div style="text-align: center; padding: 50px; color: white;">
+    <h2>Carregando Pedido...</h2>
+  </div>
 </ng-template>

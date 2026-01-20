@@ -80,17 +80,22 @@
             </button>
           </div>
           <hr>
-          <div class="item-pedido-atual">
-            <div class="item-info">
-              <span>Taxa de Entrega</span>
+          <div class="item-pedido-atual taxa-row">
+            <div class="item-info taxa-info">
+              <span><i class="fas fa-motorcycle"></i> Taxa de Entrega</span>
               
-              <input type="number" 
-                     class="input-taxa-entrega" 
-                     [(ngModel)]="taxaEntrega"
-                     (ngModelChange)="onTaxaChange()"
-                     placeholder="R$ 0,00">
+              <div class="input-group-taxa">
+                  <span class="currency-symbol">R$</span>
+                  <input type="number" 
+                       class="input-taxa-entrega" 
+                       [(ngModel)]="taxaEntrega"
+                       (ngModelChange)="onTaxaChange()"
+                       min="0"
+                       step="0.50">
+              </div>
             </div>
           </div>
+
           <div class="total-pedido">
             <strong>Total: R$ {{ totalNovoPedido.toFixed(2) }}</strong>
           </div>

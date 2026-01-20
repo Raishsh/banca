@@ -1,48 +1,50 @@
-/* Remove todo o layout principal (menu, etc) desta página */
+/* ============================================================
+   ESTILO DE TELA (Como você vê no computador)
+   ============================================================ */
 :host {
   display: block;
-  background-color: #f0f2f5; /* Um fundo cinza para a tela */
+  background-color: #555; /* Fundo escuro para destacar o papel na tela */
   min-height: 100vh;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .cupom-cozinha {
-  background-color: #ffffff;
-  width: 320px; /* Largura de impressora térmica (aprox) */
+  background-color: #fff;
+  width: 100%;
+  max-width: 80mm; /* Simula a largura do papel de 80mm */
   margin: 0 auto;
-  padding: 20px;
-  border: 1px dashed #333;
-  font-family: 'Courier New', Courier, monospace;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  font-family: 'Courier New', Courier, monospace; /* Fonte monoespaçada é melhor para cupons */
   color: #000;
 }
 
 .cupom-header {
   text-align: center;
-  border-bottom: 1px dashed #333;
-  padding-bottom: 15px;
-  margin-bottom: 15px;
+  border-bottom: 2px dashed #000;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .cupom-header h1 {
+  font-size: 1.5rem;
   margin: 0;
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: 900;
 }
 
 .cupom-header p {
-  margin: 5px 0 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-.cupom-header .horario {
-  font-size: 0.9rem;
-  font-weight: normal;
+  margin: 2px 0;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
-.cupom-body {
-  font-size: 1.1rem;
+.horario {
+  font-size: 0.8rem !important;
+  font-weight: normal !important;
 }
 
+/* LISTA DE ITENS */
 .itens-lista {
   list-style: none;
   padding: 0;
@@ -50,81 +52,115 @@
 }
 
 .itens-lista li {
+  margin-bottom: 12px;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 8px;
+}
+
+.item-linha-principal {
   display: flex;
-  margin-bottom: 8px;
-  font-weight: 600;
+  align-items: flex-start;
 }
 
-.itens-lista .qtde {
-  flex-shrink: 0;
-  margin-right: 10px;
+.qtde {
+  font-weight: 900;
   font-size: 1.2rem;
+  margin-right: 8px;
+  min-width: 30px; /* Alinha os nomes */
 }
 
-.itens-lista .nome {
-  /* Permite que o nome quebre a linha se for grande */
-  word-break: break-word;
+.nome {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.1;
 }
 
 .tamanho-cozinha {
-  font-weight: normal;
   font-size: 0.9rem;
-  margin-left: 3px;
+  font-weight: normal;
 }
 
+.sabores-lista {
+  margin-top: 4px;
+  padding-left: 38px; /* Indenta para alinhar com o nome do produto */
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.observacao {
+  display: block;
+  margin-top: 2px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* RODAPÉ DO CUPOM (BOTÃO) */
 .cupom-footer {
   margin-top: 20px;
   text-align: center;
+  border-top: 2px dashed #000;
+  padding-top: 15px;
 }
 
 .cupom-footer button {
-  width: 100%;
-  padding: 15px;
-  background-color: rgb(50, 50, 50);
-  color: white;
+  background-color: #333;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  padding: 10px 20px;
+  font-size: 1rem;
   cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
 }
+
 .cupom-footer button:hover {
-  background-color: rgb(80, 80, 80);
+  background-color: #000;
 }
 
-.loading-mensagem {
-  text-align: center;
-  font-size: 1.2rem;
-  padding: 40px;
-}
-
-/* ======================================= */
-/* ESTILOS DE IMPRESSÃO */
-/* ======================================= */
+/* ============================================================
+   ESTILO DE IMPRESSÃO (O que sai no papel)
+   ============================================================ */
 @media print {
-  /* Esconde tudo que NÃO é o cupom */
-  body * {
-    visibility: hidden;
+  /* Remove margens do navegador (cabeçalho/rodapé automático) */
+  @page {
+    margin: 0;
+    size: auto;
   }
 
-  /* Mostra o cupom e seus filhos */
-  .cupom-cozinha, .cupom-cozinha * {
-    visibility: visible;
+  :host {
+    background-color: white;
+    padding: 0;
+    min-height: auto;
   }
 
-  /* Centraliza o cupom na página de impressão */
-  .cupom-cozinha {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+  body, html {
+    background-color: white;
     margin: 0;
     padding: 0;
+    width: 100%;
+  }
+
+  .cupom-cozinha {
+    max-width: 100%; /* Usa 100% do papel */
+    width: 100%;
+    margin: 0;
+    padding: 0 5px; /* Margem de segurança mínima */
+    box-shadow: none;
     border: none;
   }
 
-  /* Esconde o botão de imprimir */
-  .no-print, .no-print * {
+  /* Esconde elementos que não devem sair no papel */
+  .no-print {
     display: none !important;
+  }
+
+  /* Garante contraste máximo (preto puro) */
+  * {
+    color: #000 !important;
+    text-shadow: none !important;
+  }
+
+  .cupom-header {
+    border-bottom: 2px solid #000; /* Linha sólida fica melhor impresso */
   }
 }

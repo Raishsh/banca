@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MesaService } from '../../core/services/mesa';
 import { PedidoService } from '../../core/services/pedido';
 import { ReservaService } from '../../core/services/reserva';
@@ -35,16 +36,15 @@ export interface ItemPedidoInterno {
 export class Mesas implements OnInit {
   listaMesas: Mesa[] = [];
 
-  // Variáveis do Modal
   mesaSelecionada: Mesa | null = null;
   modalView: 'novoPedido' | 'pedidos' | 'reserva' = 'novoPedido';
 
-  // Dados para os diferentes views do modal
   pedidosDaMesa: Pedido[] = [];
   reservasDaMesa: any[] = [];
   cardapioCompleto: Produto[] = [];
   cardapioFiltrado: Produto[] = [];
   filtroCardapioAtual: string = 'PIZZA_ESPECIAL';
+  
   tiposDeProduto: string[] = [
     'PIZZA_ESPECIAL',
     'PIZZA_TRADICIONAL',
@@ -61,16 +61,13 @@ export class Mesas implements OnInit {
   novoPedidoItens: ItemPedidoInterno[] = [];
   totalNovoPedido: number = 0;
 
-  // Modal de Seleção de Tamanho
   mostrarModalTamanho: boolean = false;
   produtoSelecionadoParaTamanho: Produto | null = null;
-  tamanhosSelecionaveis: string[] = ['P', 'M', 'G'];
+  tamanhosSelecionaveis: string[] = ['P', 'M', 'G', 'F']; // Adicionado F
 
-  // Propriedades do modal de tamanho
   produtoParaSelecionarTamanho: Produto | null = null;
   showSizeModal: boolean = false;
 
-  // Propriedades do modal de sabores
   showFlavorModal: boolean = false;
   tamanhoSelecionado: string = '';
   produtoParaSelecionarSabores: Produto | null = null;
@@ -80,7 +77,8 @@ export class Mesas implements OnInit {
     private pedidoService: PedidoService,
     private reservaService: ReservaService,
     private produtoService: ProdutoService,
-    private pagamentoState: PagamentoStateService
+    private pagamentoState: PagamentoStateService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -102,19 +100,14 @@ export class Mesas implements OnInit {
   }
 
   abrirModal(mesa: Mesa): void {
-    // Refresh da mesa para obter o status mais recente do servidor
-    // Isso garante que após um pagamento, a mesa tenha status LIVRE atualizado
     this.mesaService.getMesaPorNumero(mesa.numero).subscribe((mesaAtualizada) => {
       this.mesaSelecionada = mesaAtualizada;
-      // O padrão é sempre abrir na tela de "Novo Pedido" para consistência.
       this.modalView = 'novoPedido';
 
-      // Busca os pedidos ativos em segundo plano, para o caso de o usuário navegar para essa aba.
       this.pedidoService.getPedidosPorMesa(mesaAtualizada.numero).subscribe((pedidos) => {
         this.pedidosDaMesa = pedidos;
       });
 
-      // Busca as reservas ativas para a mesa (agora apenas retorna reservas PENDENTE ou CONFIRMADA)
       this.reservaService.getReservasPorMesa(mesaAtualizada.numero).subscribe((reservas) => {
         this.reservasDaMesa = reservas;
       });
@@ -129,7 +122,6 @@ export class Mesas implements OnInit {
     this.totalNovoPedido = 0;
   }
 
-  // --- Lógica do Novo Pedido ---
   filtrarCardapio(tipo: string): void {
     this.filtroCardapioAtual = tipo;
     this.cardapioFiltrado = this.cardapioCompleto.filter(
@@ -138,7 +130,7 @@ export class Mesas implements OnInit {
   }
 
   adicionarAoPedido(produto: Produto): void {
-    if (produto.precoPequeno || produto.precoMedio || produto.precoGrande) {
+    if (produto.precoPequeno || produto.precoMedio || produto.precoGrande || produto.precoFamilia) {
       this.produtoParaSelecionarTamanho = produto;
       this.showSizeModal = true;
     } else {
@@ -182,6 +174,8 @@ export class Mesas implements OnInit {
         preco = produto.precoMedio;
       } else if (tamanho === 'G' && produto.precoGrande) {
         preco = produto.precoGrande;
+      } else if (tamanho === 'F' && produto.precoFamilia) {
+        preco = produto.precoFamilia;
       }
     }
 
@@ -247,18 +241,16 @@ export class Mesas implements OnInit {
       return;
     }
 
+    // CORREÇÃO: idProduto com fallback para 0 e tipagem correta
     const itensParaApi = this.novoPedidoItens.map((item) => ({
-      idProduto: item.produto.id_produto,
+      idProduto: item.produto.id_produto || 0, // Fallback importante
       quantidade: item.quantidade,
       tamanho: item.tamanho,
       sabores: item.sabores?.map(s => s.nome) ?? null
     }));
 
     if (this.pedidosDaMesa.length > 0) {
-      // --- LÓGICA ANTIGA: ADICIONAR ITENS ---
       const pedidoId = this.pedidosDaMesa[0].idPedido;
-
-      // (O seu 'adicionarItensAoPedido' no service espera o formato { itens: [...] } )
       const requestBody = { itens: itensParaApi };
 
       this.pedidoService
@@ -274,22 +266,16 @@ export class Mesas implements OnInit {
           },
         });
     } else {
-      // --- LÓGICA NOVA: CRIAR PEDIDO (COM IMPRESSÃO) ---
       const pedidoParaApi = {
         idMesa: this.mesaSelecionada!.numero,
         idCliente: null,
         nomeClienteTemporario: null,
         taxaEntrega: 0,
-        itens: itensParaApi, // <<< Usa o formato antigo
+        itens: itensParaApi,
       };
 
       this.pedidoService.realizarPedido(pedidoParaApi).subscribe({
         next: (pedidoSalvo) => {
-          // <-- 1. Recebe o pedido salvo
-
-          // ===============================================
-          // == 2. CHAMA O POPUP DE IMPRESSÃO (Mantido) ==
-          // ===============================================
           const url = `/app/cozinha/${pedidoSalvo.idPedido}?autoprint=true`;
           window.open(
             url,
@@ -297,7 +283,6 @@ export class Mesas implements OnInit {
             'width=350,height=500,left=100,top=100'
           );
 
-          // 3. Limpa e fecha
           this.carregarMesas();
           this.pedidoService.getPedidosPorMesa(this.mesaSelecionada!.numero).subscribe((pedidos) => {
             this.pedidosDaMesa = pedidos;
@@ -313,7 +298,6 @@ export class Mesas implements OnInit {
     }
   }
 
-  // --- Lógica da Reserva ---
   alternarReserva(): void {
     if (!this.mesaSelecionada) {
       return;
@@ -415,6 +399,7 @@ export class Mesas implements OnInit {
         (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       );
   }
+
   removerDoPedido(itemParaRemover: ItemPedidoInterno): void {
     this.novoPedidoItens = this.novoPedidoItens.filter(item => {
       const mesmoId = item.produto.id_produto === itemParaRemover.produto.id_produto;
@@ -434,5 +419,11 @@ export class Mesas implements OnInit {
     }
     return sabores.map(s => s.nome).join(', ');
   }
+
+  irParaPagamento(pedido: Pedido): void {
+    if (pedido && pedido.idPedido) {
+      this.fecharModal();
+      this.router.navigate(['/app/pagamento', pedido.idPedido]);
+    }
+  }
 }
-// CORREÇÃO: Chave "}" extra removida daqui.

@@ -12,7 +12,8 @@ public record ProdutoResponseDto(
     String descricao,
     BigDecimal precoPequeno,
     BigDecimal precoMedio,
-    BigDecimal precoGrande
+    BigDecimal precoGrande,
+    BigDecimal precoFamilia // <--- ADICIONADO
 ) {
     public ProdutoResponseDto(Produto produto) {
         this(
@@ -24,7 +25,8 @@ public record ProdutoResponseDto(
             produto.getDescricao(),
             produto.getPrecoPequeno(),
             produto.getPrecoMedio(),
-            produto.getPrecoGrande()
+            produto.getPrecoGrande(),
+            produto.getPrecoFamilia() // <--- ADICIONADO
         );
     }
 }

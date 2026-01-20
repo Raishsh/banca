@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router'; // <-- 'ActivatedRoute' é necessário
+import { ActivatedRoute } from '@angular/router';
 import { PedidoService } from '../../core/services/pedido';
 import { Pedido } from '../../core/models/pedido.model';
 
@@ -9,14 +9,14 @@ import { Pedido } from '../../core/models/pedido.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pedido-cozinha.component.html',
-  styleUrls: ['./pedido-cozinha.component.css']
+  styleUrls: ['./pedido-cozinha.component.css'] // Garanta que o nome do arquivo bate
 })
 export class PedidoCozinhaComponent implements OnInit {
 
   pedido: Pedido | null = null;
 
   constructor(
-    private route: ActivatedRoute, // <-- Injetado para ler a URL
+    private route: ActivatedRoute,
     private pedidoService: PedidoService
   ) {}
 
@@ -30,21 +30,13 @@ export class PedidoCozinhaComponent implements OnInit {
         next: (data) => {
           this.pedido = data;
           
-          // ===============================================
-          // == INÍCIO DA LÓGICA DE AUTO-IMPRESSÃO ==
-          // ===============================================
-          // 1. Verifica se a URL tem o parâmetro ?autoprint=true
+          // Auto-impressão
           const autoprint = this.route.snapshot.queryParamMap.get('autoprint');
           if (autoprint === 'true') {
-            
-            // 2. Espera 100ms para o HTML ser renderizado antes de imprimir
             setTimeout(() => {
               this.imprimir();
-            }, 100);
+            }, 500); // Aumentei para 500ms para garantir que carregou estilos e imagens
           }
-          // ===============================================
-          // == FIM DA LÓGICA DE AUTO-IMPRESSÃO ==
-          // ===============================================
         },
         error: (err) => {
           console.error('Erro ao carregar pedido para cozinha', err);
@@ -53,24 +45,25 @@ export class PedidoCozinhaComponent implements OnInit {
     }
   }
 
+  formatarSabor(sabor: any): string {
+    if (typeof sabor === 'string') {
+      return sabor;
+    }
+    return sabor?.nome || '';
+  }
+
   getTipoPedido(pedido: Pedido): string {
     if (pedido.numeroMesa) {
       return `MESA ${pedido.numeroMesa}`;
     }
-    if (pedido.cliente) {
-      return `ENTREGA (Cliente: ${pedido.cliente.nome})`;
+    // Lógica para Delivery vs Balcão
+    if (!pedido.numeroMesa && pedido.cliente && !pedido.nomeClienteTemporario) {
+        return `DELIVERY - ${pedido.cliente.nome.split(' ')[0]}`; // Pega só o primeiro nome p/ economizar espaço
     }
-    if (pedido.nomeClienteTemporario) {
-      return `BALCÃO (Cliente: ${pedido.nomeClienteTemporario})`;
-    }
-    return 'PEDIDO';
+    return `BALCÃO - ${pedido.nomeClienteTemporario || 'Cliente'}`;
   }
 
   imprimir(): void {
-    window.print(); // Chama a impressão do navegador
-    
-    // Opcional: Descomente a linha abaixo para fechar o popup
-    // automaticamente após o usuário confirmar ou cancelar a impressão.
-    // window.close();
+    window.print();
   }
 }

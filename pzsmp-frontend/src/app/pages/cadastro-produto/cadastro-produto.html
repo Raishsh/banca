@@ -1,26 +1,21 @@
-<!-- Cabeçalho Padrão -->
 <div class="page-header">
   <div class="header-text">
     <h1>Cadastrar Novo Produto</h1>
     <p>Preencha os dados abaixo para adicionar um novo item ao cardápio.</p>
   </div>
-  <div class="header-actions">
-    <!-- Não há ações no cabeçalho desta página -->
-  </div>
 </div>
 
-<!-- Card de Conteúdo para o Formulário -->
 <div class="content-card">
   <form (ngSubmit)="cadastrar()">
-    <!-- Grid para organizar os campos do formulário -->
     <div class="form-grid">
+      
       <div class="form-group">
         <label for="nome">Nome do Produto</label>
         <input type="text" id="nome" [(ngModel)]="produto.nome" name="nome" placeholder="Digite o nome do produto" required>
       </div>
 
       <div class="form-group">
-        <label for="preco">Preço</label>
+        <label for="preco">Preço Base (Geralmente Grande)</label>
         <input type="text" id="preco" [(ngModel)]="produto.preco" name="preco" appInputMask="currency" placeholder="R$ 0,00" required>
       </div>
 
@@ -28,37 +23,40 @@
         <label for="tipo">Tipo de Produto</label>
         <select id="tipo" [(ngModel)]="produto.tipo" name="tipo" required>
           <option value="" disabled>Selecione um tipo...</option>
-          <option value="PIZZA_ESPECIAL">Pizza Especial</option>
           <option value="PIZZA_TRADICIONAL">Pizza Tradicional</option>
+          <option value="PIZZA_PREMIUM">Pizza Premium</option>
           <option value="PIZZA_DOCE">Pizza Doce</option>
-          <option value="PASTEL_DOCE">Pastel Doce</option>
-          <option value="LANCHES">Lanches</option>
+          <option value="HAMBURGUER">Hambúrguer</option>
           <option value="PASTEL">Pastel</option>
-          <option value="SUCOS">Sucos</option>
-          <option value="DRINKS">Drinks</option>
+          <option value="BEBIDA">Bebida / Drink</option>
           <option value="SOBREMESA">Sobremesa</option>
-          <option value="BEBIDA">Bebida</option>
+          <option value="BORDAS">Adicional / Borda</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="descricao">Descrição (opcional)</label>
-        <textarea id="descricao" [(ngModel)]="produto.descricao" name="descricao" rows="3" placeholder="Breve descrição do produto"></textarea>
+        <textarea id="descricao" [(ngModel)]="produto.descricao" name="descricao" rows="3" placeholder="Ingredientes e detalhes..."></textarea>
       </div>
 
       <div class="form-group">
-        <label for="precoPequeno">Preço P (Pequeno - opcional)</label>
+        <label for="precoPequeno">Preço Broto (P)</label>
         <input type="text" id="precoPequeno" [(ngModel)]="produto.precoPequeno" name="precoPequeno" appInputMask="currency" placeholder="R$ 0,00">
       </div>
 
       <div class="form-group">
-        <label for="precoMedio">Preço M (Médio - opcional)</label>
+        <label for="precoMedio">Preço Média (M)</label>
         <input type="text" id="precoMedio" [(ngModel)]="produto.precoMedio" name="precoMedio" appInputMask="currency" placeholder="R$ 0,00">
       </div>
 
       <div class="form-group">
-        <label for="precoGrande">Preço G (Grande - opcional)</label>
+        <label for="precoGrande">Preço Grande (G)</label>
         <input type="text" id="precoGrande" [(ngModel)]="produto.precoGrande" name="precoGrande" appInputMask="currency" placeholder="R$ 0,00">
+      </div>
+
+      <div class="form-group" style="border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; background-color: #f8fafc;">
+        <label for="precoFamilia" style="color: var(--cor-primaria); font-weight: bold;">Preço Família (F)</label>
+        <input type="text" id="precoFamilia" [(ngModel)]="produto.precoFamilia" name="precoFamilia" appInputMask="currency" placeholder="R$ 0,00">
       </div>
 
       <div class="form-group">
@@ -67,13 +65,11 @@
       </div>
     </div>
 
-    <!-- Botão de Ação -->
     <div class="form-actions">
       <button type="submit" class="btn-salvar">Cadastrar Produto</button>
     </div>
   </form>
 
-  <!-- Mensagem de sucesso -->
   <div *ngIf="mensagemSucesso" class="mensagem-sucesso">
     {{ mensagemSucesso }}
   </div>

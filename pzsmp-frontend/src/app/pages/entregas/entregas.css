@@ -370,3 +370,43 @@
   color: #666;
   margin-left: 5px;
 }
+
+
+.taxa-row {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.taxa-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-weight: 500;
+}
+
+.input-group-taxa {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0 8px;
+    width: 100px;
+}
+
+.currency-symbol {
+    color: #666;
+    margin-right: 4px;
+}
+
+.input-taxa-entrega {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 8px 0;
+    font-weight: bold;
+    text-align: right;
+}

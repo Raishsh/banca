@@ -9,5 +9,6 @@ public record ProdutoRequest(
     String descricao,
     BigDecimal precoPequeno,
     BigDecimal precoMedio,
-    BigDecimal precoGrande
+    BigDecimal precoGrande,
+    BigDecimal precoFamilia // <--- ADICIONADO
 ) {}

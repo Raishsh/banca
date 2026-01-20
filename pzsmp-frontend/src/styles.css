@@ -7,7 +7,7 @@
 */
 :root {
   --cor-primaria: #0052cc; /* Azul para ações principais e destaques */
-  --cor-fundo: #f4f7f6;      /* Um cinza muito claro para o fundo das páginas */
+  --cor-fundo: #f8fafc;      /* Um cinza muito claro para o fundo das páginas */
   --cor-sidebar: #ffffff;   /* Fundo branco para o menu lateral */
   --cor-texto-principal: #2d3748;
   --cor-texto-secundario: #718096;

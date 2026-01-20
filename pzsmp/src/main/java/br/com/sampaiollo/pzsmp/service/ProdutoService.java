@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-
 @Service
 public class ProdutoService {
 
@@ -31,99 +30,88 @@ public class ProdutoService {
         return produtoRepository.findById(id);
     }
     
-@Transactional
-public Produto cadastrarProduto(ProdutoRequest request, MultipartFile imagem) {
-    Produto novoProduto = new Produto();
-    novoProduto.setNome(request.nome());
-    novoProduto.setPreco(request.preco());
-    novoProduto.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
-    novoProduto.setDescricao(request.descricao());
-    novoProduto.setPrecoPequeno(request.precoPequeno());
-    novoProduto.setPrecoMedio(request.precoMedio());
-    novoProduto.setPrecoGrande(request.precoGrande());
-    if (produtoRepository.existsByNome(request.nome())) {
-    throw new RuntimeException("Já existe um produto cadastrado com o nome: " + request.nome());
-}
-
-    if (imagem != null && !imagem.isEmpty()) {
-        String nomeArquivo = salvarImagem(imagem);
-        novoProduto.setImagemUrl(nomeArquivo);
-    }
-
-    return produtoRepository.save(novoProduto);
-}
-
-// Novo método privado para salvar o arquivo de imagem
-private String salvarImagem(MultipartFile imagem) {
-    try {
-        // Define o diretório onde as imagens serão salvas
-        // Crie esta pasta na raiz do seu projeto backend
-        Path diretorioDeUpload = Paths.get("product-images");
-        if (!Files.exists(diretorioDeUpload)) {
-            Files.createDirectories(diretorioDeUpload);
+    @Transactional
+    public Produto cadastrarProduto(ProdutoRequest request, MultipartFile imagem) {
+        Produto novoProduto = new Produto();
+        novoProduto.setNome(request.nome());
+        novoProduto.setPreco(request.preco());
+        novoProduto.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
+        novoProduto.setDescricao(request.descricao());
+        novoProduto.setPrecoPequeno(request.precoPequeno());
+        novoProduto.setPrecoMedio(request.precoMedio());
+        novoProduto.setPrecoGrande(request.precoGrande());
+        novoProduto.setPrecoFamilia(request.precoFamilia()); // <--- ADICIONADO
+        
+        if (produtoRepository.existsByNome(request.nome())) {
+            throw new RuntimeException("Já existe um produto cadastrado com o nome: " + request.nome());
         }
 
-        // Gera um nome de arquivo único para evitar colisões
-        String nomeArquivoOriginal = imagem.getOriginalFilename();
-        String extensao = nomeArquivoOriginal.substring(nomeArquivoOriginal.lastIndexOf("."));
-        String nomeArquivoUnico = UUID.randomUUID().toString() + extensao;
+        if (imagem != null && !imagem.isEmpty()) {
+            String nomeArquivo = salvarImagem(imagem);
+            novoProduto.setImagemUrl(nomeArquivo);
+        }
 
-        // Salva o arquivo no diretório
-        Path caminhoDoArquivo = diretorioDeUpload.resolve(nomeArquivoUnico);
-        Files.copy(imagem.getInputStream(), caminhoDoArquivo);
-
-        return nomeArquivoUnico;
-    } catch (IOException e) {
-        throw new RuntimeException("Não foi possível salvar a imagem do produto.", e);
+        return produtoRepository.save(novoProduto);
     }
-}
- @Transactional
-public Produto atualizarProduto(Integer id, ProdutoRequest request, MultipartFile imagem) {
-    Produto produtoExistente = produtoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
+
+    private String salvarImagem(MultipartFile imagem) {
+        try {
+            Path diretorioDeUpload = Paths.get("product-images");
+            if (!Files.exists(diretorioDeUpload)) {
+                Files.createDirectories(diretorioDeUpload);
+            }
+            String nomeArquivoOriginal = imagem.getOriginalFilename();
+            String extensao = nomeArquivoOriginal.substring(nomeArquivoOriginal.lastIndexOf("."));
+            String nomeArquivoUnico = UUID.randomUUID().toString() + extensao;
+            Path caminhoDoArquivo = diretorioDeUpload.resolve(nomeArquivoUnico);
+            Files.copy(imagem.getInputStream(), caminhoDoArquivo);
+            return nomeArquivoUnico;
+        } catch (IOException e) {
+            throw new RuntimeException("Não foi possível salvar a imagem do produto.", e);
+        }
+    }
+
+    @Transactional
+    public Produto atualizarProduto(Integer id, ProdutoRequest request, MultipartFile imagem) {
+        Produto produtoExistente = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
 
         Optional<Produto> produtoComMesmoNome = produtoRepository.findByNome(request.nome());
 
-// Verifica se o nome já existe E se pertence a um produto DIFERENTE do que estamos editando
-if (produtoComMesmoNome.isPresent() && !produtoComMesmoNome.get().getId_produto().equals(id)) {
-    throw new RuntimeException("O nome '" + request.nome() + "' já está em uso por outro produto.");
-}
-    // Se uma nova imagem foi enviada...
-    if (imagem != null && !imagem.isEmpty()) {
-        // (Opcional, mas recomendado) Apaga a imagem antiga se ela existir
-        if (produtoExistente.getImagemUrl() != null && !produtoExistente.getImagemUrl().isEmpty()) {
-            try {
-                Path caminhoImagemAntiga = Paths.get("product-images").resolve(produtoExistente.getImagemUrl());
-                Files.deleteIfExists(caminhoImagemAntiga);
-            } catch (IOException e) {
-                // Log do erro, mas não impede a atualização
-                System.err.println("Erro ao deletar imagem antiga: " + e.getMessage());
-            }
+        if (produtoComMesmoNome.isPresent() && !produtoComMesmoNome.get().getId_produto().equals(id)) {
+            throw new RuntimeException("O nome '" + request.nome() + "' já está em uso por outro produto.");
         }
-        
-        // Salva a nova imagem e atualiza a URL
-        String nomeNovoArquivo = salvarImagem(imagem); // Reutiliza o método que já temos
-        produtoExistente.setImagemUrl(nomeNovoArquivo);
+
+        if (imagem != null && !imagem.isEmpty()) {
+            if (produtoExistente.getImagemUrl() != null && !produtoExistente.getImagemUrl().isEmpty()) {
+                try {
+                    Path caminhoImagemAntiga = Paths.get("product-images").resolve(produtoExistente.getImagemUrl());
+                    Files.deleteIfExists(caminhoImagemAntiga);
+                } catch (IOException e) {
+                    System.err.println("Erro ao deletar imagem antiga: " + e.getMessage());
+                }
+            }
+            String nomeNovoArquivo = salvarImagem(imagem);
+            produtoExistente.setImagemUrl(nomeNovoArquivo);
+        }
+
+        produtoExistente.setNome(request.nome());
+        produtoExistente.setPreco(request.preco());
+        produtoExistente.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
+        produtoExistente.setDescricao(request.descricao());
+        produtoExistente.setPrecoPequeno(request.precoPequeno());
+        produtoExistente.setPrecoMedio(request.precoMedio());
+        produtoExistente.setPrecoGrande(request.precoGrande());
+        produtoExistente.setPrecoFamilia(request.precoFamilia()); // <--- ADICIONADO
+
+        return produtoRepository.save(produtoExistente);
     }
 
-    // Atualiza os outros campos
-    produtoExistente.setNome(request.nome());
-    produtoExistente.setPreco(request.preco());
-    produtoExistente.setTipo(TipoProduto.valueOf(request.tipo().toUpperCase()));
-    produtoExistente.setDescricao(request.descricao());
-    produtoExistente.setPrecoPequeno(request.precoPequeno());
-    produtoExistente.setPrecoMedio(request.precoMedio());
-    produtoExistente.setPrecoGrande(request.precoGrande());
-
-    return produtoRepository.save(produtoExistente);
-}
-
-@Transactional
-public void excluirProduto(Integer id) {
-    // Verifica se o produto existe antes de tentar excluir
-    if (!produtoRepository.existsById(id)) {
-        throw new RuntimeException("Produto não encontrado com ID: " + id);
+    @Transactional
+    public void excluirProduto(Integer id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new RuntimeException("Produto não encontrado com ID: " + id);
+        }
+        produtoRepository.deleteById(id);
     }
-    produtoRepository.deleteById(id);
-}
 }

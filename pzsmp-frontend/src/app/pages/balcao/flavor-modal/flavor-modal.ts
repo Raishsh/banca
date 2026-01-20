@@ -35,7 +35,7 @@ export class FlavorModalComponent implements OnInit {
 
     if (this.produtosDisponiveisPizza && this.produtosDisponiveisPizza.length > 0) {
       this.saboresDisponiveis = this.produtosDisponiveisPizza.map(produto => ({
-        id: produto.id_produto,
+        id: produto.id_produto || 0, // <--- CORREÇÃO: Fallback para 0 se id for undefined
         nome: produto.nome,
         preco: this.obterPrecoParaTamanho(produto)
       }));
@@ -49,6 +49,8 @@ export class FlavorModalComponent implements OnInit {
       return produto.precoMedio;
     } else if (this.tamanho === 'G' && produto.precoGrande) {
       return produto.precoGrande;
+    } else if (this.tamanho === 'F' && produto.precoFamilia) {
+        return produto.precoFamilia;
     }
     return produto.preco;
   }
@@ -60,6 +62,8 @@ export class FlavorModalComponent implements OnInit {
       case 'M':
         return 3;
       case 'G':
+        return 4;
+      case 'F': // Adicionado suporte para Família
         return 4;
       default:
         return 1;

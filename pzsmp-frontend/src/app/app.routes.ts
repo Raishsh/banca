@@ -52,6 +52,7 @@ export const routes: Routes = [
       { path: 'historico-sangria', component: HistoricoSangriaComponent },
       { path: 'historico-aporte', component: HistoricoAporteComponent },
       { path: 'relatorios/:data', component: RelatorioDetalhadoComponent },
+      { path: 'estatisticas', loadComponent: () => import('./pages/estatisticas/estatisticas').then(m => m.Estatisticas) },
 
       // Rota padrão dentro da área logada, redireciona para a tela de pedidos
       { path: '', redirectTo: 'pedidos', pathMatch: 'full' }

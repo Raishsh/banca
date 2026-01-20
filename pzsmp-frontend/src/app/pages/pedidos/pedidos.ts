@@ -5,7 +5,7 @@ import { PedidoService } from '../../core/services/pedido';
 import { Pedido } from '../../core/models/pedido.model';
 import { PagamentoStateService } from '../../core/services/pagamento-state';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-pedidos',
@@ -13,7 +13,7 @@ import { forkJoin, of } from 'rxjs';
   imports: [
     CommonModule,
     RouterModule,
-    TooltipDirective
+    
   ],
   templateUrl: './pedidos.html',
   styleUrls: ['./pedidos.css']
@@ -21,6 +21,10 @@ import { forkJoin, of } from 'rxjs';
 export class Pedidos implements OnInit {
 
   pedidos: Pedido[] = [];
+  
+  // Controle das Abas
+  abaAtual: 'TODOS' | 'MESAS' | 'BALCAO' | 'ENTREGAS' = 'TODOS';
+
   showCancelModal = false;
   pedidoParaCancelar: Pedido | null = null;
 
@@ -33,6 +37,30 @@ export class Pedidos implements OnInit {
     this.carregarPedidos();
   }
 
+  // --- LÓGICA DE FILTRO DAS ABAS ---
+  get pedidosFiltrados(): Pedido[] {
+    if (this.abaAtual === 'TODOS') {
+      return this.pedidos;
+    }
+    if (this.abaAtual === 'MESAS') {
+      return this.pedidos.filter(p => !!p.numeroMesa);
+    }
+    if (this.abaAtual === 'ENTREGAS') {
+      // Consideramos entrega se tiver um Cliente cadastrado e NÃO tiver mesa
+      return this.pedidos.filter(p => !p.numeroMesa && !!p.cliente);
+    }
+    if (this.abaAtual === 'BALCAO') {
+      // Consideramos balcão se não tiver mesa E não tiver cliente cadastrado (apenas nome temporário)
+      return this.pedidos.filter(p => !p.numeroMesa && !p.cliente);
+    }
+    return this.pedidos;
+  }
+
+  setAba(novaAba: 'TODOS' | 'MESAS' | 'BALCAO' | 'ENTREGAS'): void {
+    this.abaAtual = novaAba;
+  }
+  // ---------------------------------
+
   private mergePendentesComLista(): void {
     const pendentes = this.pagamentoState.all();
     const faltantes = pendentes.filter(id => !this.pedidos.some(p => p.idPedido === id));
@@ -40,7 +68,6 @@ export class Pedidos implements OnInit {
 
     forkJoin(faltantes.map(id => this.pedidoService.getPedidoById(id))).subscribe({
       next: (extraPedidos) => {
-        // adiciona ao início para maior visibilidade
         this.pedidos = [...extraPedidos, ...this.pedidos];
       },
       error: (err) => console.error('Erro ao carregar pedidos pendentes de pagamento', err)

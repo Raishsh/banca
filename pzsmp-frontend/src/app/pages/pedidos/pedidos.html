@@ -5,81 +5,89 @@
   </div>
 </div>
 
-<div *ngIf="pedidos && pedidos.length > 0">
+<div class="tabs-container">
+  <button class="tab-btn" [class.active]="abaAtual === 'TODOS'" (click)="setAba('TODOS')">
+    Todos
+  </button>
+  <button class="tab-btn" [class.active]="abaAtual === 'MESAS'" (click)="setAba('MESAS')">
+    <i class="fas fa-utensils"></i> Mesas
+  </button>
+  <button class="tab-btn" [class.active]="abaAtual === 'ENTREGAS'" (click)="setAba('ENTREGAS')">
+    <i class="fas fa-motorcycle"></i> Entregas
+  </button>
+  <button class="tab-btn" [class.active]="abaAtual === 'BALCAO'" (click)="setAba('BALCAO')">
+    <i class="fas fa-cash-register"></i> Balcão
+  </button>
+</div>
+
+<div *ngIf="pedidosFiltrados && pedidosFiltrados.length > 0">
   <div class="pedidos-grid">
-    <div *ngFor="let pedido of pedidos" class="card pedido-card">
+    <div *ngFor="let pedido of pedidosFiltrados" class="card pedido-card">
       <div class="card-header">
         <h3>Pedido Nº {{ pedido.numeroDia || pedido.idPedido }}</h3>
         <div class="tags">
-          <span class="tag" *ngIf="pedido.numeroMesa">Mesa {{ pedido.numeroMesa }}</span>
-          <span class="tag" *ngIf="pedido.nomeClienteTemporario && !pedido.numeroMesa">Balcão</span>
+          <span class="tag tag-mesa" *ngIf="pedido.numeroMesa">Mesa {{ pedido.numeroMesa }}</span>
+          <span class="tag tag-balcao" *ngIf="pedido.nomeClienteTemporario && !pedido.numeroMesa">Balcão</span>
+          <span class="tag tag-entrega" *ngIf="!pedido.numeroMesa && pedido.cliente && !pedido.nomeClienteTemporario">Delivery</span>
+          
           <span class="tag status" [class.status-cancelado]="pedido.status === 'CANCELADO'">{{ pedido.status }}</span>
-          <span class="badge-cancelado" *ngIf="pedido.status === 'CANCELADO'">Cancelado</span>
         </div>
       </div>
       <div class="card-body">
         <ul class="itens-lista">
           <li *ngFor="let item of pedido.itens">
-            <span>{{ item.quantidade }}x {{ item.nomeProduto }}<span *ngIf="item.tamanho" class="tamanho-pedido"> ({{ item.tamanho }})</span></span>
+            <span>
+              {{ item.quantidade }}x {{ item.nomeProduto }}
+              <span *ngIf="item.tamanho" class="tamanho-pedido" style="font-weight:bold; color:var(--cor-primaria)"> 
+                ({{ item.tamanho }})
+              </span>
+            </span>
             <span>{{ item.precoUnitario | currency:'BRL' }}</span>
+            
+            <div *ngIf="item.sabores && item.sabores.length" style="font-size: 0.85rem; color: #666; padding-left: 20px;">
+                <span *ngFor="let sabor of item.sabores">+ {{ sabor }} </span>
+            </div>
           </li>
         </ul>
+        <div class="taxa-entrega-row" *ngIf="pedido.taxaEntrega > 0">
+            <span>Taxa de Entrega:</span>
+            <span>{{ pedido.taxaEntrega | currency:'BRL' }}</span>
+        </div>
       </div>
       <div class="card-footer">
         <span>Cliente: {{ pedido.cliente?.nome || pedido.nomeClienteTemporario || 'Não identificado' }}</span>
         <strong>Total: {{ pedido.total | currency:'BRL' }}</strong>
       </div>
       <div class="card-actions" [class.card-actions-cancelado]="pedido.status === 'CANCELADO'">
+        
         <div *ngIf="pedido.status === 'CANCELADO'" class="cancelado-message">
-          <p>Este pedido foi cancelado durante este expediente</p>
+          <p>Pedido cancelado.</p>
         </div>
 
         <div *ngIf="pedido.status !== 'CANCELADO'">
-          <button
-            *ngIf="pedido.status === 'PREPARANDO'"
-            class="btn btn-sucesso"
-            (click)="mudarStatus(pedido.idPedido, 'PRONTO')"
-            appTooltip="Marque o pedido como pronto para indicar que está pronto para ser entregue">
+          <button *ngIf="pedido.status === 'PREPARANDO'" class="btn btn-sucesso" (click)="mudarStatus(pedido.idPedido, 'PRONTO')">
             Marcar como Pronto
           </button>
 
           <div *ngIf="pedido.status === 'PRONTO'">
-            <button
-              *ngIf="pedido.numeroMesa"
-              class="btn btn-info"
-              (click)="fecharPedido(pedido.idPedido)"
-              appTooltip="Feche o pedido da mesa após o cliente ter recebido os itens">
+            <button *ngIf="pedido.numeroMesa" class="btn btn-info" (click)="fecharPedido(pedido.idPedido)">
               Fechar Pedido
             </button>
-            <button
-              *ngIf="!pedido.numeroMesa"
-              class="btn btn-info"
-              (click)="mudarStatus(pedido.idPedido, 'ENTREGUE')"
-              appTooltip="Finalize a entrega e registre que o pedido foi entregue ao cliente">
-              Finalizar Entrega
+            <button *ngIf="!pedido.numeroMesa" class="btn btn-info" (click)="mudarStatus(pedido.idPedido, 'ENTREGUE')">
+              Saiu para Entrega / Entregue
             </button>
           </div>
 
-          <button
-            *ngIf="pedido.status !== 'PAGO'"
-            class="btn btn-primario"
-            [routerLink]="['/app/pagamento', pedido.idPedido]"
-            appTooltip="Clique para processar o pagamento deste pedido">
+          <button *ngIf="pedido.status !== 'PAGO'" class="btn btn-primario" [routerLink]="['/app/pagamento', pedido.idPedido]">
             Ir para Pagamento
           </button>
 
           <div *ngIf="pedido.status === 'PAGO'">
-            <button class="btn btn-sucesso" disabled appTooltip="O pagamento deste pedido já foi realizado">
-              Pagamento Realizado
-            </button>
+             <button class="btn btn-sucesso" disabled>Pagamento Realizado</button>
           </div>
 
-          <button
-            *ngIf="pedido.status === 'PREPARANDO' || pedido.status === 'PRONTO'"
-            class="btn btn-cancelar"
-            (click)="abrirModalCancelarPedido(pedido)"
-            appTooltip="Clique para cancelar este pedido (essa ação não pode ser desfeita)">
-            Cancelar Pedido
+          <button *ngIf="pedido.status === 'PREPARANDO' || pedido.status === 'PRONTO'" class="btn btn-cancelar" (click)="abrirModalCancelarPedido(pedido)">
+            Cancelar
           </button>
         </div>
       </div>
@@ -87,67 +95,25 @@
   </div>
 </div>
 
-<div *ngIf="!pedidos || pedidos.length === 0" class="empty-state">
+<div *ngIf="!pedidosFiltrados || pedidosFiltrados.length === 0" class="empty-state">
   <div class="empty-state-icon">
-    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-      <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
-    </svg>
+    <i class="fas fa-search"></i>
   </div>
-  <h2>Tudo tranquilo por aqui</h2>
-  <p>Ainda não há pedidos em andamento. Inicie uma nova venda.</p>
-
-  <div class="quick-actions">
-    <button
-      class="btn-action-card"
-      [routerLink]="['/app/mesas']"
-      appTooltip="Registre um novo pedido para uma mesa do restaurante">
-      <span>Pedido para Mesa</span>
-    </button>
-    <button
-      class="btn-action-card"
-      [routerLink]="['/app/entregas']"
-      appTooltip="Crie um novo pedido para entrega em domicílio">
-      <span>Pedido para Entrega</span>
-    </button>
-    <button
-      class="btn-action-card"
-      [routerLink]="['/app/balcao']"
-      appTooltip="Registre uma venda rápida do balcão">
-      <span>Pedido de Balcão</span>
-    </button>
-  </div>
+  <h2>Nenhum pedido encontrado nesta aba</h2>
 </div>
 
-<!-- Modal de Confirmação de Cancelamento -->
 <div *ngIf="showCancelModal" class="modal-overlay" (click)="fecharModalCancelar()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>Cancelar Pedido?</h2>
-      <button class="modal-close-btn" (click)="fecharModalCancelar()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708l2.647-2.646-2.647-2.646a.5.5 0 0 1 0-.708z"/>
-        </svg>
-      </button>
+      <button class="modal-close-btn" (click)="fecharModalCancelar()">X</button>
     </div>
-
     <div class="modal-body">
-      <p *ngIf="pedidoParaCancelar" class="modal-message">
-        Tem certeza que deseja cancelar o pedido Nº {{ pedidoParaCancelar.numeroDia || pedidoParaCancelar.idPedido }}?
-      </p>
-      <div *ngIf="pedidoParaCancelar" class="modal-order-summary">
-        <p><strong>Total:</strong> {{ pedidoParaCancelar.total | currency:'BRL' }}</p>
-        <p><strong>Status:</strong> {{ pedidoParaCancelar.status }}</p>
-      </div>
-      <p class="modal-warning">Esta ação não pode ser desfeita.</p>
+      <p *ngIf="pedidoParaCancelar">Tem certeza que deseja cancelar o pedido #{{ pedidoParaCancelar.numeroDia }}?</p>
     </div>
-
     <div class="modal-footer">
-      <button class="btn btn-modal-cancelar" (click)="fecharModalCancelar()">
-        Manter Pedido
-      </button>
-      <button class="btn btn-modal-confirmar" (click)="confirmarCancelamento()">
-        Confirmar Cancelamento
-      </button>
+      <button class="btn btn-modal-cancelar" (click)="fecharModalCancelar()">Não</button>
+      <button class="btn btn-modal-confirmar" (click)="confirmarCancelamento()">Sim, Cancelar</button>
     </div>
   </div>
 </div>

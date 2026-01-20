@@ -1,123 +1,53 @@
 <app-helper-panel></app-helper-panel>
 
-<!-- 
-  NOVO OVERLAY 
-  Aparece atrás do menu quando ele está aberto em modo mobile
--->
 <div class="menu-overlay" [class.aberto]="isMenuAberto" (click)="fecharMenu()"></div>
 
 <div class="main-container">
   
-  <!-- 
-    SIDEBAR ATUALIZADO
-    Agora reage à variável 'isMenuAberto'
-  -->
   <aside class="sidebar" [class.aberto]="isMenuAberto">
 
     <div class="sidebar-header">
       <img src="assets/images/icone2.png" alt="Logo" class="logo-icon" />
       <div class="header-title">
         <h3>Sampaiollo</h3>
-        <span>LTDA</span>
+        <span>SISTEMA</span>
       </div>
-      
-      <!-- NOVO BOTÃO DE FECHAR (só aparece no mobile) -->
       <button class="btn-fechar-menu" (click)="fecharMenu()">
         <i class="fas fa-times"></i>
       </button>
     </div>
 
-    <!-- 
-      LINKS DE NAVEGAÇÃO ATUALIZADOS
-      Agora fecham o menu ao serem clicados no mobile
-    -->
     <nav class="sidebar-nav">
-      <a
-        routerLink="/app/pedidos"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Visualize e gerencie todos os pedidos em andamento">
-        <i class="fas fa-box"></i> Pedidos
-      </a>
-      <a
-        routerLink="/app/cardapio"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Veja todos os produtos disponíveis no cardápio">
-        <i class="fas fa-utensils"></i> Cardápio
-      </a>
-      <a
-        routerLink="/app/entregas"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Gerencie pedidos de entrega em domicílio">
-        <i class="fas fa-truck"></i> Entrega
-      </a>
-      <a
-        routerLink="/app/mesas"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Controle as mesas e seus pedidos associados">
-        <i class="fas fa-chair"></i>Mesas
-      </a>
-      <a
-        routerLink="/app/balcao"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Registre vendas rápidas do balcão">
-        <i class="fas fa-cash-register"></i> Balcão
-      </a>
-      <a
-        routerLink="/app/cadastro-produto"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Adicione ou edite produtos do seu cardápio">
-        <i class="fas fa-plus-square"></i> Cadastro de Produto
-      </a>
-      <a
-        routerLink="/app/cadastro-cliente"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Gerencie dados dos seus clientes">
-        <i class="fas fa-user-plus"></i>Clientes
-      </a>
-      <a
-        routerLink="/app/funcionarios"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Gerencie os funcionários da sua equipe">
-        <i class="fas fa-users-cog"></i>Funcionários
-      </a>
-      <a
-        routerLink="/app/relatorios"
-        routerLinkActive="active"
-        (click)="fecharMenu()"
-        appTooltip="Visualize relatórios e análises de vendas">
-        <i class="fas fa-chart-bar"></i> Relatórios
-      </a>
-      <a
-        routerLink="/app/historico-sangria"
-        routerLinkActive="active"
-        *ngIf="cargoUsuario === 'ADMIN'"
-        (click)="fecharMenu()"
-        appTooltip="Acompanhe o histórico de sangrias do caixa">
-        <i class="fas fa-box-open"></i>Sangrias
-      </a>
-      <a
-        routerLink="/app/historico-aporte"
-        routerLinkActive="active"
-        *ngIf="cargoUsuario === 'ADMIN'"
-        (click)="fecharMenu()"
-        appTooltip="Acompanhe o histórico de aportes do caixa">
-        <i class="fas fa-arrow-circle-down"></i>Aportes
-      </a>
+      
+      <div class="nav-group" *ngFor="let grupo of menuGrupos">
+        
+        <div class="group-header" 
+             (click)="toggleGrupo(grupo.id)" 
+             [class.active]="grupoExpandido === grupo.id">
+          <span class="group-title">{{ grupo.titulo }}</span>
+          <i class="fas fa-chevron-right arrow-icon" [class.rotate]="grupoExpandido === grupo.id"></i>
+        </div>
+
+        <div class="group-items" *ngIf="grupoExpandido === grupo.id">
+          <ng-container *ngFor="let item of grupo.itens">
+            <a 
+              *ngIf="podeVerItem(item)"
+              [routerLink]="item.link" 
+              routerLinkActive="active"
+              (click)="fecharMenu()">
+              <i [class]="item.icon"></i>
+              {{ item.label }}
+            </a>
+          </ng-container>
+        </div>
+
+      </div>
+
     </nav>
+
     <div class="sidebar-bottom">
       <div class="sidebar-actions">
-        <button
-          class="btn-fechar-caixa"
-          (click)="fecharCaixa()"
-          appTooltip="Feche o caixa para encerrar o expediente (libera todas as mesas)">
+        <button class="btn-fechar-caixa" (click)="fecharCaixa()">
           Fechar Caixa
         </button>
       </div>
@@ -125,13 +55,7 @@
   </aside>
 
   <main class="content-area">
-    <!-- 
-      CABEÇALHO ATUALIZADO
-      O 'header-placeholder' foi removido e o botão hambúrguer foi adicionado
-    -->
     <header class="content-header">
-      
-      <!-- NOVO BOTÃO HAMBÚRGUER (só aparece no mobile) -->
       <button class="menu-toggle" (click)="toggleMenu()">
         <i class="fas fa-bars"></i>
       </button>
@@ -146,11 +70,7 @@
           <i class="fas fa-user-circle"></i> 
           <span>{{ nomeUsuarioLogado || 'Usuário' }}</span> 
         </div>
-        <a
-          (click)="logout()"
-          class="btn-logout"
-          title="Sair"
-          appTooltip="Clique para fazer logout e sair do sistema">
+        <a (click)="logout()" class="btn-logout" title="Sair">
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </div>

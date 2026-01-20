@@ -1,3 +1,5 @@
+
+
 export interface ItemPedido {
   nomeProduto: string;
   quantidade: number;
@@ -21,4 +23,5 @@ export interface Pedido {
   numeroMesa?: number;
   nomeClienteTemporario?: string;
   numeroDia?: number;
+  taxaEntrega: number;
 }

@@ -251,7 +251,7 @@ export class Entregas implements OnInit {
     this.termoBusca = '';
     this.novoPedidoItens = [];
     this.totalNovoPedido = 0;
-    this.taxaEntrega = 0;
+    this.taxaEntrega = 7;
   }
   
   formatarNomeFiltro(tipo: string): string {

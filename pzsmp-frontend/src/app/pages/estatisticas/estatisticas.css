@@ -1,0 +1,134 @@
+.stats-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-text h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.header-text p {
+    color: #666;
+}
+
+/* Filtros */
+.filtros-data {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.grupo-input label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.grupo-input input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-filtrar {
+    padding: 8px 16px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 35px;
+}
+
+/* Ranking Lista */
+.ranking-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.rank-numero {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #aaa;
+    width: 40px;
+    text-align: center;
+}
+
+.ranking-item:nth-child(1) .rank-numero { color: #ffd700; font-size: 1.5rem; } /* Ouro */
+.ranking-item:nth-child(2) .rank-numero { color: #c0c0c0; } /* Prata */
+.ranking-item:nth-child(3) .rank-numero { color: #cd7f32; } /* Bronze */
+
+.rank-info {
+    flex: 1;
+}
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.produto-nome {
+    font-weight: 600;
+    color: #333;
+}
+
+.valores {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+}
+
+.qtd { color: #555; font-weight: bold; }
+.faturamento { color: #28a745; }
+
+/* Barras */
+.barra-fundo {
+    width: 100%;
+    height: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.barra-progresso {
+    height: 100%;
+    background-color: #6c757d; /* Cinza padrão */
+    border-radius: 5px;
+    transition: width 1s ease-in-out;
+}
+
+.barra-progresso.top-1 { background-color: #d32f2f; } /* Vermelho destaque */
+.barra-progresso.top-3 { background-color: #ff9800; } /* Laranja */
+
+.sem-dados {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}

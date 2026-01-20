@@ -1,0 +1,50 @@
+<div class="stats-container">
+  <div class="page-header">
+    <div class="header-text">
+      <h1>Estatísticas de Vendas</h1>
+      <p>Ranking dos produtos mais vendidos no período.</p>
+    </div>
+    
+    <div class="filtros-data">
+      <div class="grupo-input">
+        <label>De:</label>
+        <input type="date" [(ngModel)]="dataInicio">
+      </div>
+      <div class="grupo-input">
+        <label>Até:</label>
+        <input type="date" [(ngModel)]="dataFim">
+      </div>
+      <button class="btn-filtrar" (click)="buscarDados()">
+        <i class="fas fa-filter"></i> Filtrar
+      </button>
+    </div>
+  </div>
+
+  <div class="ranking-card">
+    <div *ngIf="dados.length === 0" class="sem-dados">
+      <p>Nenhuma venda encontrada neste período.</p>
+    </div>
+
+    <div *ngFor="let item of dados; let i = index" class="ranking-item">
+      <div class="rank-numero">#{{ i + 1 }}</div>
+      
+      <div class="rank-info">
+        <div class="info-header">
+          <span class="produto-nome">{{ item.nomeProduto }}</span>
+          <div class="valores">
+            <span class="qtd">{{ item.quantidadeTotal }} vendidos</span>
+            <span class="faturamento">{{ item.valorTotal | currency:'BRL' }}</span>
+          </div>
+        </div>
+        
+        <div class="barra-fundo">
+          <div class="barra-progresso" 
+               [style.width]="getLarguraBarra(item.quantidadeTotal)"
+               [class.top-1]="i === 0"
+               [class.top-3]="i > 0 && i < 3">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
