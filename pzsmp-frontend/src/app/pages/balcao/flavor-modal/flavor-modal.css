@@ -215,3 +215,85 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); z-index: 2000;
+  display: flex; justify-content: center; align-items: center;
+}
+
+.modal-content {
+  background: white; width: 600px; max-width: 95%; height: 80vh;
+  border-radius: 12px; display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.modal-header {
+  background: var(--cor-primaria); color: white; padding: 15px;
+}
+.header-top { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+.btn-voltar { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+.modal-header h3 { margin: 0; font-size: 1.1rem; }
+
+/* Progress Bar */
+.progress-bar { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.step { 
+  width: 25px; height: 25px; border-radius: 50%; background: rgba(255,255,255,0.3); 
+  display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;
+}
+.line { width: 30px; height: 2px; background: rgba(255,255,255,0.3); }
+.step.active, .line.active { background: white; color: var(--cor-primaria); }
+
+/* Body */
+.modal-body { flex-grow: 1; overflow-y: auto; padding: 20px; background: #f8fafc; }
+
+/* Passo 1: Tamanhos */
+.step-tamanho { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.btn-tamanho {
+  border: 2px solid #e2e8f0; background: white; border-radius: 10px;
+  padding: 30px 10px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-tamanho:hover { border-color: var(--cor-primaria); transform: translateY(-3px); }
+.btn-tamanho .sigla { font-size: 2rem; font-weight: 800; color: var(--cor-primaria); }
+.btn-tamanho .nome { font-size: 1rem; font-weight: 600; color: #4a5568; }
+.destaque-familia { background: #fffbeb; border-color: #fcd34d; }
+
+/* Passo 2: Sabores */
+.search-box { 
+  display: flex; align-items: center; background: white; padding: 10px; 
+  border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 10px;
+}
+.search-box input { border: none; outline: none; width: 100%; margin-left: 10px; }
+.sabores-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.sabor-card {
+  background: white; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;
+  cursor: pointer; position: relative; min-height: 70px; display: flex; flex-direction: column; justify-content: space-between;
+}
+.sabor-card.selected { border-color: var(--cor-primaria); background: #fff5f5; }
+.sabor-nome { font-size: 0.9rem; font-weight: 600; line-height: 1.2; }
+.sabor-preco { font-size: 0.8rem; color: #718096; }
+.check-icon { position: absolute; top: 5px; right: 5px; color: var(--cor-primaria); }
+
+/* Passo 3: Bordas */
+.bordas-lista { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.radio-borda {
+  background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;
+  cursor: pointer; display: flex; align-items: center; font-weight: 600;
+}
+.radio-borda.active { border-color: var(--cor-primaria); background: #fff5f5; color: var(--cor-primaria); }
+.resumo-final { background: white; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e0; }
+
+/* Footer */
+.modal-footer {
+  padding: 15px 20px; background: white; border-top: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.total-info .valor { font-size: 1.4rem; font-weight: 800; color: var(--cor-primaria); }
+.actions button {
+  padding: 12px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;
+}
+.btn-cancelar { background: #e2e8f0; color: #4a5568; margin-right: 10px; }
+.btn-confirmar { background: var(--cor-primaria); color: white; }
+.btn-confirmar:disabled { opacity: 0.5; cursor: not-allowed; }

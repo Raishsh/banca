@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Produto } from '../../../core/models/produto.model';
 
 export interface Sabor {
@@ -11,67 +12,86 @@ export interface Sabor {
 @Component({
   selector: 'app-flavor-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './flavor-modal.html',
   styleUrls: ['./flavor-modal.css']
 })
 export class FlavorModalComponent implements OnInit {
-  @Input() tamanho: string = '';
-  @Input() produtosDisponiveisPizza: Produto[] = [];
+  
+  @Input() todosProdutosPizza: Produto[] = []; 
+  @Input() tamanhoInicial: string | null = null; 
 
-  @Output() saboreSelecionado = new EventEmitter<{ sabores: Sabor[], precoMedio: number }>();
+  @Output() saboreSelecionado = new EventEmitter<{ sabores: Sabor[], borda: string | null, tamanho: string, precoFinal: number }>();
   @Output() cancelado = new EventEmitter<void>();
 
-  saboresDisponiveis: Sabor[] = [];
+  step: number = 1; 
+
+  tamanhoSelecionado: string = '';
   saboresSelecionados: Sabor[] = [];
+  saboresDisponiveisNoTamanho: Sabor[] = [];
+  
+  bordaSelecionada: string = 'Sem Borda';
+  opcoesBorda: string[] = ['Sem Borda', 'Catupiry', 'Cheddar', 'Chocolate', 'Nutella'];
+  
+  termoBuscaSabor: string = '';
 
   ngOnInit(): void {
-    this.inicializarSaboresDisponiveisAPizzas();
+    this.resetar();
+    
+    if (this.tamanhoInicial) {
+      this.selecionarTamanho(this.tamanhoInicial);
+    }
   }
 
-  private inicializarSaboresDisponiveisAPizzas(): void {
-    this.saboresDisponiveis = [];
+  resetar(): void {
+    this.step = 1;
+    this.tamanhoSelecionado = '';
     this.saboresSelecionados = [];
+    this.bordaSelecionada = 'Sem Borda';
+    this.termoBuscaSabor = '';
+  }
 
-    if (this.produtosDisponiveisPizza && this.produtosDisponiveisPizza.length > 0) {
-      this.saboresDisponiveis = this.produtosDisponiveisPizza.map(produto => ({
-        id: produto.id_produto || 0, // <--- CORREÇÃO: Fallback para 0 se id for undefined
-        nome: produto.nome,
-        preco: this.obterPrecoParaTamanho(produto)
-      }));
+  // --- PASSO 1: TAMANHO ---
+  selecionarTamanho(tam: string): void {
+    this.tamanhoSelecionado = tam;
+    this.prepararListaDeSabores();
+    this.step = 2; 
+  }
+
+  private prepararListaDeSabores(): void {
+    this.saboresDisponiveisNoTamanho = this.todosProdutosPizza.map(p => ({
+      id: p.id_produto || 0,
+      nome: p.nome,
+      preco: this.obterPrecoPorTamanho(p)
+    }));
+  }
+
+  private obterPrecoPorTamanho(p: Produto): number {
+    switch (this.tamanhoSelecionado) {
+      case 'P': return p.precoPequeno || p.preco;
+      case 'M': return p.precoMedio || p.preco;
+      case 'G': return p.precoGrande || p.preco;
+      case 'F': return p.precoFamilia || p.preco;
+      default: return p.preco;
     }
   }
 
-  private obterPrecoParaTamanho(produto: Produto): number {
-    if (this.tamanho === 'P' && produto.precoPequeno) {
-      return produto.precoPequeno;
-    } else if (this.tamanho === 'M' && produto.precoMedio) {
-      return produto.precoMedio;
-    } else if (this.tamanho === 'G' && produto.precoGrande) {
-      return produto.precoGrande;
-    } else if (this.tamanho === 'F' && produto.precoFamilia) {
-        return produto.precoFamilia;
-    }
-    return produto.preco;
+  // --- PASSO 2: SABORES ---
+  get saboresFiltrados(): Sabor[] {
+    if (!this.termoBuscaSabor) return this.saboresDisponiveisNoTamanho;
+    return this.saboresDisponiveisNoTamanho.filter(s => 
+      s.nome.toLowerCase().includes(this.termoBuscaSabor.toLowerCase())
+    );
   }
 
   get maxSabores(): number {
-    switch (this.tamanho) {
-      case 'P':
-        return 2;
-      case 'M':
-        return 3;
-      case 'G':
-        return 4;
-      case 'F': // Adicionado suporte para Família
-        return 4;
-      default:
-        return 1;
+    switch (this.tamanhoSelecionado) {
+      case 'P': return 2;
+      case 'M': return 3;
+      case 'G': return 4;
+      case 'F': return 4;
+      default: return 1;
     }
-  }
-
-  get textoMaximo(): string {
-    return `Selecione até ${this.maxSabores} sabor(es) para o tamanho ${this.tamanho}`;
   }
 
   toggleSabor(sabor: Sabor): void {
@@ -85,28 +105,61 @@ export class FlavorModalComponent implements OnInit {
     }
   }
 
-  isSabor(sabor: Sabor): boolean {
+  isSaborSelected(sabor: Sabor): boolean {
     return this.saboresSelecionados.some(s => s.id === sabor.id);
   }
 
-  get precoMedio(): number {
-    if (this.saboresSelecionados.length === 0) {
-      return 0;
+  avancarParaBorda(): void {
+    this.step = 3;
+  }
+
+  // --- PASSO 3: BORDA E CÁLCULO FINAL ---
+  get precoBorda(): number {
+    if (this.bordaSelecionada === 'Sem Borda') return 0;
+    switch (this.tamanhoSelecionado) {
+      case 'P': return 6.00;
+      case 'M': return 8.00;
+      case 'G': return 10.00;
+      case 'F': return 12.00;
+      default: return 0;
     }
-    const soma = this.saboresSelecionados.reduce((total, sabor) => total + sabor.preco, 0);
-    return soma / this.saboresSelecionados.length;
+  }
+
+  get precoFinalCalculado(): number {
+    if (this.saboresSelecionados.length === 0) return 0;
+    const soma = this.saboresSelecionados.reduce((total, s) => total + s.preco, 0);
+    const media = soma / this.saboresSelecionados.length;
+    return media + this.precoBorda;
   }
 
   confirmar(): void {
-    if (this.saboresSelecionados.length > 0) {
-      this.saboreSelecionado.emit({
-        sabores: this.saboresSelecionados,
-        precoMedio: this.precoMedio
-      });
-    }
+    this.saboreSelecionado.emit({
+      sabores: this.saboresSelecionados,
+      borda: this.bordaSelecionada !== 'Sem Borda' ? `Borda ${this.bordaSelecionada}` : null,
+      tamanho: this.tamanhoSelecionado,
+      precoFinal: this.precoFinalCalculado
+    });
   }
 
+  // --- MÉTODOS CORRIGIDOS PARA O HTML ---
+
+  // O HTML chama (click)="cancelar()"
   cancelar(): void {
     this.cancelado.emit();
+  }
+
+  // O HTML chama (click)="voltarStep()"
+  voltarStep(): void {
+    // Se veio pelo atalho (já começou no passo 2), voltar fecha o modal
+    if (this.step === 2 && this.tamanhoInicial) {
+      this.cancelar();
+      return;
+    }
+
+    if (this.step > 1) {
+      this.step--;
+    } else {
+      this.cancelar();
+    }
   }
 }

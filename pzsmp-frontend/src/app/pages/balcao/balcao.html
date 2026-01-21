@@ -1,100 +1,63 @@
 <div class="page-header">
-  <div class="header-text">
-    <h1>Pedido de Balcão</h1>
-    <p>Registre um novo pedido para retirada no restaurante.</p>
-  </div>
-  <div class="header-actions">
-    </div>
+  <div class="header-text"><h1>Pedido de Balcão</h1></div>
 </div>
 
 <div class="novo-pedido-view">
   <div class="cardapio-coluna">
     <h4>Cardápio</h4>
     <div class="filtros-cardapio">
-      <button *ngFor="let tipo of tiposDeProduto" class="btn-filtro" 
-              (click)="filtrarCardapio(tipo)"
-              [class.active]="filtroCardapioAtual === tipo">
+      <button *ngFor="let tipo of tiposDeProduto" class="btn-filtro" (click)="filtrarCardapio(tipo)" [class.active]="filtroCardapioAtual === tipo">
         {{ formatarNomeFiltro(tipo) }}
       </button>
     </div>
+    
     <div class="lista-produtos-cardapio">
-      <div class="item-cardapio" *ngFor="let produto of cardapioFiltrado" (click)="adicionarAoPedido(produto)">
-        {{ produto.nome }} - R$ {{ produto.preco.toFixed(2) }}
+      
+      <div *ngIf="filtroCardapioAtual.includes('PIZZA')" class="area-tamanhos-pizza">
+        <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('P')">
+          <div class="sigla">P</div><span class="nome">Broto</span>
+        </button>
+        <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('M')">
+          <div class="sigla">M</div><span class="nome">Média</span>
+        </button>
+        <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('G')">
+          <div class="sigla">G</div><span class="nome">Grande</span>
+        </button>
+        <button class="btn-tamanho-atalho familia" (click)="abrirMontadorPizza('F')">
+          <div class="sigla">F</div><span class="nome">Família</span>
+        </button>
       </div>
+
+      <ng-container *ngIf="!filtroCardapioAtual.includes('PIZZA')">
+        <div class="item-cardapio" *ngFor="let produto of cardapioFiltrado" (click)="adicionarAoPedido(produto)">
+          {{ produto.nome }} - R$ {{ produto.preco.toFixed(2) }}
+        </div>
+      </ng-container>
     </div>
   </div>
 
   <div class="pedido-coluna">
     <h4>Pedido Atual</h4>
-    
     <div class="form-group">
-      <label for="nomeCliente">Nome do Cliente</label>
-      <input id="nomeCliente" type="text" [(ngModel)]="nomeCliente" name="nomeCliente" required>
+      <label>Cliente</label>
+      <input type="text" [(ngModel)]="nomeCliente" placeholder="Nome">
     </div>
-    
-    <div class="itens-container" *ngIf="novoPedidoItens.length > 0; else pedidoVazio">
-      
+    <div class="itens-container">
       <div *ngFor="let item of novoPedidoItens" class="item-pedido-atual">
-        <div class="item-info">
-          <div class="item-detalhes">
-            <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span></span>
-            <span *ngIf="formatarSabores(item.sabores)" class="sabores-item">
-              {{ formatarSabores(item.sabores) }}
-            </span>
-          </div>
-          <span>R$ {{ ((item.precoFinal ?? item.produto.preco) * item.quantidade).toFixed(2) }}</span>
-        </div>
-        <button class="btn-remover-item" (click)="removerDoPedido(item)" title="Remover Item">
-          <i class="fas fa-trash-alt"></i>
-        </button>
-      </div>
-      <hr>
-      <div class="total-pedido">
-        <strong>Total: R$ {{ totalNovoPedido.toFixed(2) }}</strong>
+        <div>{{ item.quantidade }}x {{ item.produto.nome }} {{ item.tamanho ? '('+item.tamanho+')' : '' }}</div>
+        <div style="font-size:0.8rem">{{ formatarSabores(item.sabores) }}</div>
+        <div>R$ {{ (item.precoFinal ?? item.produto.preco).toFixed(2) }}</div>
+        <button class="btn-remover-item" (click)="removerDoPedido(item)">X</button>
       </div>
     </div>
-    <ng-template #pedidoVazio>
-      <p class="pedido-vazio-mensagem">Clique nos itens do cardápio para adicionar.</p>
-    </ng-template>
-
-    <button class="btn-finalizar-pedido" (click)="finalizarPedido()">Finalizar Pedido</button>
+    <div class="total-pedido">Total: R$ {{ totalNovoPedido.toFixed(2) }}</div>
+    <button class="btn-finalizar-pedido" (click)="finalizarPedido()">Finalizar</button>
   </div>
 </div>
 
-<!-- Modal de Seleção de Tamanho -->
-<div class="modal-overlay" *ngIf="showSizeModal" (click)="fecharSizeModal()">
-  <div class="modal-tamanho" (click)="$event.stopPropagation()">
-    <h3>Selecione o Tamanho</h3>
-    <p *ngIf="produtoParaSelecionarTamanho">{{ produtoParaSelecionarTamanho.nome }}</p>
-    <div class="tamanho-opcoes">
-      <button
-        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoPequeno"
-        class="tamanho-btn"
-        (click)="selecionarTamanho('P')">
-        P - R$ {{ produtoParaSelecionarTamanho.precoPequeno.toFixed(2) }}
-      </button>
-      <button
-        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoMedio"
-        class="tamanho-btn"
-        (click)="selecionarTamanho('M')">
-        M - R$ {{ produtoParaSelecionarTamanho.precoMedio.toFixed(2) }}
-      </button>
-      <button
-        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoGrande"
-        class="tamanho-btn"
-        (click)="selecionarTamanho('G')">
-        G - R$ {{ produtoParaSelecionarTamanho.precoGrande.toFixed(2) }}
-      </button>
-    </div>
-    <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">Cancelar</button>
-  </div>
-</div>
-
-<!-- Modal de Seleção de Sabores -->
-<app-flavor-modal
-  *ngIf="showFlavorModal"
-  [tamanho]="tamanhoSelecionado"
-  [produtosDisponiveisPizza]="obterProdutosPizzaParaFlavors()"
-  (saboreSelecionado)="onSaboresSelecionados($event)"
-  (cancelado)="onSaboresCancelados()"
-></app-flavor-modal>
+<app-flavor-modal *ngIf="showFlavorModal" 
+  [todosProdutosPizza]="produtosPizzaParaModal" 
+  [tamanhoInicial]="tamanhoSelecionadoNoAtalho"
+  (saboreSelecionado)="onPizzaFinalizada($event)" 
+  (cancelado)="onSaboresCancelados()">
+</app-flavor-modal>

@@ -2,23 +2,13 @@
   <div class="page-header">
     <div class="header-text">
       <h1>Gerenciamento de Mesas</h1>
-      <p>
-        Clique em uma mesa para ver detalhes, fazer um pedido ou uma reserva.
-      </p>
+      <p>Clique em uma mesa para ver detalhes, fazer um pedido ou uma reserva.</p>
     </div>
   </div>
 
   <div class="mesas-grid">
-    <div
-      *ngFor="let mesa of listaMesas"
-      class="mesa-card"
-      (click)="abrirModal(mesa)"
-      [ngClass]="{
-        'status-livre': mesa.status === 'LIVRE',
-        'status-ocupada': mesa.status === 'OCUPADA',
-        'status-reservada': mesa.status === 'RESERVADA'
-      }"
-    >
+    <div *ngFor="let mesa of listaMesas" class="mesa-card" (click)="abrirModal(mesa)"
+      [ngClass]="{'status-livre': mesa.status === 'LIVRE', 'status-ocupada': mesa.status === 'OCUPADA', 'status-reservada': mesa.status === 'RESERVADA'}">
       <div class="mesa-numero">Mesa {{ mesa.numero }}</div>
       <div class="mesa-status">{{ mesa.status }}</div>
       <div class="mesa-capacidade">{{ mesa.capacidade }} lugares</div>
@@ -32,24 +22,9 @@
     <h2>Mesa {{ mesaSelecionada.numero }}</h2>
 
     <div class="modal-nav">
-      <button
-        (click)="modalView = 'novoPedido'"
-        [class.active]="modalView === 'novoPedido'"
-      >
-        Novo Pedido / Adicionar Itens
-      </button>
-      <button
-        (click)="modalView = 'pedidos'"
-        [class.active]="modalView === 'pedidos'"
-      >
-        Ver Pedidos Ativos
-      </button>
-      <button
-        (click)="modalView = 'reserva'"
-        [class.active]="modalView === 'reserva'"
-      >
-        Reservar
-      </button>
+      <button (click)="modalView = 'novoPedido'" [class.active]="modalView === 'novoPedido'">Novo Pedido</button>
+      <button (click)="modalView = 'pedidos'" [class.active]="modalView === 'pedidos'">Ver Pedidos</button>
+      <button (click)="modalView = 'reserva'" [class.active]="modalView === 'reserva'">Reservar</button>
     </div>
 
     <div class="modal-body">
@@ -57,178 +32,89 @@
         <div class="cardapio-coluna">
           <h4>Cardápio</h4>
           <div class="filtros-cardapio">
-            <button
-              *ngFor="let tipo of tiposDeProduto"
-              (click)="filtrarCardapio(tipo)"
-              [class.active]="filtroCardapioAtual === tipo"
-            >
+            <button *ngFor="let tipo of tiposDeProduto" (click)="filtrarCardapio(tipo)" [class.active]="filtroCardapioAtual === tipo">
               {{ formatarNomeFiltro(tipo) }}
             </button>
           </div>
+          
           <div class="lista-produtos-cardapio">
-            <div
-              class="item-cardapio"
-              *ngFor="let produto of cardapioFiltrado"
-              (click)="adicionarAoPedido(produto)"
-            >
-              {{ produto.nome }} - R$ {{ produto.preco.toFixed(2) }}
+            
+            <div *ngIf="filtroCardapioAtual.includes('PIZZA')" class="area-tamanhos-pizza">
+              <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('P')">
+                <div class="sigla">P</div>
+                <span class="nome">Broto</span>
+                <span class="fatias">4 Fatias</span>
+              </button>
+              <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('M')">
+                <div class="sigla">M</div>
+                <span class="nome">Média</span>
+                <span class="fatias">6 Fatias</span>
+              </button>
+              <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('G')">
+                <div class="sigla">G</div>
+                <span class="nome">Grande</span>
+                <span class="fatias">8 Fatias</span>
+              </button>
+              <button class="btn-tamanho-atalho familia" (click)="abrirMontadorPizza('F')">
+                <div class="sigla">F</div>
+                <span class="nome">Família</span>
+                <span class="fatias">12 Fatias</span>
+              </button>
             </div>
+
+            <ng-container *ngIf="!filtroCardapioAtual.includes('PIZZA')">
+              <div class="item-cardapio" *ngFor="let produto of cardapioFiltrado" (click)="adicionarAoPedido(produto)">
+                {{ produto.nome }} - R$ {{ produto.preco.toFixed(2) }}
+              </div>
+            </ng-container>
           </div>
         </div>
+
         <div class="pedido-coluna">
           <h4>Itens a Adicionar</h4>
           <div *ngIf="novoPedidoItens.length > 0; else pedidoVazio">
             <div *ngFor="let item of novoPedidoItens" class="item-pedido-atual">
               <div class="item-info">
                 <div class="item-detalhes">
-                  <span
-                    >{{ item.quantidade }}x {{ item.produto.nome
-                    }}<span *ngIf="item.tamanho" class="tamanho-item">
-                      ({{ item.tamanho }})</span
-                    ></span
-                  >
-                  <span *ngIf="formatarSabores(item.sabores)" class="sabores-item">
-                    {{ formatarSabores(item.sabores) }}
-                  </span>
+                  <span>{{ item.quantidade }}x {{ item.produto.nome }}<span *ngIf="item.tamanho"> ({{ item.tamanho }})</span></span>
+                  <span *ngIf="formatarSabores(item.sabores)" class="sabores-item">{{ formatarSabores(item.sabores) }}</span>
                 </div>
-                <span
-                  >R$ {{ ((item.precoFinal ?? item.produto.preco) * item.quantidade).toFixed(2) }}</span
-                >
+                <span>R$ {{ ((item.precoFinal ?? item.produto.preco) * item.quantidade).toFixed(2) }}</span>
               </div>
-              <button
-                class="btn-remover-item"
-                (click)="removerDoPedido(item)"
-                title="Remover Item"
-              >
-                <i class="fas fa-trash-alt"></i>
-              </button>
+              <button class="btn-remover-item" (click)="removerDoPedido(item)"><i class="fas fa-trash-alt"></i></button>
             </div>
             <hr />
-            <div class="total-pedido">
-              <strong
-                >Total a Adicionar: R$ {{ totalNovoPedido.toFixed(2) }}</strong
-              >
-            </div>
+            <div class="total-pedido"><strong>Total: R$ {{ totalNovoPedido.toFixed(2) }}</strong></div>
           </div>
-          <ng-template #pedidoVazio
-            ><p>Clique nos itens do cardápio para adicionar.</p></ng-template
-          >
+          <ng-template #pedidoVazio><p class="msg-vazio">Selecione itens do cardápio.</p></ng-template>
           <button class="btn-finalizar-pedido" (click)="finalizarPedido()">
-            {{
-              pedidosDaMesa.length > 0
-                ? "Adicionar ao Pedido Existente"
-                : "Criar Novo Pedido"
-            }}
+            {{ pedidosDaMesa.length > 0 ? "Adicionar ao Pedido" : "Criar Novo Pedido" }}
           </button>
         </div>
       </div>
 
       <div *ngIf="modalView === 'pedidos'" class="pedidos-view">
-        <h4>Pedidos Ativos da Mesa {{ mesaSelecionada!.numero }}</h4>
-        <div *ngIf="pedidosDaMesa.length > 0; else nenhumPedido" class="pedidos-lista">
-          <div *ngFor="let pedido of pedidosDaMesa" class="pedido-card">
-            <div class="pedido-header">
-              <span class="pedido-id">Pedido #{{ pedido.idPedido }}</span>
-              <span class="pedido-status" [ngClass]="'status-' + pedido.status.toLowerCase()">{{ pedido.status }}</span>
-            </div>
-            <div class="pedido-detalhes">
-              <p><strong>Data:</strong> {{ pedido.data | date: 'dd/MM/yyyy HH:mm' }}</p>
-              <p class="total-destaque"><strong>Total: R$ {{ pedido.total.toFixed(2) }}</strong></p>
-              <p *ngIf="pedido.cliente"><strong>Cliente:</strong> {{ pedido.cliente.nome }}</p>
-            </div>
-            <div class="pedido-itens">
-              <strong>Itens:</strong>
-              <ul>
-                <li *ngFor="let item of pedido.itens">
-                  {{ item.quantidade }}x {{ item.nomeProduto }}<span *ngIf="item.tamanho" class="tamanho-item"> ({{ item.tamanho }})</span> - R$ {{ (item.precoUnitario * item.quantidade).toFixed(2) }}
-                </li>
-              </ul>
-            </div>
-            <div class="pedido-actions" *ngIf="pedido.status !== 'PAGO' && pedido.status !== 'ENTREGUE' && pedido.status !== 'CANCELADO'">
-                <button class="btn-fechar-conta" (click)="irParaPagamento(pedido)">
-                    <i class="fas fa-cash-register"></i> Fechar Conta / Pagar
-                </button>
-            </div>
+        <div *ngFor="let pedido of pedidosDaMesa" class="pedido-card">
+          <div class="pedido-header"><span>#{{ pedido.idPedido }}</span> <span>{{ pedido.status }}</span></div>
+          <div class="pedido-itens">
+            <ul><li *ngFor="let item of pedido.itens">{{ item.quantidade }}x {{ item.nomeProduto }} ({{ item.tamanho }})</li></ul>
           </div>
+          <button class="btn-fechar-conta" (click)="irParaPagamento(pedido)">Fechar Conta</button>
         </div>
-        <ng-template #nenhumPedido>
-          <p class="pedido-vazio-mensagem">Nenhum pedido ativo para esta mesa.</p>
-        </ng-template>
       </div>
 
       <div *ngIf="modalView === 'reserva'" class="reserva-view">
-        <h4>Gerenciar Reserva</h4>
-        <div class="reserva-toggle-container">
-          <p *ngIf="mesaSelecionada?.status === 'OCUPADA'" class="reserva-status-mensagem">
-            Esta mesa está ocupada. Não é possível fazer ou cancelar reservas.
-          </p>
-          <p *ngIf="mesaSelecionada?.status !== 'OCUPADA'" class="reserva-info">
-            {{ mesaSelecionada?.status === 'RESERVADA' ? 'Esta mesa está reservada. Clique abaixo para cancelar a reserva.' : 'Esta mesa está disponível. Clique abaixo para fazer uma reserva.' }}
-          </p>
-          <button
-            class="btn-toggle-reserva"
-            [ngClass]="{
-              'reservar': mesaSelecionada?.status === 'LIVRE',
-              'cancelar': mesaSelecionada?.status === 'RESERVADA'
-            }"
-            [disabled]="mesaSelecionada?.status === 'OCUPADA'"
-            (click)="alternarReserva()">
-            {{ mesaSelecionada?.status === 'LIVRE' ? 'Reservar Mesa' : mesaSelecionada?.status === 'RESERVADA' ? 'Cancelar Reserva' : '' }}
-          </button>
-        </div>
+        <button class="btn-toggle-reserva" (click)="alternarReserva()">
+          {{ mesaSelecionada?.status === 'LIVRE' ? 'Reservar Mesa' : 'Cancelar Reserva' }}
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" *ngIf="showSizeModal" (click)="fecharSizeModal()">
-  <div class="modal-tamanho" (click)="$event.stopPropagation()">
-    <h3>Selecione o Tamanho</h3>
-    <p *ngIf="produtoParaSelecionarTamanho">
-      {{ produtoParaSelecionarTamanho.nome }}
-    </p>
-    <div class="tamanho-opcoes">
-      <button
-        *ngIf="
-          produtoParaSelecionarTamanho &&
-          produtoParaSelecionarTamanho.precoPequeno
-        "
-        class="tamanho-btn"
-        (click)="selecionarTamanho('P')"
-      >
-        P - R$ {{ produtoParaSelecionarTamanho.precoPequeno.toFixed(2) }}
-      </button>
-      <button
-        *ngIf="
-          produtoParaSelecionarTamanho &&
-          produtoParaSelecionarTamanho.precoMedio
-        "
-        class="tamanho-btn"
-        (click)="selecionarTamanho('M')"
-      >
-        M - R$ {{ produtoParaSelecionarTamanho.precoMedio.toFixed(2) }}
-      </button>
-      <button
-        *ngIf="
-          produtoParaSelecionarTamanho &&
-          produtoParaSelecionarTamanho.precoGrande
-        "
-        class="tamanho-btn"
-        (click)="selecionarTamanho('G')"
-      >
-        G - R$ {{ produtoParaSelecionarTamanho.precoGrande.toFixed(2) }}
-      </button>
-    </div>
-    <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">
-      Cancelar
-    </button>
-  </div>
-</div>
-
-<app-flavor-modal
-  *ngIf="showFlavorModal"
-  [tamanho]="tamanhoSelecionado"
-  [produtosDisponiveisPizza]="obterProdutosPizzaParaFlavors()"
-  (saboreSelecionado)="onSaboresSelecionados($event)"
-  (cancelado)="onSaboresCancelados()"
-></app-flavor-modal>
+<app-flavor-modal *ngIf="showFlavorModal" 
+  [todosProdutosPizza]="produtosPizzaParaModal" 
+  [tamanhoInicial]="tamanhoSelecionadoNoAtalho"
+  (saboreSelecionado)="onPizzaFinalizada($event)" 
+  (cancelado)="onSaboresCancelados()">
+</app-flavor-modal>

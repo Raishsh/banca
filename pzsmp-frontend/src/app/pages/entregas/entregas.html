@@ -7,7 +7,7 @@
     <div class="header-actions">
       <button class="btn btn-primario" [routerLink]="['/app/cadastro-cliente']">
         <i class="fas fa-plus"></i>
-        <span> Cadastrar Novo Cliente  </span>
+        <span> Cadastrar Novo Cliente </span>
       </button>
     </div>
   </div>
@@ -46,6 +46,7 @@
     <hr class="separador-secao">
 
     <div class="novo-pedido-view">
+      
       <div class="cardapio-coluna">
         <h4>Cardápio</h4>
         <div class="filtros-cardapio">
@@ -54,10 +55,37 @@
             {{ formatarNomeFiltro(tipo) }}
           </button>
         </div>
+        
         <div class="lista-produtos-cardapio">
-          <div class="item-cardapio" *ngFor="let produto of cardapioFiltrado" (click)="adicionarAoPedido(produto)">
-            {{ produto.nome }} - R$ {{ produto.preco.toFixed(2) }}
+          
+          <div *ngIf="filtroCardapioAtual.includes('PIZZA')" class="area-tamanhos-pizza">
+            <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('P')">
+              <div class="sigla">P</div>
+              <span class="nome">Broto</span>
+              <span class="fatias">4 Fatias</span>
+            </button>
+            <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('M')">
+              <div class="sigla">M</div>
+              <span class="nome">Média</span>
+              <span class="fatias">6 Fatias</span>
+            </button>
+            <button class="btn-tamanho-atalho" (click)="abrirMontadorPizza('G')">
+              <div class="sigla">G</div>
+              <span class="nome">Grande</span>
+              <span class="fatias">8 Fatias</span>
+            </button>
+            <button class="btn-tamanho-atalho familia" (click)="abrirMontadorPizza('F')">
+              <div class="sigla">F</div>
+              <span class="nome">Família</span>
+              <span class="fatias">12 Fatias</span>
+            </button>
           </div>
+
+          <ng-container *ngIf="!filtroCardapioAtual.includes('PIZZA')">
+            <div class="item-cardapio" *ngFor="let produto of cardapioFiltrado" (click)="adicionarAoPedido(produto)">
+              {{ produto.nome }} - R$ {{ produto.preco.toFixed(2) }}
+            </div>
+          </ng-container>
         </div>
       </div>
       
@@ -79,11 +107,12 @@
               <i class="fas fa-trash-alt"></i>
             </button>
           </div>
+          
           <hr>
+          
           <div class="item-pedido-atual taxa-row">
             <div class="item-info taxa-info">
               <span><i class="fas fa-motorcycle"></i> Taxa de Entrega</span>
-              
               <div class="input-group-taxa">
                   <span class="currency-symbol">R$</span>
                   <input type="number" 
@@ -109,40 +138,10 @@
   </div>
 </div>
 
-<!-- Modal de Seleção de Tamanho -->
-<div class="modal-overlay" *ngIf="showSizeModal" (click)="fecharSizeModal()">
-  <div class="modal-tamanho" (click)="$event.stopPropagation()">
-    <h3>Selecione o Tamanho</h3>
-    <p *ngIf="produtoParaSelecionarTamanho">{{ produtoParaSelecionarTamanho.nome }}</p>
-    <div class="tamanho-opcoes">
-      <button
-        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoPequeno"
-        class="tamanho-btn"
-        (click)="selecionarTamanho('P')">
-        P - R$ {{ produtoParaSelecionarTamanho.precoPequeno.toFixed(2) }}
-      </button>
-      <button
-        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoMedio"
-        class="tamanho-btn"
-        (click)="selecionarTamanho('M')">
-        M - R$ {{ produtoParaSelecionarTamanho.precoMedio.toFixed(2) }}
-      </button>
-      <button
-        *ngIf="produtoParaSelecionarTamanho && produtoParaSelecionarTamanho.precoGrande"
-        class="tamanho-btn"
-        (click)="selecionarTamanho('G')">
-        G - R$ {{ produtoParaSelecionarTamanho.precoGrande.toFixed(2) }}
-      </button>
-    </div>
-    <button class="tamanho-btn-cancelar" (click)="fecharSizeModal()">Cancelar</button>
-  </div>
-</div>
-
-<!-- Modal de Seleção de Sabores -->
 <app-flavor-modal
   *ngIf="showFlavorModal"
-  [tamanho]="tamanhoSelecionado"
-  [produtosDisponiveisPizza]="obterProdutosPizzaParaFlavors()"
-  (saboreSelecionado)="onSaboresSelecionados($event)"
+  [todosProdutosPizza]="produtosPizzaParaModal"
+  [tamanhoInicial]="tamanhoSelecionadoNoAtalho"
+  (saboreSelecionado)="onPizzaFinalizada($event)"
   (cancelado)="onSaboresCancelados()"
 ></app-flavor-modal>

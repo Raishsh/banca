@@ -1,56 +1,88 @@
-<div class="modal-overlay" (click)="cancelar()">
-  <div class="modal-sabores" (click)="$event.stopPropagation()">
+<div class="modal-overlay">
+  <div class="modal-content">
+    
     <div class="modal-header">
-      <h3>Selecione os Sabores</h3>
-      <p class="tamanho-info">Tamanho: <strong>{{ tamanho }}</strong></p>
-      <p class="instrucoes">{{ textoMaximo }}</p>
+      <div class="header-top">
+        <button class="btn-voltar" (click)="voltarStep()" *ngIf="step > 1">
+          <i class="fas fa-arrow-left"></i> Voltar
+        </button>
+        <h3>Montar Pizza</h3>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="step" [class.active]="step >= 1">1</div>
+        <div class="line" [class.active]="step >= 2"></div>
+        <div class="step" [class.active]="step >= 2">2</div>
+        <div class="line" [class.active]="step >= 3"></div>
+        <div class="step" [class.active]="step >= 3">3</div>
+      </div>
+      
+      <div class="step-label">
+        <span *ngIf="step===1">Escolha o Tamanho</span>
+        <span *ngIf="step===2">Escolha os Sabores ({{tamanhoSelecionado}})</span>
+        <span *ngIf="step===3">Adicionar Borda?</span>
+      </div>
     </div>
 
     <div class="modal-body">
-      <div class="sabores-grid">
-        <div
-          *ngFor="let sabor of saboresDisponiveis"
-          class="sabor-item"
-          [class.selecionado]="isSabor(sabor)"
-          [class.desabilitado]="
-            saboresSelecionados.length >= maxSabores && !isSabor(sabor)
-          "
-          (click)="toggleSabor(sabor)"
-        >
-          <div class="sabor-nome">{{ sabor.nome }}</div>
-          <div class="sabor-preco">R$ {{ sabor.preco.toFixed(2) }}</div>
-          <div *ngIf="isSabor(sabor)" class="sabor-check">
-            <i class="fas fa-check"></i>
+      <div *ngIf="step === 1" class="step-container step-tamanho">
+        <button class="btn-tamanho" (click)="selecionarTamanho('P')"><span class="sigla">P</span><span class="nome">Broto (4 Fat.)</span></button>
+        <button class="btn-tamanho" (click)="selecionarTamanho('M')"><span class="sigla">M</span><span class="nome">Média (6 Fat.)</span></button>
+        <button class="btn-tamanho" (click)="selecionarTamanho('G')"><span class="sigla">G</span><span class="nome">Grande (8 Fat.)</span></button>
+        <button class="btn-tamanho destaque-familia" (click)="selecionarTamanho('F')"><span class="sigla">F</span><span class="nome">Família (12 Fat.)</span></button>
+      </div>
+
+      <div *ngIf="step === 2" class="step-container step-sabores">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Buscar sabor..." [(ngModel)]="termoBuscaSabor">
+        </div>
+        <p class="info-selecao">Selecionado: <strong>{{ saboresSelecionados.length }}</strong> de {{ maxSabores }}</p>
+        <div class="sabores-grid">
+          <div *ngFor="let sabor of saboresFiltrados" class="sabor-card" [class.selected]="isSaborSelected(sabor)" (click)="toggleSabor(sabor)">
+            <div class="sabor-nome">{{ sabor.nome }}</div>
+            <div class="sabor-preco">{{ sabor.preco | currency:'BRL' }}</div>
+            <div class="check-icon" *ngIf="isSaborSelected(sabor)"><i class="fas fa-check"></i></div>
           </div>
         </div>
       </div>
 
-      <div class="sabores-selecionados">
-        <h4>Sabores Selecionados ({{ saboresSelecionados.length }}/{{ maxSabores }})</h4>
-        <div class="sabor-selecionado-list">
-          <div *ngFor="let sabor of saboresSelecionados" class="sabor-selecionado">
-            <span>{{ sabor.nome }} - R$ {{ sabor.preco.toFixed(2) }}</span>
-            <button class="btn-remover" (click)="toggleSabor(sabor)">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
+      <div *ngIf="step === 3" class="step-container step-borda">
+        <p class="info-borda" *ngIf="precoBorda > 0">Adicional de Borda: + {{ precoBorda | currency:'BRL' }}</p>
+        <div class="bordas-lista">
+          <label *ngFor="let opcao of opcoesBorda" class="radio-borda" [class.active]="bordaSelecionada === opcao">
+            <input type="radio" name="borda" [value]="opcao" [(ngModel)]="bordaSelecionada">
+            <span class="nome-borda">{{ opcao }}</span>
+          </label>
         </div>
-
-        <div class="preco-medio" *ngIf="saboresSelecionados.length > 0">
-          <strong>Preço Médio: R$ {{ precoMedio.toFixed(2) }}</strong>
+        <div class="resumo-final">
+          <h4>Resumo:</h4>
+          <ul>
+            <li *ngFor="let s of saboresSelecionados">1/{{ saboresSelecionados.length }} {{ s.nome }}</li>
+            <li *ngIf="bordaSelecionada !== 'Sem Borda'" class="item-borda">+ Borda {{ bordaSelecionada }}</li>
+          </ul>
         </div>
       </div>
     </div>
 
     <div class="modal-footer">
-      <button class="btn-cancelar" (click)="cancelar()">Cancelar</button>
-      <button
-        class="btn-confirmar"
-        [disabled]="saboresSelecionados.length === 0"
-        (click)="confirmar()"
-      >
-        Confirmar Sabores
-      </button>
+      <div class="total-info" *ngIf="step > 1">
+        <span class="label">Total Item:</span>
+        <span class="valor">{{ precoFinalCalculado | currency:'BRL' }}</span>
+      </div>
+      
+      <div class="actions">
+        <button class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+        
+        <button class="btn-confirmar" *ngIf="step === 2" [disabled]="saboresSelecionados.length === 0" (click)="avancarParaBorda()">
+          Avançar <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <button class="btn-confirmar final" *ngIf="step === 3" (click)="confirmar()">
+          <i class="fas fa-check"></i> Finalizar
+        </button>
+      </div>
     </div>
+
   </div>
 </div>

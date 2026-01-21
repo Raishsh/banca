@@ -5,7 +5,6 @@
   </div>
 </div>
 
-<!-- Menu de Filtros Horizontal -->
 <div class="filtros-container">
   <button
     *ngFor="let tipo of tiposDeProduto"
@@ -17,7 +16,6 @@
   </button>
 </div>
 
-<!-- Grade de Produtos -->
 <div class="cardapio-grid">
   <div *ngFor="let produto of produtosFiltrados" class="card produto-card">
     <div class="imagem-container">
@@ -33,11 +31,14 @@
     <div class="produto-info">
       <h3>{{ produto.nome }}</h3>
       <p>R$ {{ produto.preco.toFixed(2) }}</p>
-      <div *ngIf="produto.precoPequeno || produto.precoMedio || produto.precoGrande" class="tamanhos-preco">
+      
+      <div *ngIf="produto.precoPequeno || produto.precoMedio || produto.precoGrande || produto.precoFamilia" class="tamanhos-preco">
         <span *ngIf="produto.precoPequeno" class="tamanho-badge">P: R$ {{ produto.precoPequeno.toFixed(2) }}</span>
         <span *ngIf="produto.precoMedio" class="tamanho-badge">M: R$ {{ produto.precoMedio.toFixed(2) }}</span>
         <span *ngIf="produto.precoGrande" class="tamanho-badge">G: R$ {{ produto.precoGrande.toFixed(2) }}</span>
+        <span *ngIf="produto.precoFamilia" class="tamanho-badge" style="background-color: #ffd700; color: #000;">F: R$ {{ produto.precoFamilia.toFixed(2) }}</span>
       </div>
+
       <p *ngIf="produto.descricao" class="produto-descricao">{{ produto.descricao }}</p>
     </div>
     <div class="card-actions">
@@ -57,14 +58,10 @@
   </div>
 </div>
 
-<!-- Mensagem caso não haja produtos -->
 <div *ngIf="produtosFiltrados.length === 0" class="sem-produtos card">
   <p>Não há produtos nesta categoria no momento.</p>
 </div>
 
-<!-- ================================================== -->
-<!-- MODAL DE EDIÇÃO -->
-<!-- ================================================== -->
 <div class="modal-overlay" *ngIf="produtoEmEdicao">
   <div class="modal-content">
     <h2>Editar Produto</h2>
@@ -76,7 +73,7 @@
       </div>
 
       <div class="form-group">
-        <label for="edit-preco">Preço</label>
+        <label for="edit-preco">Preço Base</label>
         <input id="edit-preco" type="number" [(ngModel)]="produtoEmEdicao.preco" name="edit-preco" required>
       </div>
 
@@ -89,22 +86,31 @@
 
       <div class="form-group">
         <label for="edit-descricao">Descrição (opcional)</label>
-        <textarea id="edit-descricao" [(ngModel)]="produtoEmEdicao.descricao" name="edit-descricao" rows="3" placeholder="Ex.: Ingredientes, observações, porções..."></textarea>
+        <textarea id="edit-descricao" [(ngModel)]="produtoEmEdicao.descricao" name="edit-descricao" rows="3"></textarea>
       </div>
 
-      <div class="form-group">
-        <label for="edit-precoPequeno">Preço P (Pequeno - opcional)</label>
-        <input type="number" id="edit-precoPequeno" [(ngModel)]="produtoEmEdicao.precoPequeno" name="edit-precoPequeno" step="0.01" placeholder="0.00">
-      </div>
+      <div class="tamanhos-group" style="border: 1px solid #eee; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+          <h4 style="margin-top: 0; font-size: 0.9rem; color: #666;">Variação de Tamanhos</h4>
+          
+          <div class="form-group">
+            <label for="edit-precoPequeno">Preço P (Pequeno)</label>
+            <input type="number" id="edit-precoPequeno" [(ngModel)]="produtoEmEdicao.precoPequeno" name="edit-precoPequeno" step="0.01">
+          </div>
 
-      <div class="form-group">
-        <label for="edit-precoMedio">Preço M (Médio - opcional)</label>
-        <input type="number" id="edit-precoMedio" [(ngModel)]="produtoEmEdicao.precoMedio" name="edit-precoMedio" step="0.01" placeholder="0.00">
-      </div>
+          <div class="form-group">
+            <label for="edit-precoMedio">Preço M (Médio)</label>
+            <input type="number" id="edit-precoMedio" [(ngModel)]="produtoEmEdicao.precoMedio" name="edit-precoMedio" step="0.01">
+          </div>
 
-      <div class="form-group">
-        <label for="edit-precoGrande">Preço G (Grande - opcional)</label>
-        <input type="number" id="edit-precoGrande" [(ngModel)]="produtoEmEdicao.precoGrande" name="edit-precoGrande" step="0.01" placeholder="0.00">
+          <div class="form-group">
+            <label for="edit-precoGrande">Preço G (Grande)</label>
+            <input type="number" id="edit-precoGrande" [(ngModel)]="produtoEmEdicao.precoGrande" name="edit-precoGrande" step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-precoFamilia" style="color: var(--cor-primaria); font-weight: bold;">Preço F (Família)</label>
+            <input type="number" id="edit-precoFamilia" [(ngModel)]="produtoEmEdicao.precoFamilia" name="edit-precoFamilia" step="0.01">
+          </div>
       </div>
 
       <div class="form-group">

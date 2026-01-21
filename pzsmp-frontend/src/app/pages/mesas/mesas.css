@@ -1,630 +1,100 @@
-/* =================================================================== */
-/* CSS COMPLETO E CONSOLIDADO - PÁGINA MESAS                         */
-/* =================================================================== */
+/* Layout Principal */
+.mesas-container { padding: 20px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.header-text h1 { color: var(--cor-primaria); margin-bottom: 5px; }
+.header-text p { color: #718096; }
 
-
-/* Estilos para o Cabeçalho da Página
-------------------------------------------------------------------- */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  padding-bottom: 25px;
-  border-bottom: 1px solid var(--cor-borda, #e2e8f0);
-}
-
-.header-text h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--cor-texto-principal, #1a202c);
-  margin: 0 0 8px 0;
-}
-
-.header-text p {
-  font-size: 1rem;
-  color: var(--cor-texto-secundario, #718096);
-  margin: 0;
-}
-
-
-
-/* Estilos para a Grade de Mesas
-------------------------------------------------------------------- */
-.mesas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 25px;
-}
-
+/* Grid de Mesas */
+.mesas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
 .mesa-card {
-  border: 2px solid;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  font-weight: bold;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
+  height: 120px; border-radius: 12px; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; color: white;
 }
+.mesa-card:hover { transform: translateY(-5px); }
+.status-livre { background-color: #38a169; }
+.status-ocupada { background-color: #e53e3e; }
+.status-reservada { background-color: #d69e2e; }
+.mesa-numero { font-size: 1.5rem; font-weight: bold; }
+.mesa-status { font-size: 0.9rem; text-transform: uppercase; margin-top: 5px; }
+.mesa-capacidade { font-size: 0.8rem; opacity: 0.8; }
 
-.mesa-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-}
-
-.mesa-numero {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-}
-
-.mesa-status {
-  font-size: 1rem;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-}
-
-.mesa-capacidade {
-  font-size: 0.9rem;
-  font-weight: normal;
-  color: #555;
-}
-
-/* Cores para cada status */
-.status-livre {
-  border-color: #28a745;
-  background-color: #e9f7ef;
-  color: #155724;
-}
-
-.status-ocupada {
-  border-color: #dc3545;
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-.status-reservada {
-  border-color: #ffc107;
-  background-color: #fff3cd;
-  color: #856404;
-}
-
-/* Estilos para o Modal
-------------------------------------------------------------------- */
+/* Modal Grande */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.6); z-index: 1000;
+  display: flex; justify-content: center; align-items: center;
 }
-
 .modal-content-large {
-  position: relative;
-  background-color: white;
-  padding: 30px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 900px;
-  min-height: 500px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  display: flex;
-  flex-direction: column;
+  background: white; width: 95%; max-width: 1200px; height: 90vh;
+  border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; position: relative;
 }
+.btn-fechar { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #718096; }
+.modal-content-large h2 { padding: 20px; margin: 0; border-bottom: 1px solid #eee; color: var(--cor-primaria); }
 
-.btn-fechar {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #888;
-}
-
-.modal-content-large h2 {
-  margin-top: 0;
-  margin-bottom: 25px;
-}
-
-.modal-tamanho {
-  position: relative;
-  background-color: white;
-  padding: 30px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  text-align: center;
-}
-
-.modal-tamanho h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.5rem;
-  color: var(--cor-texto-principal, #1a202c);
-}
-
-.modal-tamanho p {
-  margin: 0 0 20px 0;
-  font-weight: 600;
-  color: var(--cor-texto-secundario, #718096);
-}
-
-.tamanho-opcoes {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.tamanho-btn {
-  padding: 12px 20px;
-  border: 1px solid #ddd;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-  transition: all 0.2s;
-}
-
-.tamanho-btn:hover {
-  background-color: #e7f3ff;
-  border-color: #007bff;
-  color: #007bff;
-}
-
-.tamanho-btn-cancelar {
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #666;
-  transition: all 0.2s;
-}
-
-.tamanho-btn-cancelar:hover {
-  background-color: #e0e0e0;
-}
-
-.modal-nav {
-  display: flex;
-  gap: 10px;
-  border-bottom: 2px solid #eee;
-  margin-bottom: 20px;
-}
-
+/* Navegação Modal */
+.modal-nav { display: flex; border-bottom: 1px solid #eee; background: #f8fafc; }
 .modal-nav button {
-  padding: 10px 15px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  border-bottom: 3px solid transparent;
+  flex: 1; padding: 15px; border: none; background: none; font-weight: 600; color: #718096; cursor: pointer;
 }
+.modal-nav button.active { border-bottom: 3px solid var(--cor-primaria); color: var(--cor-primaria); background: white; }
 
-.modal-nav button.active {
-  border-bottom-color: #007bff;
-  color: #007bff;
-}
+.modal-body { flex-grow: 1; overflow-y: auto; padding: 20px; }
 
-.modal-body {
-  flex-grow: 1;
-}
+/* Área de Novo Pedido */
+.novo-pedido-view { display: flex; gap: 20px; height: 100%; }
+.cardapio-coluna { flex: 1.5; display: flex; flex-direction: column; border-right: 1px solid #eee; padding-right: 15px; }
+.pedido-coluna { flex: 1; display: flex; flex-direction: column; }
 
-.novo-pedido-view {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  height: 100%;
-}
-
-.cardapio-coluna {
-  border-right: 1px solid #eee;
-  padding-right: 20px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-/* Demais estilos para formulários, listas, etc. dentro do modal */
-.form-group {
-  margin-bottom: 20px;
-}
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-.form-group input, .form-group textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.filtros-cardapio {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 15px;
-}
+/* Filtros */
+.filtros-cardapio { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
 .filtros-cardapio button {
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 15px;
-  cursor: pointer;
+  padding: 8px 15px; border-radius: 20px; border: 1px solid #e2e8f0; background: white;
+  cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
 }
-.filtros-cardapio button.active {
-  background-color: #333;
-  color: white;
-}
+.filtros-cardapio button.active { background: var(--cor-primaria); color: white; border-color: var(--cor-primaria); }
 
-.lista-produtos-cardapio {
-  max-height: 300px;
-  overflow-y: auto;
+/* === NOVOS BOTÕES DE TAMANHO (GRID) === */
+.area-tamanhos-pizza {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+  padding: 10px 0 20px 0; border-bottom: 1px dashed #e2e8f0; margin-bottom: 15px;
 }
+.btn-tamanho-atalho {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px; background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+  cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.btn-tamanho-atalho:hover { border-color: var(--cor-primaria); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(197, 48, 48, 0.15); }
+.btn-tamanho-atalho .sigla {
+  font-size: 1.8rem; font-weight: 900; color: var(--cor-primaria); background: #fff5f5;
+  width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;
+}
+.btn-tamanho-atalho .nome { font-size: 1rem; font-weight: 700; color: #4a5568; text-transform: uppercase; }
+.btn-tamanho-atalho .fatias { font-size: 0.75rem; color: #718096; }
+.btn-tamanho-atalho.familia { background: linear-gradient(135deg, #fff 0%, #fffbeb 100%); border-color: #fcd34d; }
+.btn-tamanho-atalho.familia .sigla { color: #d97706; background: #fff; }
+
+/* Lista de Produtos Normais */
+.lista-produtos-cardapio { overflow-y: auto; flex-grow: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .item-cardapio {
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 4px;
+  background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;
+  cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center; font-weight: 600; min-height: 80px;
 }
-.item-cardapio:hover {
-  background-color: #f0f0f0;
-}
-/* Estilos para a lista de itens do pedido atual */
-.item-pedido-atual {
-  display: flex;
-  justify-content: space-between;
-  align-items: center; /* Alinha o texto e o botão verticalmente */
-  padding: 10px 0;
-  border-bottom: 1px solid var(--cor-borda, #e2e8f0);
-}
+.item-cardapio:hover { border-color: var(--cor-primaria); background-color: #fff5f5; }
 
-.item-pedido-atual .item-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-grow: 1;
-}
+/* Itens do Pedido */
+.item-pedido-atual { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; }
+.item-detalhes { display: flex; flex-direction: column; }
+.sabores-item { font-size: 0.8rem; color: #718096; margin-left: 10px; }
+.btn-remover-item { background: none; border: none; color: #e53e3e; cursor: pointer; }
+.total-pedido { margin-top: auto; font-size: 1.2rem; text-align: right; padding-top: 15px; }
+.btn-finalizar-pedido { width: 100%; padding: 15px; background: #38a169; color: white; border: none; border-radius: 8px; margin-top: 15px; font-weight: bold; cursor: pointer; }
+.msg-vazio { text-align: center; color: #aaa; margin-top: 20px; font-style: italic; }
 
-.item-detalhes {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.tamanho-item {
-  background-color: #f0f0f0;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.85rem;
-  color: #666;
-  margin-left: 5px;
-}
-
-
-.btn-fechar-conta {
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    background-color: #28a745; /* Verde Sucesso */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn-fechar-conta:hover {
-    background-color: #218838;
-}
-
-.total-destaque {
-    font-size: 1.2rem;
-    color: #333;
-    margin: 10px 0;
-}
-
-.sabores-item {
-  font-size: 0.85rem;
-  color: #666;
-  font-style: italic;
-}
-
-/* Estilo para o botão de remover item */
-.btn-remover-item {
-  background: none;
-  border: none;
-  color: var(--cor-texto-secundario, #a0aec0);
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 5px 10px;
-  margin-left: 15px; /* Espaço entre o preço e o botão */
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.btn-remover-item:hover {
-  background-color: #f8d7da; /* Fundo vermelho claro */
-  color: var(--cor-erro, #dc3545); /* Ícone vermelho */
-}
-.total-pedido {
-  text-align: right;
-  font-size: 1.2rem;
-  margin-top: 15px;
-}
-.btn-finalizar-pedido, .btn-salvar {
-  width: 100%;
-  padding: 12px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.pedido-detalhado {
-  border: 1px solid #eee;
-  padding: 15px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-}
-.pedido-detalhado h4 {
-  margin-top: 0;
-}
-.pedido-detalhado ul {
-  list-style-type: none;
-  padding: 0;
-}
-.pedido-detalhado li {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-}
-.total-geral-pedido {
-  display: block;
-  text-align: right;
-  margin-top: 10px;
-  font-size: 1.1rem;
-  border-top: 1px solid #eee;
-  padding-top: 10px;
-}
-
-/* Estilos para a View de Pedidos Ativos
-------------------------------------------------------------------- */
-.pedidos-view {
-  padding: 20px;
-}
-
-.pedidos-view h4 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 1.3rem;
-  color: var(--cor-texto-principal, #1a202c);
-}
-
-.pedidos-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-height: 500px;
-  overflow-y: auto;
-}
-
-.pedido-card {
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 15px;
-  background-color: #f8fafc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.pedido-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.pedido-id {
-  font-weight: 600;
-  color: var(--cor-texto-principal, #1a202c);
-}
-
-.pedido-status {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.status-aberto {
-  background-color: #fef3c7;
-  color: #b45309;
-}
-
-.status-em_preparacao {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-.status-pronto {
-  background-color: #dcfce7;
-  color: #15803d;
-}
-
-.status-entregue {
-  background-color: #d1d5db;
-  color: #374151;
-}
-
-.status-pago {
-  background-color: #c6f6d5;
-  color: #22543d;
-}
-
-.status-cancelado {
-  background-color: #fed7d7;
-  color: #742a2a;
-}
-
-.pedido-detalhes {
-  margin-bottom: 12px;
-  font-size: 0.95rem;
-}
-
-.pedido-detalhes p {
-  margin: 5px 0;
-  color: var(--cor-texto-secundario, #718096);
-}
-
-.pedido-itens {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #e2e8f0;
-  font-size: 0.95rem;
-}
-
-.pedido-itens strong {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--cor-texto-principal, #1a202c);
-}
-
-.pedido-itens ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.pedido-itens li {
-  padding: 4px 0;
-  color: var(--cor-texto-secundario, #718096);
-}
-
-.pedido-vazio-mensagem {
-  text-align: center;
-  padding: 30px 20px;
-  color: #888;
-  background-color: #f9fafb;
-  border-radius: 8px;
-}
-
-/* Estilos para a View de Reserva
-------------------------------------------------------------------- */
-.reserva-view {
-  padding: 20px;
-}
-
-.reserva-view h4 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 1.3rem;
-  color: var(--cor-texto-principal, #1a202c);
-}
-
-.reserva-toggle-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 40px 20px;
-  background-color: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-}
-
-.reserva-status-mensagem {
-  padding: 15px;
-  background-color: #f8d7da;
-  border-left: 4px solid #dc3545;
-  color: #721c24;
-  border-radius: 4px;
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
-}
-
-.reserva-info {
-  padding: 15px;
-  background-color: #e0f2fe;
-  border-left: 4px solid #0284c7;
-  color: #0c4a6e;
-  border-radius: 4px;
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
-}
-
-.btn-toggle-reserva {
-  padding: 14px 32px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s;
-  width: 100%;
-  max-width: 300px;
-}
-
-.btn-toggle-reserva.reservar {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-toggle-reserva.reservar:hover {
-  background-color: #218838;
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-}
-
-.btn-toggle-reserva.cancelar {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-toggle-reserva.cancelar:hover {
-  background-color: #c82333;
-  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
-}
-
-.btn-toggle-reserva:disabled {
-  background-color: #6c757d;
-  color: white;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.btn-toggle-reserva:disabled:hover {
-  background-color: #6c757d;
-  box-shadow: none;
-}
+/* Ver Pedidos e Reservas */
+.pedidos-view { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+.pedido-card { border: 1px solid #eee; border-radius: 8px; padding: 15px; background: #fafafa; }
+.pedido-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; }
+.reserva-view { padding: 40px; text-align: center; }
+.btn-toggle-reserva { padding: 15px 30px; font-size: 1.1rem; border-radius: 8px; border: none; cursor: pointer; color: white; }
+.reservar { background: #38a169; } .cancelar { background: #e53e3e; }
